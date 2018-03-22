@@ -1,0 +1,26 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: wes
+ * Date: 2/24/18
+ * Time: 11:34 AM
+ *
+ * The site root.
+ *
+ * @var \app\controllers\BaseController $this
+ */
+$title = 'Home';
+$logged_in = $this->is_logged_in() ? 'true' : 'false';
+
+$js_init = "init_index($logged_in)";
+$container_class = 'container';
+$container_id = 'container';
+include "app/views/_header.phtml"
+?>
+
+<h1>CS3744 Project 4</h1>
+<p>TODO: better frontend</p>
+<a href="/users/new">Create Account</a>
+<a href="/users/login">Log In</a>
+
+<?php include "app/views/_footer.phtml" ?>

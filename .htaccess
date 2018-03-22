@@ -1,0 +1,12 @@
+Options +FollowSymLinks
+IndexIgnore */*
+
+<IfModule mod_rewrite.c>
+    #Turn on the RewriteEngine
+    RewriteEngine On
+
+    # Run everything but real files thru server.php
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ server.php/$1?%{QUERY_STRING} [L]
+</IfModule>

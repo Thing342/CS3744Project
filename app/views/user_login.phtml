@@ -1,0 +1,31 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: wes
+ * Date: 2/26/18
+ * Time: 2:32 PM
+ *
+ * The log-in page.
+ */
+$title = 'Log In';
+
+$js_init = '';
+$container_class = 'container';
+$container_id = 'container';
+include "app/views/_header.phtml"
+?>
+    <span>No account? <a href="<?= $_ENV['SUBDIRECTORY'] ?>/users/new">Create a new one.</a></span>
+<form action="<?= $_ENV['SUBDIRECTORY'] ?>/users/login" method="post">
+    <label>
+        Username
+        <input type="text" name="username" placeholder="Username" required>
+    </label>
+    <label>
+        Password
+        <input type="password" name="password" required>
+    </label>
+    <input type="submit">
+</form>
+<?php
+include "app/views/_footer.phtml"
+?>

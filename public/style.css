@@ -1,0 +1,10 @@
+/* basic CSS file, just shows how to serve static content */
+
+body {
+    background-color: #d9ff8b;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+}
