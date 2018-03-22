@@ -56,7 +56,7 @@ class Unit
     }
 
     /**
-     * Fetches the complete list of Units from the database.
+     * Fetches the list of Units from the database.
      * @param PDO $db
      * @param int $unitid
      * @return Unit|null - null if the query failed.
