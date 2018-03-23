@@ -124,7 +124,7 @@ class Person
             ]);
         }
 
-        if ($res) { // update token id
+        if ($res) { // update person id
             $this->changed = false;
             $this->id = $db->lastInsertId();
         }

@@ -4,7 +4,7 @@ Creates the database, user, tables, and sample data for the project.
  */
 
 CREATE DATABASE IF NOT EXISTS fantasticfour_p4;
-CREATE USER 'fantasticfour'@'localhost' IDENTIFIED BY 'cs3744';
+CREATE USER IF NOT EXISTS 'fantasticfour'@'localhost' IDENTIFIED BY 'cs3744';
 GRANT ALL PRIVILEGES ON fantasticfour_p4.* to 'fantasticfour'@'localhost';
 
 USE fantasticfour_p4;
@@ -59,8 +59,11 @@ CREATE TABLE UnitEvent
   unitID INT NOT NULL ,
   type INT NOT NULL ,
   date DATE NOT NULL ,
-  location VARCHAR(160) NOT NULL ,
-  event TEXT NOT NULL ,
+  description TEXT NOT NULL ,
+  locationName TEXT NOT NULL ,
+  latitude FLOAT NOT NULL ,
+  longitude FLOAT NOT NULL ,
+
   CONSTRAINT UnitEvent_Unit_unitID_fk FOREIGN KEY (unitID) REFERENCES Unit(id)
     ON DELETE CASCADE ON UPDATE CASCADE
 );
