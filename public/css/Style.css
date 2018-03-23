@@ -1,0 +1,351 @@
+/*Font and background of site styling*/
+html, body {
+  font-family: Arial, sans-serif;
+  background-color: #192c3b;
+}
+
+/*Link styling*/
+a:link {
+  color: blue;
+  text-decoration: underline;
+}
+
+/*Visited link styling*/
+a:visited {
+  color: gold;
+}
+
+/*H1 header tags styling*/
+h1 {
+  font-family: "Lucida Console";
+  color: gold;
+  margin-bottom: 0px;
+  text-decoration: none !important;
+}
+
+h2 {
+  color: white;
+}
+
+/*H3 header tags styling*/
+h3 {
+  color: #666;
+}
+
+/*Hovering over a link styling*/
+a:hover {
+  color: gold;
+  text-decoration: none;
+}
+
+/*Clear class*/
+.clear {
+  clear: both;
+}
+
+/*List styling*/
+ul {
+  list-style: none;
+  padding-left: 0;
+  margin-left: 0;
+  width: 100%;
+  height: 30px;
+  background-color: #0f7f8b;
+  outline-color: : #ecf1d0;
+}
+
+/*Bulleted list styling*/
+li {
+  float: left;
+  display: block;
+  width: auto;
+  padding-left: 0;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-left: 30px;
+  text-align: center;
+}
+
+/*Styling of first element on the list*/
+li:first-child {
+  margin-left: 10px;
+  padding-left: 0px;
+}
+
+/*Styling of second to last and last element on the list*/
+li:last-child {
+  float:right; 
+  margin-right: 10px;
+}
+
+/*Styling of links on the list*/
+li a:link, li a:visited {
+   color: white;
+   text-decoration: none;
+}
+
+/*Styling of links on the list upon uper hover*/
+li a:hover {
+  color: gold;
+  text-decoration: none;
+}
+
+/*Styling of visited elements on the list*/
+li#selected {
+  background-color: blue;
+}
+
+/*Styling of bottom block*/
+div#bottom {
+  width: 100%;
+  float: left;
+  color: white;
+}
+
+/*Styling of center welcoming information*/
+div#welcomeTitle {
+  text-align: center;
+  color: white;
+}
+
+/*Styling of header*/
+#header {
+  display:inline-block
+}
+
+/*Username appears at top*/
+  #LoginAtTop {
+    font-size: 20px;
+    display: block;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    text-decoration: none !important;
+    font-family: Arial;
+  }
+
+/*Box sizing information*/
+* {box-sizing:border-box}
+
+/*https://www.w3schools.com/howto/howto_js_slideshow.asp*/
+/* Slideshow container */
+.slideshow-container {
+  max-width: 1000px;
+  position: relative;
+  margin: auto;
+}
+/* Hide the images by default */
+.mySlides {
+    display: none;
+}
+/* Next & previous buttons */
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  margin-top: -22px;
+  padding: 16px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+}
+/* Position the "next button" to the right */
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover, .next:hover {
+  background-color: rgba(0,0,0,0.8);
+}
+/* Caption text */
+.text {
+  color: #f2f2f2;
+  font-size: 15px;
+  padding: 8px 12px;
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+/* Number text (1/3 etc) */
+.numbertext {
+  color: #f2f2f2;
+  font-size: 12px;
+  padding: 8px 12px;
+  position: absolute;
+  top: 0;
+}
+/* The dots/bullets/indicators */
+.dot {
+  cursor:pointer;
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+/*Color of active dot*/
+.active, .dot:hover {
+  background-color: #717171;
+}
+/* Fading animation */
+.fade {
+  -webkit-animation-name: fade;
+  -webkit-animation-duration: 1.5s;
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+/*Container at the foot of the page*/
+/*http://jsfiddle.net/BYEw5/ */
+.container > div {
+    display: inline-block;
+    *display: inline; /* For IE7 */
+    zoom: 1; /* Trigger hasLayout */
+    width: 33%;
+    text-align: center;
+}
+
+/*Styles banner photos*/
+#bannerPhotos, #bannerPhotos2, #bannerPhotos3 {
+  width: 100%;
+  max-height: 600px;
+}
+
+/*Styles dots*/
+#allDots {
+  text-align:center;
+}
+
+/*Styles short-form description in fillable form*/
+#oLife {
+  height:50px;
+}
+
+/*Styles long-form description in fillable form*/
+#lLife {
+  height:200px;
+}
+
+/*Slideshow animation*/
+/*https://www.w3schools.com/howto/howto_js_slideshow.asp*/
+@-webkit-keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+/*Slideshow animation*/
+@keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+
+/*Makes button appear as normal text*/
+/*https://stackoverflow.com/questions/1367409/how-to-make-button-look-like-a-link*/
+#logoutButton {
+  background:none!important;
+  color:white;
+  border:none; 
+  padding:0!important;
+  font: inherit;
+  cursor: pointer;
+}
+
+
+/*Makes button appear as normal text*/
+/*https://stackoverflow.com/questions/1367409/how-to-make-button-look-like-a-link*/
+#logoutButtonContentSame {
+  background:none!important;
+  color:white;
+  border:none; 
+  padding:0!important;
+  font: inherit;
+  cursor: pointer;
+}
+
+/*Styles user settings*/
+.setting {
+  display: block;
+  font-weight: normal;
+  padding: 7px 3px;
+  border-top: 1px solid #d6d1af;
+  margin-bottom: 5px;
+  color: white;
+}
+.setting span {
+  float: left; 
+  width: 250px;
+  font-weight: bold;
+}
+.setting span img { 
+  cursor: pointer;
+}
+
+img {
+  border: solid black 1px;
+}
+
+#signin {
+  text-align: left;
+  width: 15%;
+}
+
+#details {
+  float: right;
+  display: block;
+  width: 70%;
+}
+
+#docs {
+  margin-top: 25%;
+  clear: both;
+}
+#soldiers {
+  float: right;
+  width: 50%;
+  margin-top: 5%;
+  text-align: right;
+}
+#events {
+  margin-top: 30%;
+  clear: both;
+}
+#left {
+  width: 50%;
+  margin: 0;
+  float: left;
+  margin-top: 5%;
+}
+
+/*Styles the page when the resolution is small*/
+@media all and (max-width: 500px) {
+  body {
+
+  }
+
+  /*List changes form*/
+  li {
+    margin-left: 0px;
+    float: none;
+    width: 100%;
+  }
+
+  /*List margin disapears*/
+  li:first-child {
+    margin: 0px;
+  }
+
+  /*Styling of second to last and last element on the list*/
+  li:last-child {
+    margin-right: 0px;
+  }
+
+  /*List changes form*/
+  ul {
+    height: 145px;
+  }
+}
