@@ -97,7 +97,9 @@ class Token
 
         if ($res) { // update token id
             $this->changed = false;
-            $this->tokenId = $db->lastInsertId();
+            if ($this->tokenId == -1) {
+                $this->tokenId = $db->lastInsertId();
+            }
         }
         else error_log("Unable to insert or update user object!: ".$stmt->errorCode());
         return $res;

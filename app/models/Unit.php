@@ -113,7 +113,9 @@ class Unit
 
         if ($res) { // update token id
             $this->changed = false;
-            $this->id = $db->lastInsertId();
+            if ($this->id == -1) {
+                $this->id = $db->lastInsertId();
+            }
         }
         else {
             error_log("Unable to commit Unit object!: " . $stmt->errorCode());

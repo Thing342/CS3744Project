@@ -121,13 +121,31 @@ class UnitEvent
 
         if ($res) { // update event id
             $this->changed = false;
-            $this->id = $db->lastInsertId();
+            if ($this->id == -1) {
+                $this->id = $db->lastInsertId();
+            }
         }
         else {
             error_log("Unable to commit Event object!: " . $stmt->errorCode());
         }
 
         return $res;
+    }
+
+    /**
+     * @return array - json-encodeable array containing the data in this class.
+     */
+    public function serialize(): array {
+        return [
+            "id" => $this->id,
+            "unitID" => $this->unitID,
+            "type" => $this->type,
+            "date" => $this->date,
+            "description" => $this->description,
+            "locationName" => $this->locationName,
+            "latitude" => $this->latitude,
+            "longitude" => $this->longitude
+        ];
     }
 
     /***

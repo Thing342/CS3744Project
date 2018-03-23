@@ -21,13 +21,15 @@ class Person
 
     private $changed = false;
 
-    public static function build(int $id, int $unitID, string $rank, string $firstname, string $lastname) {
+    public static function build(int $id, int $unitID, string $rank, string $firstname, string $lastname) : Person {
         $person = new Person();
         $person->id = $id;
         $person->unitID = $unitID;
         $person->rank = $rank;
         $person->firstname = $firstname;
         $person->lastname = $lastname;
+
+        return $person;
     }
 
     /**
@@ -126,13 +128,19 @@ class Person
 
         if ($res) { // update person id
             $this->changed = false;
-            $this->id = $db->lastInsertId();
+            if ($this->id == -1) {
+                $this->id = $db->lastInsertId();
+            }
         }
         else {
             error_log("Unable to commit Person object!: " . $stmt->errorCode());
         }
 
         return $res;
+    }
+
+    public function getName() : string {
+        return $this->getFirstname() . " " . $this->getLastname();
     }
 
     /***

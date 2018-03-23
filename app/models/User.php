@@ -104,7 +104,9 @@ class User
 
         if($res) {
             $this->changed = false;
-            $this->userId = $db->lastInsertId(); // Update this user's ID
+            if ($this->userId == -1) {
+                $this->userId = $db->lastInsertId();
+            }
         }
         else error_log("Unable to insert or update user object!: ".$stmt->errorCode());
         return $res;

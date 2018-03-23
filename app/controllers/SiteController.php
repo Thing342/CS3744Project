@@ -9,6 +9,11 @@
 namespace app\controllers;
 
 require_once "app/controllers/BaseController.php";
+require_once "app/models/Unit.php";
+require_once "app/models/Person.php";
+
+use app\models\Unit;
+use app\models\Person;
 
 use lib\Controller;
 
@@ -36,7 +41,11 @@ class SiteController extends BaseController
     public function routes(): array
     {
         return [
-            self::route("GET", "/", 'index'),
+            self::route("GET", "/units", 'units'),
+            self::route("GET", "/units/add", 'addUnits'),
+            self::route("GET", "/people/:unit/add", 'addPeople'),
+            self::route("GET", "/people/:unit", 'people'),
+            self::route("GET", "/", 'index')
         ];
     }
 
@@ -46,4 +55,88 @@ class SiteController extends BaseController
     public function index($params) {
         require "app/views/index.phtml";
     }
+
+    /***
+     * TEMP TESTING CODE
+     ***/
+
+    /**
+     * Test getting units
+     */
+    public function units($params) {
+        $units = Unit::fetchAll($this->getDBConn());
+        foreach ($units as $unit) {
+            /* @var \app\models\Unit $unit */
+            $name = $unit->getName();
+            echo <<<HTML
+                <p>$name</p>
+HTML;
+        }
+    }
+
+    /**
+     * Test adding and updating units
+     */
+    public function addUnits($params) {
+        $unit = new Unit();
+        $db = $this->getDBConn();
+
+        $unit->setName("My Cool Unit");
+        $unit->commit($db);
+
+        // $unit->id gets updated when commit() is called
+
+        $unit->setName("My Cool Unit #" . $unit->getId());
+        $unit->commit($db);
+
+        echo "<h1>OK</h1>";
+    }
+
+    /**
+     * Test displaying people
+     */
+    public function people($params) {
+        $unitID = $params['unit'];
+        $db = $this->getDBConn();
+
+        $unit = Unit::fetch($db, $unitID);
+        if ($unit == null) {
+            $this->error404($params[0]);
+        }
+
+        echo "<h1>" . $unit->getName() . "</h1>";
+
+        $people = Person::fetchAllInUnit($db, $unitID);
+        foreach ($people as $person) {
+            /* @var \app\models\Person $person */
+            $name = $person->getName();
+            echo <<<HTML
+                <p>$name</p>
+HTML;
+        }
+    }
+
+    /**
+     * Test adding people
+     */
+    public function addPeople($params) {
+        $unitID = $params['unit'];
+        $db = $this->getDBConn();
+
+        $unit = Unit::fetch($db, $unitID);
+        if ($unit == null) {
+            $this->error404($params[0]);
+        }
+
+        $person = Person::build(-1, $unitID, "Lieutenant", "Test", "Person");
+        $person->commit($db);
+
+        // $person->id gets updated when commit() is called
+
+        $person->setLastname("Person #" . $person->getId());
+        $person->commit($db);
+
+        echo "<h1>OK</h1>";
+    }
+
 }
