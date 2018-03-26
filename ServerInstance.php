@@ -10,7 +10,7 @@ namespace lib;
 
 use PDO;
 
-define('PUBLIC_MEDIA_TYPES', 'png|jpg|jpeg|gif|css|js|html');
+define('PUBLIC_MEDIA_TYPES', 'png|jpg|jpeg|gif|css|js|html'); // List of media types to serve (builtin server only)
 
 session_start();
 
@@ -48,7 +48,7 @@ class ServerInstance
         $req_uri = str_replace($this->config['Subdirectory'], '', $req_uri);
 
         // Check if we're requesting a static resource (PHP Builtin Only)
-        if ($this->config['Server'] == 'builtin' && preg_match("/public\/([\w-_+\/]+\.(".PUBLIC_MEDIA_TYPES."))$/", $_SERVER["REQUEST_URI"])) {
+        if ($this->config['Server'] == 'builtin' && preg_match("/public\/([\w-_+\/]+\.(".PUBLIC_MEDIA_TYPES."))$/", strtolower($_SERVER["REQUEST_URI"]))) {
             return false;
         }
 
