@@ -41,6 +41,7 @@ class SiteController extends BaseController
     public function routes(): array
     {
         return [
+            self::route("GET", "/about", 'about'),
             self::route("GET", "/units", 'units'),
             self::route("GET", "/units/add", 'addUnits'),
             self::route("GET", "/people/:unit/add", 'addPeople'),
@@ -48,6 +49,16 @@ class SiteController extends BaseController
             self::route("GET", "/", 'index')
         ];
     }
+
+
+    /**
+     * Full path: '/' (site root)
+     */
+    public function about($params) {
+        require "app/views/_header.phtml";
+        require "app/views/about.php";
+    }
+
 
     /**
      * Full path: '/' (site root)

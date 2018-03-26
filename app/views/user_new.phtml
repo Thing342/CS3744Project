@@ -14,7 +14,9 @@ $container_class = 'container';
 $container_id = 'container';
 include "app/views/_header.phtml"
 ?>
-<h1>Create User Account:</h1>
+
+<h1>Create User Account</h1>
+<div id = "whiteTextDiv">
 <form action="<?= $_ENV['SUBDIRECTORY'] ?>/users/new" method="post" id="new-user-table">
     <table>
         <tbody>
@@ -39,6 +41,8 @@ include "app/views/_header.phtml"
         </tfoot>
     </table>
 </form>
+</div>
+
 <?php
 include "app/views/_footer.phtml"
 ?>

@@ -14,7 +14,7 @@ $config = [
         'user' => 'fantasticfour',
         'pass' => 'cs3744'
     ],
-    "Location" => "http://localhost:9999", // The absolute URL where this site is hosted. (TODO: change for submission)
-    "Subdirectory" => "", // The subdirectory within /htdocs where the site is stored.
-    "Server" => "builtin" // deployment method. using "builtin" turns on settings specific to the PHP built-in server
+    "Location" => "http://localhost/Project4/CS3744Project", // The absolute URL where this site is hosted. (TODO: change for submission)
+    "Subdirectory" => "/Project4/CS3744Project", // The subdirectory within /htdocs where the site is stored.
+    "Server" => "apache" // deployment method. using "builtin" turns on settings specific to the PHP built-in server
 ];
