@@ -11,6 +11,7 @@ namespace app\controllers;
 require_once "Controller.php";
 
 use app\models\Token;
+use app\models\User;
 use lib\Controller;
 
 /**
@@ -65,5 +66,14 @@ abstract class BaseController extends Controller
 
         // Return the token to the user
         return $token;
+    }
+
+    /**
+     * Shortcut method for returning the object representing the currently logged-in user.
+     * @return User|null
+     */
+    public function getLoggedInUser() : ?User {
+        if (!$this->is_logged_in() || !array_key_exists('user', $_SESSION)) return null;
+        else return $_SESSION['user'];
     }
 }

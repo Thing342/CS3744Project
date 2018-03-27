@@ -57,6 +57,7 @@ CREATE TABLE UnitEvent
 (
   id INT PRIMARY KEY AUTO_INCREMENT,
   unitID INT NOT NULL ,
+  eventName VARCHAR(64) NOT NULL,
   type INT NOT NULL ,
   date DATE NOT NULL ,
   description TEXT NOT NULL ,

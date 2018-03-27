@@ -15,6 +15,7 @@ class UnitEvent
 {
     private $id = -1;
     private $unitID = -1;
+    private $eventName = "NoName";
     private $type = "NoType";
     private $date = "1900-00-00";
     private $description = "NoDescription";
@@ -24,10 +25,11 @@ class UnitEvent
 
     private $changed = false;
 
-    public static function build(int $id, int $unitID, string $type, string $date, string $description, string $locationName, float $latitude, float $longitude) : UnitEvent {
+    public static function build(int $id, int $unitID, string $eventName, string $type, string $date, string $description, string $locationName, float $latitude, float $longitude) : UnitEvent {
         $event = new UnitEvent();
         $event->id = $id;
         $event->unitID = $unitID;
+        $event->eventName = $eventName;
         $event->type = $type;
         $event->date = $date;
         $event->description = $description;
@@ -106,15 +108,15 @@ class UnitEvent
     public function commit(PDO $db) : bool {
         $res = false;
         if ($this->id == -1) { // new object
-            $stmt = $db->prepare('INSERT INTO UnitEvent VALUE (0, :uid, :t, :d, :des, :ln, :lat, :lon)');
+            $stmt = $db->prepare('INSERT INTO UnitEvent VALUE (0, :uid, :en, :t, :d, :des, :ln, :lat, :lon)');
             $res = $stmt->execute([
-                "uid" => $this->unitID, "t" => $this->type, 'd' => $this->date, 'des' => $this->description,
+                "uid" => $this->unitID, "en" => $this->eventName, "t" => $this->type, 'd' => $this->date, 'des' => $this->description,
                 'ln' => $this->locationName, 'lat' => $this->latitude, 'lon' => $this->longitude
             ]);
         } else {
-            $stmt = $db->prepare('UPDATE UnitEvent SET unitID=:uid, type=:t, date=:d, description=:des, locationName=:ln, latitude=:lat, longitude=:lon WHERE id = :id');
+            $stmt = $db->prepare('UPDATE UnitEvent SET unitID=:uid, eventName=:en, type=:t, date=:d, description=:des, locationName=:ln, latitude=:lat, longitude=:lon WHERE id = :id');
             $res = $stmt->execute([
-                "uid" => $this->unitID, "t" => $this->type, 'd' => $this->date, 'des' => $this->description,
+                "uid" => $this->unitID, "en" => $this->eventName, "t" => $this->type, 'd' => $this->date, 'des' => $this->description,
                 'ln' => $this->locationName, 'lat' => $this->latitude, 'lon' => $this->longitude, 'id' => $this->id
             ]);
         }
@@ -146,6 +148,15 @@ class UnitEvent
             "latitude" => $this->latitude,
             "longitude" => $this->longitude
         ];
+    }
+
+    /**
+     * Returns the url-compatible name for this event
+     * (suitable for wikipedia API)
+     * @return string
+     */
+    public function getURLName() : string {
+        return urlencode($this->eventName);
     }
 
     /***
@@ -299,6 +310,16 @@ class UnitEvent
     public function isChanged(): bool
     {
         return $this->changed;
+    }
+
+    public function getEventName(): string {
+        return $this->eventName;
+    }
+
+    public function setEvent(string $eventName): UnitEvent {
+        $this->eventName = $eventName;
+        $this->changed = true;
+        return $this;
     }
 
 }

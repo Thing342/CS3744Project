@@ -52,11 +52,10 @@ class SiteController extends BaseController
 
 
     /**
-     * Full path: '/' (site root)
+     * Full path: '/about'
      */
     public function about($params) {
-        require "app/views/_header.phtml";
-        require "app/views/about.php";
+        require "app/views/about.phtml";
     }
 
 

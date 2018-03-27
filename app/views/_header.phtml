@@ -29,7 +29,26 @@
     <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 </head>
 <body onload="<?= $js_init ?>">
-<!--div id="flashes">
+<div id = "Header">
+    <h1>In Their Own Words: World War II</h1>
+</div>
+
+<ul class="navbar">
+    <li><a id = "selected" href="<?= $_ENV['SUBDIRECTORY'] ?>/">Home</a></li>
+    <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/about">About</a></li>
+    <li><a href="#">Companies</a></li>
+    <li><a href="#">People</a></li>
+    <!--li><button id = "logoutButtonContentSame" class="logoutButtonContentSame" onclick="">Logout</button></li-->
+    <?php if($this->getLoggedInUser() != null): ?>
+        <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/users"><?= $this->getLoggedInUser()->getUsername() ?></a></li>
+        <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/users/logout">Log Out</a></li>
+    <?php else: ?>
+        <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/users/new">Create Account</a></li>
+        <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/users/login">Log In</a></li>
+    <?php endif; ?>
+</ul>
+
+<div id="flashes">
     <ul>
         <?php
         $flashes = $this->showFlashMessages();
@@ -38,6 +57,6 @@
         }
         ?>
     </ul>
-</div-->
+</div>
+
 <div class="<?= $container_class ?>" id="<?= $container_id ?>">
-<?php include "app/views/navigationMenu.html" ?>

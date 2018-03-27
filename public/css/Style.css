@@ -44,18 +44,18 @@ a:hover {
 }
 
 /*List styling*/
-ul {
+ul.navbar {
   list-style: none;
   padding-left: 0;
   margin-left: 0;
   width: 100%;
   height: 30px;
   background-color: #0f7f8b;
-  outline-color: : #ecf1d0;
+  outline-color: #ecf1d0;
 }
 
 /*Bulleted list styling*/
-li {
+ul.navbar li {
   float: left;
   display: block;
   width: auto;
