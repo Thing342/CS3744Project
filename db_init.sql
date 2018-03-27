@@ -73,20 +73,20 @@ ALTER TABLE UnitEvent COMMENT = 'An event that occurred to some Unit along the c
 /** Add Sample Data **/
 
 /** Username: adminuser; Password: mypassword **/
-INSERT INTO fantasticfour_p4.User (userId, username, pword_hash, email) VALUES (0, 'adminuser', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'sample@example.com');
+INSERT INTO fantasticfour_p4.User (userId, username, pword_hash, email) VALUES (1, 'adminuser', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'sample@example.com');
 
-INSERT INTO fantasticfour_p4.Unit (id, name) VALUES (0, 'Assault Gun Platoon');
-INSERT INTO fantasticfour_p4.Unit (id, name) VALUES (0, 'Reconaissance Platoon');
+INSERT INTO fantasticfour_p4.Unit (id, name) VALUES (1, 'Assault Gun Platoon');
+INSERT INTO fantasticfour_p4.Unit (id, name) VALUES (2, 'Reconaissance Platoon');
 
-INSERT INTO fantasticfour_p4.Person (id, unitID, rank, firstname, lastname) VALUES (0, 1, 'Pfc', 'Lawrence', 'Clark');
-INSERT INTO fantasticfour_p4.Person (id, unitID, rank, firstname, lastname) VALUES (0, 1, 'Pvt', 'Chester', 'Harej');
-INSERT INTO fantasticfour_p4.Person (id, unitID, rank, firstname, lastname) VALUES (0, 1, 'Pfc', 'Vito', 'Mikalauski');
-INSERT INTO fantasticfour_p4.Person (id, unitID, rank, firstname, lastname) VALUES (0, 2, 'Cpl', 'Harvey', 'Keller');
-INSERT INTO fantasticfour_p4.Person (id, unitID, rank, firstname, lastname) VALUES (0, 2, 'Pvt', 'Jessie', 'Staggs');
+INSERT INTO fantasticfour_p4.Person (id, unitID, rank, firstname, lastname) VALUES (1, 1, 'Pfc', 'Lawrence', 'Clark');
+INSERT INTO fantasticfour_p4.Person (id, unitID, rank, firstname, lastname) VALUES (2, 1, 'Pvt', 'Chester', 'Harej');
+INSERT INTO fantasticfour_p4.Person (id, unitID, rank, firstname, lastname) VALUES (3, 1, 'Pfc', 'Vito', 'Mikalauski');
+INSERT INTO fantasticfour_p4.Person (id, unitID, rank, firstname, lastname) VALUES (4, 2, 'Cpl', 'Harvey', 'Keller');
+INSERT INTO fantasticfour_p4.Person (id, unitID, rank, firstname, lastname) VALUES (5, 2, 'Pvt', 'Jessie', 'Staggs');
 
 INSERT INTO fantasticfour_p4.UnitEvent (id, unitID, eventName, type, date, description, locationName, latitude, longitude) VALUES
-  (0, 1, 'Sample Battle #1', 'BATTLE', '1944-12-10', 'Lorem ipsum dolor sit amet', 'Somewhere in France', 46.820675, 2.375450);
+  (1, 1, 'Sample Battle #1', 'BATTLE', '1944-12-10', 'Lorem ipsum dolor sit amet', 'Somewhere in France', 46.820675, 2.375450);
 INSERT INTO fantasticfour_p4.UnitEvent (id, unitID, eventName, type, date, description, locationName, latitude, longitude) VALUES
-  (0, 1, 'Sample Battle #2', 'BATTLE', '1945-01-12', 'Lorem ipsum dolor sit amet', 'Somewhere in France', 46.820615, 2.375450);
+  (2, 1, 'Sample Battle #2', 'BATTLE', '1945-01-12', 'Lorem ipsum dolor sit amet', 'Somewhere in France', 46.820615, 2.375450);
 INSERT INTO fantasticfour_p4.UnitEvent (id, unitID, eventName, type, date, description, locationName, latitude, longitude) VALUES
-  (0, 1, 'Sample Battle #3', 'BATTLE', '1945-01-31', 'Lorem ipsum dolor sit amet', 'Somewhere in Germany', 46.820115, 2.375321);
+  (3, 1, 'Sample Battle #3', 'BATTLE', '1945-01-31', 'Lorem ipsum dolor sit amet', 'Somewhere in Germany', 46.820115, 2.375321);
