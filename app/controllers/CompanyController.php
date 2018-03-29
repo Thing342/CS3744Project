@@ -28,6 +28,7 @@ class CompanyController extends BaseController
     public function routes(): array
     {
         return [
+            self::route("GET", "/:companyID/edit", 'companyEditPage'),
             self::route("GET", "/:companyID", 'companyPage'),
             self::route("GET", "/", 'companies'),
         ];
@@ -60,6 +61,37 @@ class CompanyController extends BaseController
         }
 
         require "app/views/companyDetails.php";
+    }
+
+    /**
+     * Full path: '/companies/:companyID/edit'
+     */
+    public function companyEditPage($params) {
+        $token = $this->require_authentication();
+
+        $id = $params['companyID'];
+        if ($id == null) {
+            $this->error404($params[0]);
+        }
+
+        $db = $this->getDBConn();
+
+        $company = Unit::fetch($db, $id);
+        if ($company == null) {
+            $this->error404($params[0]);
+        }
+
+        $members = Person::fetchAllInUnit($db, $id);
+        if($members == null) {
+            $members = [];
+        }
+
+        $events = UnitEvent::fetchAllInUnit($db, $id);
+        if ($events == null) {
+            $events = [];
+        }
+
+        require "app/views/companyEdit.php";
     }
 
 

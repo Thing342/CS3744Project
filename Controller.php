@@ -36,6 +36,10 @@ abstract class Controller {
         ];
     }
 
+    public function url(string $internal): string {
+        return $_ENV['SUBDIRECTORY'] . $internal;
+    }
+
     /**
      * Handles a routed request.
      * @param string $internalpath The 'internal' path (stripped of the controller prefix) to check against
