@@ -1,0 +1,38 @@
+<?php
+$conn = new mysqli("localhost", "root", "", "fantasticfour_p4") or die('Error: '.$conn->connect_error);
+?>
+
+<?php include('app/views/_header.phtml') ?>
+
+<div id = "whiteTextDiv">
+<h4>Companies</h4>
+<?php
+  $query = "SELECT * FROM `unit`";
+  if ($result = mysqli_query($conn, $query)) {
+   while ($row = $result->fetch_assoc()) {
+    echo"<a href = ";
+    echo $_ENV['SUBDIRECTORY'];
+	echo "/companies/";
+    printf("%s", $row["id"]);
+    echo">";
+    printf("%s", $row["name"]);
+    echo"</a>";
+   
+    //echo "<form action = \"../leslie6/app/controller/deletePersonScript.php\" onSubmit=\"return verification()\", method=\"post\">";
+    //echo"<input type=\"hidden\" name=\"idToDelete\" value=\"";
+    //printf("%s", $row["id"]);
+    //echo "\"</label>";
+    //echo"<input type=\"submit\" value=\"Delete Entry\">";
+    //echo "</form>";
+    echo "<br>";
+   }
+ }
+?>
+
+</div>
+
+</div>
+<?php
+include "app/views/_footer.phtml"
+?>
+

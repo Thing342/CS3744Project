@@ -36,8 +36,8 @@
 <ul class="navbar">
     <li><a id = "selected" href="<?= $_ENV['SUBDIRECTORY'] ?>/">Home</a></li>
     <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/about">About</a></li>
-    <li><a href="#">Companies</a></li>
-    <li><a href="#">People</a></li>
+    <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/companies">Companies</a></li>
+    <li><a href="#">Person Search</a></li>
     <!--li><button id = "logoutButtonContentSame" class="logoutButtonContentSame" onclick="">Logout</button></li-->
     <?php if($this->getLoggedInUser() != null): ?>
         <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/users"><?= $this->getLoggedInUser()->getUsername() ?></a></li>

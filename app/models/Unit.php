@@ -12,10 +12,10 @@ use PDO;
 
 class Unit
 {
-    private $id = -1;
-    private $name = "Noname";
+    public $id = -1;
+    public $name = "Noname";
 
-    private $changed = false; // true when the model is no longer in sync with the DB.
+    public $changed = false; // true when the model is no longer in sync with the DB.
 
     /**
      * Build a Unit from database params.

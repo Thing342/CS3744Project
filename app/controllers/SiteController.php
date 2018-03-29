@@ -12,8 +12,8 @@ require_once "app/controllers/BaseController.php";
 require_once "app/models/Unit.php";
 require_once "app/models/Person.php";
 
-use app\models\Unit;
-use app\models\Person;
+use app\models\Unit
+;use app\models\Person;
 
 use lib\Controller;
 
@@ -43,11 +43,37 @@ class SiteController extends BaseController
         return [
             self::route("GET", "/about", 'about'),
             self::route("GET", "/units", 'units'),
+            self::route("GET", "/companies", 'companies'),
             self::route("GET", "/units/add", 'addUnits'),
             self::route("GET", "/people/:unit/add", 'addPeople'),
             self::route("GET", "/people/:unit", 'people'),
+            self::route("GET", "/companies/:company", 'companyPage'),
             self::route("GET", "/", 'index')
         ];
+    }
+
+    /**
+     * Full path: '/about'
+     */
+    public function companyPage($params) {
+        require "app/views/_header.phtml";
+        $id = $params['company'];
+        $db = $this->getDBConn();
+
+        $company = Unit::fetch($db, $id);
+        if ($company == null) {
+            $this->error404($params[0]);
+        }
+        require "app/views/companyDetails.php";
+        require "app/views/_footer.phtml";
+    }
+
+
+    /**
+     * Full path: '/about'
+     */
+    public function companies($params) {
+        require "app/views/companies.phtml";
     }
 
 
