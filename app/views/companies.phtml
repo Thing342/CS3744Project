@@ -11,7 +11,14 @@ include "app/views/_header.phtml"
 ?>
 
 <div id = "whiteTextDiv">
-<h1>Companies</h1>
+<h2>Companies</h2>
+    <?php if ($this->is_logged_in()): ?>
+        <form action="<?= $this->url('/companies/add') ?>" method="post">
+            <input type="submit" value="Add New Company...">
+        </form>
+    <?php else: ?>
+        <p>Log in to add new companies.</p>
+    <?php endif; ?>
     <ul>
         <?php foreach ($companies as $company): ?>
             <li>
