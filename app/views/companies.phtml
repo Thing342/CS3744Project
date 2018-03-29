@@ -1,37 +1,26 @@
 <?php
-$conn = new mysqli("localhost", "root", "", "fantasticfour_p4") or die('Error: '.$conn->connect_error);
-?>
+/**
+ * @var $companies \app\models\Unit[]
+ */
+$title = 'Companies';
 
-<?php include('app/views/_header.phtml') ?>
+$js_init = '';
+$container_class = 'container';
+$container_id = 'container';
+include "app/views/_header.phtml"
+?>
 
 <div id = "whiteTextDiv">
-<h4>Companies</h4>
-<?php
-  $query = "SELECT * FROM `unit`";
-  if ($result = mysqli_query($conn, $query)) {
-   while ($row = $result->fetch_assoc()) {
-    echo"<a href = ";
-    echo $_ENV['SUBDIRECTORY'];
-	echo "/companies/";
-    printf("%s", $row["id"]);
-    echo">";
-    printf("%s", $row["name"]);
-    echo"</a>";
-   
-    //echo "<form action = \"../leslie6/app/controller/deletePersonScript.php\" onSubmit=\"return verification()\", method=\"post\">";
-    //echo"<input type=\"hidden\" name=\"idToDelete\" value=\"";
-    //printf("%s", $row["id"]);
-    //echo "\"</label>";
-    //echo"<input type=\"submit\" value=\"Delete Entry\">";
-    //echo "</form>";
-    echo "<br>";
-   }
- }
-?>
-
+<h1>Companies</h1>
+    <ul>
+        <?php foreach ($companies as $company): ?>
+            <li>
+                <a href="<?= $_ENV['SUBDIRECTORY'] . "/companies/" . $company->getId() ?>"><?= $company->getName() ?></a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
 </div>
 
-</div>
 <?php
 include "app/views/_footer.phtml"
 ?>

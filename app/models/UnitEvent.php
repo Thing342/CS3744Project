@@ -159,6 +159,10 @@ class UnitEvent
         return urlencode($this->eventName);
     }
 
+    public function getLocationString(): string {
+        return "$this->locationName ($this->latitude, $this->longitude)";
+    }
+
     /***
      * GETTERS & SETTERS
      ***/

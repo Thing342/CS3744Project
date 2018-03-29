@@ -178,6 +178,10 @@ class Person
         return $this;
     }
 
+    public function getFullName() : string {
+        return $this->getFirstname() . " " . $this->getLastname();
+    }
+
     public function getRank(): string
     {
         return $this->rank;

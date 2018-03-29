@@ -1,42 +1,62 @@
 <?php
-$conn = new mysqli("localhost", "root", "", "fantasticfour_p4") or die('Error: '.$conn->connect_error);
+/**
+ * @var $company \app\models\Unit
+ * @var $members \app\models\Person[]
+ * @var $events  \app\models\UnitEvent[]
+ */
+$title = $company->getName();
+
+$js_init = '';
+$container_class = 'container';
+$container_id = 'container';
+include "app/views/_header.phtml"
 ?>
-
-
 <div id = "whiteTextDiv">
-<h2><?=$company->name?></h2>
+    <a href="<?= $_ENV['SUBDIRECTORY'] ?>/companies">Back to List</a>
+    <h2><?=$company->getName()?></h2>
 
-<p><b>Events</b></p>
+    <h3>Members</h3>
+    <section>
+        <table>
+            <thead>
+            <tr>
+                <td>Rank</td>
+                <td>Name</td>
+            </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($members as $person): ?>
+                    <tr>
+                        <td><?= $person->getRank() ?></td>
+                        <td><?= $person->getFullName() ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </section>
 
-<?php
-$query = "SELECT * FROM `unitevent` WHERE `unitID` LIKE '".$company->id."'";
-  if ($result = mysqli_query($conn, $query)) {
-   while ($row = $result->fetch_assoc()) {
-    printf("%s - %s (%s)", $row["eventName"], $row["type"], $row["date"]);
-    echo "<br>";
-    echo "<br>";
-   }
- }
-   else {
-    echo $query;
-   }
-?>
-
-<br>
-<p><b>People</b></p>
-
-<?php
-$query = "SELECT * FROM `person` WHERE `unitID` LIKE '".$company->id."'";
-  if ($result = mysqli_query($conn, $query)) {
-   while ($row = $result->fetch_assoc()) {
-    printf("%s, %s", $row["lastname"], $row["firstname"]);
-    echo "<br>";
-    echo "<br>";
-   }
- }
-   else {
-    echo $query;
-   }
-?>
+    <h3>Events</h3>
+    <section>
+        <table>
+            <thead><tr>
+                <td>Image</td>
+                <td>Name</td>
+                <td>Date</td>
+                <td>Description</td>
+                <td>Location (Lat, Lon)</td>
+            </tr></thead>
+            <tbody>
+                <?php foreach ($events as $event): ?>
+                    <tr>
+                        <td><!-- TODO: Load Image From AJAX --></td>
+                        <td><?= $event->getEventName() ?></td>
+                        <td><?= $event->getDate() ?></td>
+                        <td><?= $event->getDescription() ?></td>
+                        <td><?= $event->getLocationString() ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </section>
 
 </div>

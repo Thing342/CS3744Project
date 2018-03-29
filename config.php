@@ -14,7 +14,7 @@ $config = [
         'user' => 'fantasticfour',
         'pass' => 'cs3744'
     ],
-    
+
     /*
     // Settings for PHP Development Server (wes)
     "Location" => "http://localhost:9999", // The absolute URL where this site is hosted. (TODO: change for submission)
@@ -27,5 +27,4 @@ $config = [
     "Location" => "http://localhost/Project4/CS3744Project", // The absolute URL where this site is hosted.
     "Subdirectory" => "/Project4/CS3744Project", // The subdirectory within /htdocs where the site is stored.
     "Server" => "apache", // deployment method. using "builtin" turns on settings specific to the PHP built-in server
-    
     ];
