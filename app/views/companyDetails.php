@@ -22,7 +22,7 @@ include "app/views/_header.phtml"
         <input type="submit" value="Edit">
     </form>
     <?php else: ?>
-    <p>Log in to edit this page.</p>
+    <p><i>Log in to edit this page.</i></p>
     <?php endif; ?>
 
     <h3>Members</h3>
@@ -30,8 +30,8 @@ include "app/views/_header.phtml"
         <table>
             <thead>
             <tr>
-                <td>Rank</td>
-                <td>Name</td>
+                <td><b>Rank</b></td>
+                <td><b>Name</b></td>
             </tr>
             </thead>
             <tbody>
@@ -49,11 +49,11 @@ include "app/views/_header.phtml"
     <section>
         <table>
             <thead><tr>
-                <td>Image</td>
-                <td>Name</td>
-                <td>Date</td>
-                <td>Description</td>
-                <td>Location (Lat, Lon)</td>
+                <td><b>Image</b></td>
+                <td><b>Name</b></td>
+                <td><b>Date</b></td>
+                <td><b>Description</b></td>
+                <td><b>Location (Lat, Lon)</b></td>
             </tr></thead>
             <tbody>
                 <?php foreach ($events as $event): ?>

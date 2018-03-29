@@ -34,7 +34,7 @@
 </div>
 
 <ul class="navbar">
-    <li><a id = "selected" href="<?= $_ENV['SUBDIRECTORY'] ?>/">Home</a></li>
+    <li id="firstElement"><a id = "selected" href="<?= $_ENV['SUBDIRECTORY'] ?>/">Home</a></li>
     <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/about">About</a></li>
     <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/companies">Companies</a></li>
     <li><a href="#">Person Search</a></li>
@@ -48,15 +48,17 @@
     <?php endif; ?>
 </ul>
 
+<div id = "whiteTextDiv">
 <div id="flashes">
-    <ul>
+    <i>
         <?php
         $flashes = $this->showFlashMessages();
         foreach ($flashes as $flash) {
-            echo "<li class='flash ${flash['level']}'> ${flash['msg']}</li>";
+            echo "<p class='flash ${flash['level']}'> ${flash['msg']}</pi()>";
         }
         ?>
-    </ul>
+    </i>
+</div>
 </div>
 
 <div class="<?= $container_class ?>" id="<?= $container_id ?>">

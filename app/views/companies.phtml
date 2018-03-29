@@ -17,12 +17,12 @@ include "app/views/_header.phtml"
             <input type="submit" value="Add New Company...">
         </form>
     <?php else: ?>
-        <p>Log in to add new companies.</p>
+        <p><i>Log in to add new companies.</i></p>
     <?php endif; ?>
     <ul>
         <?php foreach ($companies as $company): ?>
             <li>
-                <a href="<?= $_ENV['SUBDIRECTORY'] . "/companies/" . $company->getId() ?>"><?= $company->getName() ?></a>
+                <u><a href="<?= $_ENV['SUBDIRECTORY'] . "/companies/" . $company->getId() ?>" id = "noLeft"><?= $company->getName() ?></a></u>
             </li>
         <?php endforeach; ?>
     </ul>
