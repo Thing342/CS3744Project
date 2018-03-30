@@ -66,12 +66,6 @@ ul.navbar li {
   text-align: center;
 }
 
-/*Styling of second to last and last element on the list*/
-li:nth-child(n+5) {
-  float:right; 
-  margin-right: 10px;
-}
-
 /*Styling of links on the list*/
 li a:link, li a:visited {
    color: white;

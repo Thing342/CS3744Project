@@ -39,7 +39,7 @@ class Person
      * @param array $params - Prepared paramters to privde to the sql statement, if it needs parameters
      * @return array|null - null if the query failed
      */
-    public static function fetchAll(PDO $db, string $sql = "SELECT * FROM Person ORDER BY lastname, firstname", array $params=[]): ?array {
+    public static function fetchAll(PDO $db, string $sql = "SELECT * FROM Person ORDER BY rank, lastname, firstname", array $params=[]): ?array {
         $stmt = $db->prepare($sql);
         $res = $stmt->execute($params);
 
@@ -53,16 +53,16 @@ class Person
     }
 
     public static function fetchAllInUnit(PDO $db, int $unitID): ?array {
-        return self::fetchAll($db, 'SELECT * FROM Person WHERE unitID = ? ORDER BY lastname, firstname', [$unitID]);
+        return self::fetchAll($db, 'SELECT * FROM Person WHERE unitID = ? ORDER BY rank, lastname, firstname', [$unitID]);
     }
     public static function fetchAllWithRank(PDO $db, string $rank): ?array {
-        return self::fetchAll($db, 'SELECT * FROM Person WHERE rank = ? ORDER BY lastname, firstname', [$rank]);
+        return self::fetchAll($db, 'SELECT * FROM Person WHERE rank = ? ORDER BY rank, lastname, firstname', [$rank]);
     }
     public static function fetchAllWithRankInUnit(PDO $db, string $rank, int $unitID): ?array {
-        return self::fetchAll($db, 'SELECT * FROM Person WHERE rank = ? AND unitID = ? ORDER BY lastname, firstname', [$rank, $unitID]);
+        return self::fetchAll($db, 'SELECT * FROM Person WHERE rank = ? AND unitID = ? ORDER BY rank, lastname, firstname', [$rank, $unitID]);
     }
     public static function fetchAllWithLastname(PDO $db, string $lastname): ?array {
-        return self::fetchAll($db, 'SELECT * FROM Person WHERE lastname = ? ORDER BY lastname, firstname', [$lastname]);
+        return self::fetchAll($db, 'SELECT * FROM Person WHERE lastname = ? ORDER BY rank, lastname, firstname', [$lastname]);
     }
 
     /**
