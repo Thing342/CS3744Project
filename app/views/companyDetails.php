@@ -8,7 +8,7 @@
  */
 $title = $company->getName();
 
-$js_init = 'init_ajax('.$company->getId().')';
+$js_init = 'init_ajax('.$company->getId().', false)';
 $container_class = 'container';
 $container_id = 'container';
 include "app/views/_header.phtml"
