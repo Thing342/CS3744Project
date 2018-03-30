@@ -143,6 +143,19 @@ class Person
         return $this->getFirstname() . " " . $this->getLastname();
     }
 
+    /**
+     * @return array - json-encodeable array containing the data in this class.
+     */
+    public function serialize() : array {
+        return [
+            "id" => $this->id,
+            "unitID" => $this->unitID,
+            "rank" => $this->rank,
+            "firstname" => $this->firstname,
+            "lastname" => $this->lastname
+        ];
+    }
+
     /***
      * GETTERS & SETTERS
      ***/
