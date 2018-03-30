@@ -141,6 +141,7 @@ class UnitEvent
         return [
             "id" => $this->id,
             "unitID" => $this->unitID,
+            "eventName" => $this->eventName,
             "type" => $this->type,
             "date" => $this->date,
             "description" => $this->description,
