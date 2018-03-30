@@ -1,9 +1,8 @@
 <?php
 /**
- * @var $company \app\models\Unit
- * @var $members \app\models\Person[]
- * @var $events  \app\models\UnitEvent[]
+ * The company details page.
  *
+ * @var $company \app\models\Unit
  * @var $this \app\controllers\CompanyController
  */
 $title = $company->getName();
@@ -16,6 +15,7 @@ include "app/views/_header.phtml"
 <div id = "whiteTextDiv">
     <a href="<?= $_ENV['SUBDIRECTORY'] ?>/companies">Back to List</a>
 
+    <!-- Display "Edit" and "Delete" buttons if logged in -->
     <h2><?=$company->getName()?></h2>
     <?php if ($this->is_logged_in()): ?>
     <form action="<?= $this->url('/companies/'. $company->getId() .'/edit') ?>">

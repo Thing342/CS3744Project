@@ -16,6 +16,17 @@ use app\models\UnitEvent;
 
 use lib\Controller;
 
+/**
+ * Class CompanyController
+ * @package app\controllers
+ *
+ * Endpoint for company, event, and person operations.
+ * Prefix: '/companies'
+ * Responsibilities:
+ *  - Managing companies (add, edit, delete)
+ *  - Managing company personnel (add, delete)
+ *  - Managing company events (add, delete)
+ */
 class CompanyController extends BaseController
 {
     /**
@@ -26,16 +37,14 @@ class CompanyController extends BaseController
         return new CompanyController();
     }
 
+    /**
+     * Routing table
+     */
     public function routes(): array
     {
         return [
             self::route("POST", "/add", 'companyAdd'),
-/*
-            self::route("POST", "/:companyID/personAdd/", 'companyAddPerson'),
-            self::route("POST", "/:companyID/personDelete/:personID", 'companyDeletePerson'),
-            self::route("POST", "/:companyID/eventAdd/", 'companyAddEvent'),
-            self::route("POST", "/:companyID/eventDelete/:eventID", 'companyDeleteEvent'),
-*/
+
             self::route("POST", "/:companyID/eventAdd", 'companyAddEventJSON'),
             self::route("POST", "/:companyID/personAdd", 'companyAddPersonJSON'),
             self::route("POST", "/:companyID/eventDelete/:eventID", 'companyDeleteEventJSON'),
@@ -53,38 +62,17 @@ class CompanyController extends BaseController
     }
 
     /**
-     * Full path: '/companies/:companyID'
+     * Full path: '/companies/:companyID/changeName'
+     *
+     * Changes the name of the company to the value stored in $_POST['name']
+     * Returns 200 and redirects to edit page if successful.
      */
-    public function companyPage($params)
-    {
-        $id = $params['companyID'];
-        if ($id == null) {
-            $this->error404($params[0]);
-        }
-
-        $db = $this->getDBConn();
-
-        $company = Unit::fetch($db, $id);
-        if ($company == null) {
-            $this->error404($params[0]);
-        }
-
-        $members = Person::fetchAllInUnit($db, $id);
-        if ($members == null) {
-            $members = [];
-        }
-
-        $events = UnitEvent::fetchAllInUnit($db, $id);
-        if ($events == null) {
-            $events = [];
-        }
-
-        require "app/views/companyDetails.php";
-    }
-
     public function companyChangeName($params)
     {
+        // Throw 401 if not logged in
         $token = $this->require_authentication();
+
+        // Validate url params
         $id = $params['companyID'];
         if ($id == null) {
             $this->error404($params[0]);
@@ -92,29 +80,41 @@ class CompanyController extends BaseController
 
         $db = $this->getDBConn();
 
+        // Fetch company model
         $company = Unit::fetch($db, $id);
         if ($company == null) {
             $this->error404($params[0]);
         }
 
+        // Set new name and save
         $company->setName($_POST['name']);
         $company->commit($db);
 
+        // Redirect
         $this->addFlashMessage("Changed company name to ${_POST['name']}!", self::FLASH_LEVEL_SUCCESS);
         $this->redirect("/companies/" . $company->getId() . "/edit");
     }
 
+    /**
+     * Full path: '/companies/:companyID/delete'
+     *
+     * Deletes company and all associated events and people.
+     * Returns 200 and redirects to /companies if successful.
+     */
     public function companyDelete($params)
     {
+        // Throw 401 if not logged in
         $token = $this->require_authentication();
+
+        // Throw 401 if not logged in
         $id = $params['companyID'];
         if ($id == null) {
             $this->error404($params[0]);
         }
 
+        // Delete company model from DB
         $db = $this->getDBConn();
-
-        $res = Unit::delete($db, $id);
+        $res = Unit::delete($db, $id); // true if successful
 
         if ($res) {
             $this->addFlashMessage("Deleted company!", self::FLASH_LEVEL_SUCCESS);
@@ -125,17 +125,26 @@ class CompanyController extends BaseController
         }
     }
 
+    /**
+     * Full path: '/companies/add'
+     *
+     * Creates a new, blank company object.
+     * Returns 200 and redirects to the new company's edit page if successful.
+     */
     public function companyAdd($params)
     {
+        // Throw 401 if not logged in
         $token = $this->require_authentication();
 
         $db = $this->getDBConn();
 
+        // Create new company and save
         $company = new Unit();
         $company->setName("New Company");
 
-        $res = $company->commit($db);
+        $res = $company->commit($db); // true if successful
 
+        // Redirect to new page on success
         if ($res) {
             $this->addFlashMessage("Added new company!", self::FLASH_LEVEL_SUCCESS);
             $this->redirect("/companies/" . $company->getId() . "/edit");
@@ -145,121 +154,27 @@ class CompanyController extends BaseController
         }
     }
 
-    public function companyAddPerson($params)
-    {
-        $token = $this->require_authentication();
-        $id = $params['companyID'];
-        if ($id == null) {
-            $this->error404($params[0]);
-        }
-
-        $db = $this->getDBConn();
-
-        $person = new Person();
-        $person->setFirstname($_POST['firstname'])
-            ->setLastname($_POST['lastname'])
-            ->setRank($_POST['rank'])
-            ->setUnitID($id);
-
-        $res = $person->commit($db);
-
-        if ($res) {
-            $this->addFlashMessage("Added " . $person->getFullName(), self::FLASH_LEVEL_SUCCESS);
-        } else {
-            $this->addFlashMessage("Unknown error when adding person.", self::FLASH_LEVEL_SERVER_ERR);
-        }
-
-        $this->redirect("/companies/" . $id . "/edit");
-    }
-
-    public function companyDeletePerson($params)
-    {
-        $token = $this->require_authentication();
-        $id = $params['companyID'];
-        $personid = $params['personID'];
-
-        if ($id == null || $personid == null) {
-            $this->error404($params[0]);
-        }
-
-        $db = $this->getDBConn();
-        $res = Person::delete($db, $personid);
-
-        if ($res) {
-            $this->addFlashMessage("Deleted person.", self::FLASH_LEVEL_SUCCESS);
-        } else {
-            $this->addFlashMessage("Unknown error when deleting person.", self::FLASH_LEVEL_SERVER_ERR);
-        }
-
-        $this->redirect("/companies/" . $id . "/edit");
-    }
-
-    public function companyAddEvent($params)
-    {
-        $token = $this->require_authentication();
-
-        $id = $params['companyID'];
-        if ($id == null) {
-            $this->error404($params[0]);
-        }
-
-        $db = $this->getDBConn();
-
-        $event = new UnitEvent();
-        $event->setUnitID($id)
-            ->setEvent($_POST['eventName'])
-            ->setType($_POST['type'])
-            ->setDate($_POST['date'])
-            ->setDescription($_POST['description'])
-            ->setLocationName($_POST['locationName'])
-            ->setLatitude($_POST['latitude'])
-            ->setLongitude($_POST['longitude']);
-
-        $res = $event->commit($db);
-
-        if ($res) {
-            $this->addFlashMessage("Added new event!", self::FLASH_LEVEL_SUCCESS);
-        } else {
-            $this->addFlashMessage("Unknown error when adding event.", self::FLASH_LEVEL_SERVER_ERR);
-        }
-
-        $this->redirect("/companies/" . $id . "/edit");
-    }
-
-    public function companyDeleteEvent($params)
-    {
-        $token = $this->require_authentication();
-
-        $id = $params['companyID'];
-        $eventid = $params['eventID'];
-
-        if ($id == null || $eventid == null) {
-            $this->error404($params[0]);
-        }
-
-        $db = $this->getDBConn();
-        $res = UnitEvent::delete($db, $eventid);
-
-        if ($res) {
-            $this->addFlashMessage("Deleted event.", self::FLASH_LEVEL_SUCCESS);
-        } else {
-            $this->addFlashMessage("Unknown error when deleting event.", self::FLASH_LEVEL_SERVER_ERR);
-        }
-
-        $this->redirect("/companies/" . $id . "/edit");
-    }
-
+    /**
+     * Full path: '/companies/:companyID/eventAdd'
+     *
+     * Used for AJAX requests.
+     * Adds a new event based on the JSON sent in the request.
+     * Responds with object containing success value of operation, plus either the error or newly-created object.
+     */
     public function companyAddEventJSON($params)
     {
+        // Throw 401 if not logged in
         $token = $this->require_authentication();
 
         header("Content-type:application/json");
 
+        // Validate URL params
         $id = $params['companyID'];
         if ($id == null) {
             $this->error404($params[0]);
         }
 
+        // Read parsed request data
         $data = $this->get_post_json();
         if ($data == null) {
             http_response_code(400);
@@ -268,6 +183,7 @@ class CompanyController extends BaseController
 
         $db = $this->getDBConn();
 
+        // Fill event fields and save
         $event = new UnitEvent();
         $event->setUnitID($id)
             ->setEvent($data['eventName'])
@@ -277,13 +193,12 @@ class CompanyController extends BaseController
             ->setLocationName($data['locationName'])
             ->setLatitude($data['latitude'])
             ->setLongitude($data['longitude']);
+        $res = $event->commit($db); // true if successful
 
-        $res = $event->commit($db);
-
-        if ($res) {
+        if ($res) { // encode results object and send
             $json = [
                 "result" => "success",
-                "value" => $event->serialize()
+                "value" => $event->serialize() // convert model into JSONizeable array
             ];
             echo json_encode($json);
         } else {
@@ -295,17 +210,27 @@ class CompanyController extends BaseController
         }
     }
 
+    /**
+     * Full path: '/companies/:companyID/eventAdd'
+     *
+     * Used for AJAX requests.
+     * Adds a new person based on the JSON sent in the request.
+     * Responds with object containing success value of operation, plus either the error or newly-created object.
+     */
     public function companyAddPersonJSON($params)
     {
+        // Throw 401 if not logged in
         $token = $this->require_authentication();
 
         header("Content-type:application/json");
 
+        // Validate URL params
         $id = $params['companyID'];
         if ($id == null) {
             $this->error404($params[0]);
         }
 
+        // Read parsed request data
         $data = $this->get_post_json();
         if ($data == null) {
             http_response_code(400);
@@ -314,15 +239,17 @@ class CompanyController extends BaseController
 
         $db = $this->getDBConn();
 
+        // Create and fill fields of model
         $person = new Person();
         $person->setFirstname($data['firstname'])
             ->setLastname($data['lastname'])
             ->setRank($data['rank'])
             ->setUnitID($id);
 
-        $res = $person->commit($db);
+        // Save model
+        $res = $person->commit($db); // true if save is successful
 
-        if ($res) {
+        if ($res) { // encode results object and send
             $json = [
                 "result" => "success",
                 "value" => $person->serialize()
@@ -337,26 +264,36 @@ class CompanyController extends BaseController
         }
     }
 
+    /**
+     * Full path: '/companies/:companyID/personDelete/:personID'
+     *
+     * Used for AJAX requests.
+     * Deletes the the person with given company and person ID.
+     * Responds with object containing success value of operation, plus either the error if unsuccessful.
+     */
     public function companyDeletePersonJSON($params)
     {
+        // Throw 401 if not authenticated
         $token = $this->require_authentication();
 
         header("Content-type:application/json");
 
+        // validate url params
         $id = $params['companyID'];
         $personid = $params['personID'];
-
         if ($id == null || $personid == null) {
             $this->error404($params[0]);
         }
 
+        // delete person from DB
         $db = $this->getDBConn();
         $res = Person::delete($db, $personid);
 
+        // encode response data
         if ($res) {
             $json = [
                 "result" => "success",
-                "value" => ""
+                "value" => "" // empty field for data consistency
             ];
             echo json_encode($json);
         } else {
@@ -368,26 +305,36 @@ class CompanyController extends BaseController
         }
     }
 
+    /**
+     * Full path: '/companies/:companyID/eventDelete/:eventID'
+     *
+     * Used for AJAX requests.
+     * Deletes the the event with given company and event ID.
+     * Responds with object containing success value of operation, plus either the error if unsuccessful.
+     */
     public function companyDeleteEventJSON($params)
     {
+        // Throw 401 if not authenticated
         $token = $this->require_authentication();
 
         header("Content-type:application/json");
 
+        // validate url params
         $id = $params['companyID'];
         $eventid = $params['eventID'];
-
         if ($id == null || $eventid == null) {
             $this->error404($params[0]);
         }
 
+        // delete event from DB
         $db = $this->getDBConn();
         $res = UnitEvent::delete($db, $eventid);
 
+        // encode response data
         if ($res) {
             $json = [
                 "result" => "success",
-                "value" => ""
+                "value" => "" // empty field for data consistency
             ];
             echo json_encode($json);
         } else {
@@ -399,10 +346,18 @@ class CompanyController extends BaseController
         }
     }
 
+    /**
+     * Full path: '/companies/:companyID/events'
+     *
+     * Used for AJAX requests.
+     * Fetches the list of events for this company.
+     * Responds with a JSON-encoded list of the events for this company.
+     */
     public function companyEventsJSON($params)
     {
         header("Content-type:application/json");
 
+        // Validate url params
         $id = $params['companyID'];
         if ($id == null) {
             $this->error404($params[0]);
@@ -410,23 +365,34 @@ class CompanyController extends BaseController
 
         $db = $this->getDBConn();
 
+        // Fetch all models under this Company from the DB
         $events = UnitEvent::fetchAllInUnit($db, $id);
         if ($events == null) {
             $this->error404($params[0]);
         }
 
+        // Convert the model objects into JSON-izable arrays and stuff them into a list
         $serialized = [];
         foreach ($events as $event) {
             array_push($serialized, $event->serialize());
         }
 
+        // send out encoded JSON
         echo json_encode($serialized);
     }
 
+    /**
+     * Full path: '/companies/:companyID/people'
+     *
+     * Used for AJAX requests.
+     * Fetches the list of people for this company.
+     * Responds with a JSON-encoded list of the people in this company.
+     */
     public function companyPeopleJSON($params)
     {
         header("Content-type:application/json");
 
+        // Validate url params
         $id = $params['companyID'];
         if ($id == null) {
             $this->error404($params[0]);
@@ -434,26 +400,30 @@ class CompanyController extends BaseController
 
         $db = $this->getDBConn();
 
+        // Fetch all models under this Company from the DB
         $people = Person::fetchAllInUnit($db, $id);
         if ($people == null) {
             $this->error404($params[0]);
         }
 
+        // Convert the model objects into JSON-izable arrays and stuff them into a list
         $serialized = [];
         foreach ($people as $person) {
             array_push($serialized, $person->serialize());
         }
 
+        // send out encoded JSON
         echo json_encode($serialized);
     }
 
     /**
-     * Full path: '/companies/:companyID/edit'
+     * Full path: '/companies/:companyID'
+     *
+     * Fetches the company page.
      */
-    public function companyEditPage($params)
+    public function companyPage($params)
     {
-        $token = $this->require_authentication();
-
+        // Validate url params
         $id = $params['companyID'];
         if ($id == null) {
             $this->error404($params[0]);
@@ -461,36 +431,61 @@ class CompanyController extends BaseController
 
         $db = $this->getDBConn();
 
+        // Fetch company
         $company = Unit::fetch($db, $id);
         if ($company == null) {
             $this->error404($params[0]);
         }
 
-        $members = Person::fetchAllInUnit($db, $id);
-        if ($members == null) {
-            $members = [];
+        // Display page, passing in company object.
+        require "app/views/companyDetails.php";
+    }
+
+    /**
+     * Full path: '/companies/:companyID/edit'
+     *
+     * Fetches the editable page for a company.
+     */
+    public function companyEditPage($params)
+    {
+        $token = $this->require_authentication();
+
+        // Validate url params
+        $id = $params['companyID'];
+        if ($id == null) {
+            $this->error404($params[0]);
         }
 
-        $events = UnitEvent::fetchAllInUnit($db, $id);
-        if ($events == null) {
-            $events = [];
+        $db = $this->getDBConn();
+
+        // Fetch company
+        $company = Unit::fetch($db, $id);
+        if ($company == null) {
+            $this->error404($params[0]);
         }
 
+        // Display page, passing in company object.
         require "app/views/companyEdit.php";
     }
 
     /**
      * Full path: '/companies'
+     *
+     * Displays the full list of companies on the site
      */
     public function companies($params)
     {
         $db = $this->getDBConn();
+
+        // Fetch the company list
         $companies = Unit::fetchAll($db);
+
         if ($companies == null) {
             $this->addFlashMessage("Unable to fetch companies: Unknown Error", self::FLASH_LEVEL_SERVER_ERR);
             $this->redirect('/');
         }
 
+        // Display the page, passing in $companies as a variable
         require "app/views/companies.phtml";
     }
 

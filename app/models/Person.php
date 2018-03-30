@@ -52,6 +52,7 @@ class Person
         return $rows;
     }
 
+    // All wrappers for above function, just with different filtering settings
     public static function fetchAllInUnit(PDO $db, int $unitID): ?array {
         return self::fetchAll($db, 'SELECT * FROM Person WHERE unitID = ? ORDER BY rank, lastname, firstname', [$unitID]);
     }
@@ -139,6 +140,10 @@ class Person
         return $res;
     }
 
+    /**
+     * Convenience method to get the full name of a Person
+     * @return string
+     */
     public function getName() : string {
         return $this->getFirstname() . " " . $this->getLastname();
     }

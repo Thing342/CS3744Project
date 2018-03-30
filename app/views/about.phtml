@@ -1,4 +1,8 @@
 <?php
+/**
+ * The "about" page.
+ */
+
 $title = 'About';
 
 $js_init = '';
@@ -7,20 +11,25 @@ $container_id = 'container';
 include "app/views/_header.phtml"
 ?>
 
-<script src = "<?= $_ENV['SUBDIRECTORY'] ?>/public/js/scripts.js"></script>
+<script src="<?= $_ENV['SUBDIRECTORY'] ?>/public/js/scripts.js"></script>
 
 <body onload="getLocationImages();">
 <h2>About Division</h2>
-<img src="public/img/786th.jpg" alt="Picture of Division" style="max-width: 100%" />
-<div id = "whiteTextDiv">
-<i>Picture Source: http://hollowaypages.com/786th.htm</i>
-<p>The 786th Tank Battalion was formed on September 20, 1943. On November 28 of the same year, the battalion sailed off to Europe to help defeat the Axis Powers. The battalion was attached to the 99th Infantry Division. The battalion was disbanded on June 13, 1945 upon the ending of the war. One major contribution the battalion made towards the Allied Powers in World War II was their testing of the gyrostabilizer. The gyrostabilizer was used in tanks and helped keep guns stable while the tank was moving. </p>
-<a href="https://en.wikipedia.org/wiki/New_York_Harbor"><img id="image1" src="" alt=""/></a>
-<a href="https://en.wikipedia.org/wiki/Greenock"><img id="image2" src="" alt=""/></a>
-<a href="https://en.wikipedia.org/wiki/Macclesfield"><img id="image3" src="" alt=""/></a>
-<a href="https://en.wikipedia.org/wiki/Le_Havre"><img id="image4" src="" alt=""/></a>
-<a href="https://en.wikipedia.org/wiki/Theux"><img id="image5" src="" alt=""/></a>
+<img src="public/img/786th.jpg" alt="Picture of Division" style="max-width: 100%"/>
+<div id="whiteTextDiv">
+    <i>Picture Source: http://hollowaypages.com/786th.htm</i>
+    <p>The 786th Tank Battalion was formed on September 20, 1943. On November 28 of the same year, the battalion sailed
+        off to Europe to help defeat the Axis Powers. The battalion was attached to the 99th Infantry Division. The
+        battalion was disbanded on June 13, 1945 upon the ending of the war. One major contribution the battalion made
+        towards the Allied Powers in World War II was their testing of the gyrostabilizer. The gyrostabilizer was used
+        in tanks and helped keep guns stable while the tank was moving. </p>
+    <a href="https://en.wikipedia.org/wiki/New_York_Harbor"><img id="image1" src="" alt=""/></a>
+    <a href="https://en.wikipedia.org/wiki/Greenock"><img id="image2" src="" alt=""/></a>
+    <a href="https://en.wikipedia.org/wiki/Macclesfield"><img id="image3" src="" alt=""/></a>
+    <a href="https://en.wikipedia.org/wiki/Le_Havre"><img id="image4" src="" alt=""/></a>
+    <a href="https://en.wikipedia.org/wiki/Theux"><img id="image5" src="" alt=""/></a>
 </div>
+
 <?php
 include "app/views/_footer.phtml"
 ?>

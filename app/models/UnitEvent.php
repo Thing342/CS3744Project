@@ -11,6 +11,12 @@ namespace app\models;
 
 use PDO;
 
+/**
+ * Class UnitEvent
+ * @package app\models
+ *
+ * Represents a single event belonging to a Unit.
+ */
 class UnitEvent
 {
     private $id = -1;
@@ -25,6 +31,9 @@ class UnitEvent
 
     private $changed = false;
 
+    /**
+     * Builds a UnitEvent object from the parameters. (Used by the DB querying code)
+     */
     public static function build(int $id, int $unitID, string $eventName, string $type, string $date, string $description, string $locationName, float $latitude, float $longitude) : UnitEvent {
         $event = new UnitEvent();
         $event->id = $id;
@@ -39,7 +48,18 @@ class UnitEvent
         return $event;
     }
 
+    /**
+     * Fetches all the events owned by a Unit.
+     * @param PDO $db - DB connection
+     * @param int $unitID - Unit to search through
+     *
+     * @param string $sql - optional field to use differing SQL query
+     * @param array $params - array or map to use as prepared stament values for this query
+     *
+     * @return array|null - An array of events, or null if there's an error.
+     */
     public static function fetchAllInUnit(PDO $db, int $unitID, string $sql = "", array $params=[]) : ?array {
+        // Use default statement if `$sql` is not set
         if ($sql == "") {
             $sql = "SELECT * FROM UnitEvent WHERE unitID = :uid";
         }
@@ -58,12 +78,22 @@ class UnitEvent
         return $rows;
     }
 
+    /**
+     * Wrapper for fetchAllInUnit, filters by event type.
+     * @param string $type - type of event to filter for
+     */
     public static function fetchAllInUnitByType(PDO $db, int $unitID, string $type) : ?array {
         $query = 'SELECT * FROM UnitEvent WHERE unitID = :uid AND type = :type';
         $params = ['type' => $type];
         return self::fetchAllInUnit($db, $unitID, $query, $params);
     }
 
+    /**
+     * Fetches a single event by ID
+     * @param PDO $db - DB Connection
+     * @param int $eventid - ID to query for
+     * @return UnitEvent|null - A new UnitEvent, or null if no such event exists
+     */
     public static function fetch(PDO $db, int $eventid) : ?UnitEvent {
         $sql = 'SELECT * FROM UnitEvent WHERE id = ? LIMIT 1';
         $stmt = $db->prepare($sql);
@@ -74,8 +104,9 @@ class UnitEvent
             return null;
         }
 
-        $rows = $stmt->fetchAll(PDO::FETCH_FUNC, 'app\models\UnitEvent::build');
-        if (sizeof($rows) < 1) {
+        $rows = $stmt->fetchAll(PDO::FETCH_FUNC, 'app\models\UnitEvent::build'); // calls build() with the columns as parameters and stores results in array
+
+        if (sizeof($rows) < 1) { // No such event exists
             error_log("No event matching id: " . $eventid);
             return null;
         } else {
@@ -160,6 +191,10 @@ class UnitEvent
         return urlencode($this->eventName);
     }
 
+    /**
+     * Returns a pretty string containing this event's location info
+     * @return string
+     */
     public function getLocationString(): string {
         return "$this->locationName ($this->latitude, $this->longitude)";
     }

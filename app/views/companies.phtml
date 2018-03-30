@@ -1,5 +1,7 @@
 <?php
 /**
+ * The companies list.
+ *
  * @var $companies \app\models\Unit[]
  */
 $title = 'Companies';
@@ -10,9 +12,10 @@ $container_id = 'container';
 include "app/views/_header.phtml"
 ?>
 
-<div id = "whiteTextDiv">
-<h2>Companies</h2>
+<div id="whiteTextDiv">
+    <h2>Companies</h2>
     <?php if ($this->is_logged_in()): ?>
+        <!-- Display 'add' button if logged in: -->
         <form action="<?= $this->url('/companies/add') ?>" method="post">
             <input type="submit" value="Add New Company...">
         </form>
@@ -20,9 +23,11 @@ include "app/views/_header.phtml"
         <p><i>Log in to add new companies.</i></p>
     <?php endif; ?>
     <ul>
+        <!-- Display companies in list form: -->
         <?php foreach ($companies as $company): ?>
             <li>
-                <u><a href="<?= $_ENV['SUBDIRECTORY'] . "/companies/" . $company->getId() ?>" id = "noLeft"><?= $company->getName() ?></a></u>
+                <u><a href="<?= $_ENV['SUBDIRECTORY'] . "/companies/" . $company->getId() ?>"
+                      id="noLeft"><?= $company->getName() ?></a></u>
             </li>
         <?php endforeach; ?>
     </ul>

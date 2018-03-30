@@ -51,6 +51,8 @@ class SiteController extends BaseController
 
     /**
      * Full path: '/about'
+     *
+     * Displays the about page
      */
     public function about($params) {
         require "app/views/about.phtml";
@@ -59,6 +61,8 @@ class SiteController extends BaseController
 
     /**
      * Full path: '/' (site root)
+     *
+     * Displays the site homepage.
      */
     public function index($params) {
         require "app/views/index.phtml";

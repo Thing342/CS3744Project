@@ -10,6 +10,12 @@ namespace app\models;
 
 use PDO;
 
+/**
+ * Class Unit
+ * @package app\models
+ *
+ * Model class for a company within the battalion.
+ */
 class Unit
 {
     private $id = -1;
