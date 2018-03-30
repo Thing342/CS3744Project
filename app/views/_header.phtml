@@ -20,7 +20,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title><?= $title ?> | In Their Own Words </title>
+    <title>In Their Own Words </title>
     <link rel="stylesheet" href="<?= $_ENV['SUBDIRECTORY'] ?>/public/css/Style.css"/>
 
     <!-- JQuery -->
@@ -37,7 +37,7 @@
     <li id="firstElement"><a id = "selected" href="<?= $_ENV['SUBDIRECTORY'] ?>/">Home</a></li>
     <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/about">About</a></li>
     <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/companies">Companies</a></li>
-    <li><a href="#">Person Search</a></li>
+    <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/search"">Person Search</a></li>
     <!--li><button id = "logoutButtonContentSame" class="logoutButtonContentSame" onclick="">Logout</button></li-->
     <?php if($this->getLoggedInUser() != null): ?>
         <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/users"><?= $this->getLoggedInUser()->getUsername() ?></a></li>

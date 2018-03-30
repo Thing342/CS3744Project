@@ -243,6 +243,13 @@ div#welcomeTitle {
   cursor: pointer;
 }
 
+/* Add a background color and some padding around the form */
+.containerForForm {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+
 
 /*Makes button appear as normal text*/
 /*https://stackoverflow.com/questions/1367409/how-to-make-button-look-like-a-link*/
