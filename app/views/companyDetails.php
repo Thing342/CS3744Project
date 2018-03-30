@@ -8,7 +8,7 @@
  */
 $title = $company->getName();
 
-$js_init = '';
+$js_init = 'init_ajax('.$company->getId().')';
 $container_class = 'container';
 $container_id = 'container';
 include "app/views/_header.phtml"
@@ -34,13 +34,10 @@ include "app/views/_header.phtml"
                 <td><b>Name</b></td>
             </tr>
             </thead>
-            <tbody>
-                <?php foreach ($members as $person): ?>
-                    <tr>
-                        <td><?= $person->getRank() ?></td>
-                        <td><?= $person->getFullName() ?></td>
-                    </tr>
-                <?php endforeach; ?>
+            <tbody id="members-tbody">
+                <!--
+                    AJAX
+                -->
             </tbody>
         </table>
     </section>
@@ -55,18 +52,17 @@ include "app/views/_header.phtml"
                 <td><b>Description</b></td>
                 <td><b>Location (Lat, Lon)</b></td>
             </tr></thead>
-            <tbody>
-                <?php foreach ($events as $event): ?>
-                    <tr>
-                        <td><!-- TODO: Load Image From AJAX --></td>
-                        <td><?= $event->getEventName() ?></td>
-                        <td><?= $event->getDate() ?></td>
-                        <td><?= $event->getDescription() ?></td>
-                        <td><?= $event->getLocationString() ?></td>
-                    </tr>
-                <?php endforeach; ?>
+            <tbody id="events-tbody">
+                <!--
+                    AJAX
+                -->
             </tbody>
         </table>
     </section>
 
 </div>
+
+<script src="/public/js/company_ajax.js" type="application/javascript"></script>
+<?php
+include "app/views/_footer.phtml"
+?>
