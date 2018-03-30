@@ -62,7 +62,7 @@ include "app/views/_header.phtml"
 
 </div>
 
-<script src="/public/js/company_ajax.js" type="application/javascript"></script>
+<script src="<?= $this->url('/public/js/company_ajax.js" type="application/javascript') ?>"></script>
 <?php
 include "app/views/_footer.phtml"
 ?>
