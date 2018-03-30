@@ -1,0 +1,60 @@
+<?php
+/**
+ * The search page.
+ *
+ * @var $isResults bool
+ * @var $results mixed
+ * @var $this \app\controllers\BaseController
+ */
+
+$title = 'Search';
+
+$js_init = '';
+$container_class = 'container';
+$container_id = 'container';
+include "app/views/_header.phtml"
+?>
+
+<h2>People Search</h2>
+<div class="containerForForm">
+    <form action='<?= $this->url("/search") ?>'>
+        <label for="fname">First Name</label>
+        <input type="text" id="fname" name="firstname" placeholder="First Name">
+        <label for="lname">Last Name</label>
+        <input type="text" id="lname" name="lastname" placeholder="Last Name">
+        <input type="submit" value="Submit" id="submitFancy">
+    </form>
+</div>
+
+<div id="whiteTextDiv" style="margin: 10px">
+<?php if ($isResults): ?>
+    <table>
+        <thead>
+        <tr>
+            <td>Name</td>
+            <td>Company</td>
+        </tr>
+        </thead>
+        <tbody>
+        <?php if (sizeof($results) == 0): ?>
+            <tr>
+                <td colspan="2">No results found.</td>
+            </tr>
+        <?php else: ?>
+            <?php foreach ($results as $result): ?>
+                <tr>
+                    <td><?= $result['person']->getName() ?></td>
+                    <td><a href="<?= $this->url('/companies/' . $result['person']->getUnitID()) ?>">
+                            <?= $result['unitName'] ?>
+                        </a></td>
+                </tr>
+            <?php endforeach; ?>
+        <?php endif; ?>
+        </tbody>
+    </table>
+<?php endif; ?>
+</div>
+
+<?php
+include "app/views/_footer.phtml"
+?>

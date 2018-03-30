@@ -67,6 +67,35 @@ class Person
     }
 
     /**
+     * Searches for people given a firstname and a lastname
+     * @param PDO $db - DB connection
+     * @param string $firstnameQuery - query string for firstname
+     * @param string $lastnameQuery - query string for lastname
+     * @return array|null - null if query is unsuccessful
+     */
+    public static function search(PDO $db, string $firstnameQuery, string $lastnameQuery): ?array {
+        $sql = "SELECT U.name as unitName, Person.rank as rank, Person.unitID as unitID, Person.firstname as firstname, Person.lastname as lastname, Person.id AS id FROM Person JOIN Unit U ON Person.unitID = U.id WHERE firstname LIKE ? AND lastname LIKE ? ORDER BY lastname, firstname";
+        $stmt = $db->prepare($sql);
+        $res = $stmt->execute(['%'.$firstnameQuery.'%', '%'.$lastnameQuery.'%']);
+
+        if ($res == false) {
+            error_log("Unable to search!: " . $stmt->errorCode());
+            return null;
+        }
+
+        $results = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $val = [
+                'person' => self::build($row['id'], $row['unitID'], $row['rank'], $row['firstname'], $row['lastname']),
+                'unitName' => $row['unitName']
+            ];
+            array_push($results, $val);
+        }
+
+        return $results;
+    }
+
+    /**
      * Fetches the model from the database
      * @param PDO $db
      * @param int $personid

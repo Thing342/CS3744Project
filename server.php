@@ -16,12 +16,14 @@ require "config.php";
 require_once "app/controllers/SiteController.php";
 require_once "app/controllers/UserController.php";
 require_once "app/controllers/CompanyController.php";
+require_once "app/controllers/SearchController.php";
 
 require_once "ServerInstance.php";
 
 // Maps a URL subsection to a controller factory method handle.
 $controllers = [
     "/companies" => "\app\controllers\CompanyController::init",
+    "/search" => "\app\controllers\SearchController::init",
     "/users" => "\app\controllers\UserController::init",
     "" => '\app\controllers\SiteController::init',
 ];
