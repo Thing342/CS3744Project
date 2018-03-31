@@ -223,12 +223,12 @@ div#welcomeTitle {
 /*Slideshow animation*/
 /*https://www.w3schools.com/howto/howto_js_slideshow.asp*/
 @-webkit-keyframes fade {
-  from {opacity: .4} 
+  from {opacity: .4}
   to {opacity: 1}
 }
 /*Slideshow animation*/
 @keyframes fade {
-  from {opacity: .4} 
+  from {opacity: .4}
   to {opacity: 1}
 }
 
@@ -237,7 +237,7 @@ div#welcomeTitle {
 #logoutButton {
   background:none!important;
   color:white;
-  border:none; 
+  border:none;
   padding:0!important;
   font: inherit;
   cursor: pointer;
@@ -256,7 +256,7 @@ div#welcomeTitle {
 #logoutButtonContentSame {
   background:none!important;
   color:white;
-  border:none; 
+  border:none;
   padding:0!important;
   font: inherit;
   cursor: pointer;
@@ -272,11 +272,11 @@ div#welcomeTitle {
   color: white;
 }
 .setting span {
-  float: left; 
+  float: left;
   width: 250px;
   font-weight: bold;
 }
-.setting span img { 
+.setting span img {
   cursor: pointer;
 }
 
@@ -357,13 +357,18 @@ img {
   margin: 29px 0 0 29px;
   position:relative;
   cursor:pointer;
-  border: none;  
+  border: none;
   background-color: chocolate;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   border-bottom-left-radius:5px;
   box-shadow: inset 0px 0px 0px #993300, 0px 5px 0px 0px #993300;
+}
+.locations {
+  width: 15%;
+display: inline-block;
+font-size: 13px;
 }
 
 th, td {
