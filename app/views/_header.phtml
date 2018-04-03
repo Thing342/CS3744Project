@@ -18,47 +18,52 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title><?= $title ?> | In Their Own Words </title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Our Stylesheet -->
     <link rel="stylesheet" href="<?= $_ENV['SUBDIRECTORY'] ?>/public/css/Style.css"/>
 
-    <!-- JQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <!-- FontAwesome -->
-    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 </head>
+
 <body onload="<?= $js_init ?>">
-<div id = "Header">
-    <h1>In Their Own Words: World War II</h1>
-</div>
+    <div id = "Header">
+        <h1>In Their Own Words: World War II</h1>
+    </div>
 
-<ul class="navbar">
-    <li id="firstElement"><a id = "selected" href="<?= $_ENV['SUBDIRECTORY'] ?>/">Home</a></li>
-    <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/about">About</a></li>
-    <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/companies">Companies</a></li>
-    <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/search"">Person Search</a></li>
-    <!--li><button id = "logoutButtonContentSame" class="logoutButtonContentSame" onclick="">Logout</button></li-->
-    <?php if($this->getLoggedInUser() != null): ?>
-        <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/users"><?= $this->getLoggedInUser()->getUsername() ?></a></li>
-        <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/users/logout">Log Out</a></li>
-    <?php else: ?>
-        <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/users/new">Create Account</a></li>
-        <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/users/login">Log In</a></li>
-    <?php endif; ?>
-</ul>
+    <ul class="navbar">
+        <li id="firstElement"><a id = "selected" href="<?= $_ENV['SUBDIRECTORY'] ?>/">Home</a></li>
+        <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/about">About</a></li>
+        <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/companies">Companies</a></li>
+        <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/search"">Person Search</a></li>
+        <!--li><button id = "logoutButtonContentSame" class="logoutButtonContentSame" onclick="">Logout</button></li-->
+        <?php if($this->getLoggedInUser() != null): ?>
+            <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/users"><?= $this->getLoggedInUser()->getUsername() ?></a></li>
+            <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/users/logout">Log Out</a></li>
+        <?php else: ?>
+            <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/users/new">Create Account</a></li>
+            <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/users/login">Log In</a></li>
+        <?php endif; ?>
+    </ul>
 
-<div id = "whiteTextDiv">
-<div id="flashes">
-    <i>
-        <?php
-        $flashes = $this->showFlashMessages();
-        foreach ($flashes as $flash) {
-            echo "<p class='flash ${flash['level']}'> ${flash['msg']}</pi()>";
-        }
-        ?>
-    </i>
-</div>
-</div>
+    <div id = "whiteTextDiv">
+    <div id="flashes">
+        <i>
+            <?php
+            $flashes = $this->showFlashMessages();
+            foreach ($flashes as $flash) {
+                echo "<p class='flash ${flash['level']}'> ${flash['msg']}</pi()>";
+            }
+            ?>
+        </i>
+    </div>
+    </div>
 
-<div class="<?= $container_class ?>" id="<?= $container_id ?>">
+    <div class="<?= $container_class ?>" id="<?= $container_id ?>">
+        <!-- Page content goes here -->
