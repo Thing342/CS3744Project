@@ -24,6 +24,8 @@ class User
     private $pword_hash; // string, a hashed representation of the password
     private $email; // string, the user's email address.
 
+    private $type;
+
     private $changed = false; // bool, true if the model is not in sync with the database
 
     /**
@@ -37,6 +39,7 @@ class User
         $user->username = $row["username"];
         $user->pword_hash = $row["pword_hash"];
         $user->email = $row["email"];
+        $user->type = (int)$row["type"];
 
         return $user;
     }
@@ -91,14 +94,14 @@ class User
     public function commit(\PDO $db): bool {
         $res = false;
         if ($this->userId == -1) { // new object
-            $stmt = $db->prepare('INSERT INTO User VALUE (0, :username, :pword_hash, :email)');
+            $stmt = $db->prepare('INSERT INTO User VALUE (0, :username, :pword_hash, :email, :type)');
             $res = $stmt->execute([
-                "username"=> $this->username, "pword_hash" => $this->pword_hash, "email" => $this->email
+                "username"=> $this->username, "pword_hash" => $this->pword_hash, "email" => $this->email, "type" => $this->type
             ]);
         } else {
-            $stmt = $db->prepare('UPDATE User SET username = :username, pword_hash = :pword_hash, email = :email WHERE userId = :userId');
+            $stmt = $db->prepare('UPDATE User SET username = :username, pword_hash = :pword_hash, email = :email, type = :type WHERE userId = :userId');
             $res = $stmt->execute([
-                "username"=> $this->username, "pword_hash" => $this->pword_hash, "email" => $this->email
+                "username"=> $this->username, "pword_hash" => $this->pword_hash, "email" => $this->email, "type" => $this->type
             ]);
         }
 
@@ -193,6 +196,25 @@ class User
     public function setEmail(string $email): User
     {
         $this->email = $email;
+        $this->changed = true;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): int
+    {
+        return $this->username;
+    }
+
+    /**
+     * @param string $username
+     * @return User
+     */
+    public function setType(int $type): User
+    {
+        $this->type = $type;
         $this->changed = true;
         return $this;
     }
