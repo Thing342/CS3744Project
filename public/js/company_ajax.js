@@ -59,7 +59,21 @@ function location_str(event) {
  * @returns {string} html string
  */
 function img_tag(event) {
-    return "<img id='image-event-" + event.id + "' alt='" + event.locationName + "'>"
+    return "<img id='image-event-" + event.id + "' alt='" + event.locationName + "' class='mr-3 image-thumbnail' width='200px'>"
+}
+
+function event_html(event, edit) {
+    if (!edit) return "<li class=\"media my-4\">" +
+                img_tag(event) +
+                "<div class=\"media-body\">" +
+                    "<h5 class=\"mt-0\">" + event.eventName + "</h5>" +
+                    "<p>" + event.date +"</p>" +
+                    "<p>" + event.description + "</p>" +
+                    "<p><i>" + location_str(event) +"</i></p>" +
+                "</div>" +
+            "</li>";
+    else return "<tr style='display: none'><td>" + img_tag(event) + "</td><td>" + event.eventName +  "</td><td>" + event.date + "</td><td>" + event.description +
+        "</td><td>" + location_str(event) + "</td><td><button onclick='remove_event(" + event.id + ", " + event.unitID + ")'>X</button></td></tr>"
 }
 
 //-------------------------
@@ -100,13 +114,7 @@ function getWikipediaImageAJAX(queryString, selector) {
  * @param edit - true if in edit mode
  */
 function add_event(event, edit) {
-    var html_str = "<tr style='display: none'><td>" + img_tag(event) + "</td><td>" +
-        event.eventName +  "</td><td>" + event.date + "</td><td>" + event.description + "</td><td>" + location_str(event) + "</td></tr>";
-
-    if(edit) {
-        html_str = "<tr style='display: none'><td>" + img_tag(event) + "</td><td>" + event.eventName +  "</td><td>" + event.date + "</td><td>" + event.description +
-            "</td><td>" + location_str(event) + "</td><td><button onclick='remove_event(" + event.id + ", " + event.unitID + ")'>X</button></td></tr>"
-    }
+    var html_str = event_html(event, edit);
 
     // create new DOM element
     var node = $(html_str);
@@ -131,10 +139,10 @@ function add_event(event, edit) {
  * @param edit - true if in edit mode
  */
 function add_person(person, edit) {
-    var html_str = "<tr style='display: none'><td>" + person.rank + "</td><td>" + fullname(person) + "</td></tr>";
+    var html_str = "<tr style='display: none'><td scope='col'><b>" + person.rank + "</b></td><td>" + fullname(person) + "</td></tr>";
 
     if(edit) {
-        html_str = "<tr style='display: none'><td>" + person.rank  + "</td><td>" + fullname(person) + "</td><td><button onclick='remove_person(" + person.id + ", " + person.unitID + ")'>X</button></td></tr>"
+        html_str = "<tr style='display: none'><td scope='col'>" + person.rank  + "</td><td>" + fullname(person) + "</td><td><button onclick='remove_person(" + person.id + ", " + person.unitID + ")'>X</button></td></tr>"
     }
 
     // create new DOM element

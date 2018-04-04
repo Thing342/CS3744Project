@@ -12,25 +12,29 @@ $container_id = 'container';
 include "app/views/_header.phtml"
 ?>
 
-<div id="whiteTextDiv">
-    <h2>Companies</h2>
-    <?php if ($this->is_logged_in()): ?>
-        <!-- Display 'add' button if logged in: -->
-        <form action="<?= $this->url('/companies/add') ?>" method="post">
-            <input type="submit" value="Add New Company...">
-        </form>
-    <?php else: ?>
-        <p><i>Log in to add new companies.</i></p>
-    <?php endif; ?>
-    <ul>
-        <!-- Display companies in list form: -->
-        <?php foreach ($companies as $company): ?>
-            <li>
-                <u><a href="<?= $_ENV['SUBDIRECTORY'] . "/companies/" . $company->getId() ?>"
-                      id="noLeft"><?= $company->getName() ?></a></u>
-            </li>
-        <?php endforeach; ?>
-    </ul>
+<div class="row">
+    <main id="whiteTextDiv" class="col-12">
+        <h2 class="mt-4">Companies</h2>
+        <div class="mt-4 mb-4">
+            <?php if ($this->is_logged_in()): ?>
+                <!-- Display 'add' button if logged in: -->
+                <form action="<?= $this->url('/companies/add') ?>" method="post">
+                    <input class="btn btn-primary" type="submit" value="Add New Company...">
+                </form>
+            <?php else: ?>
+                <p><i>Log in to add new companies.</i></p>
+            <?php endif; ?>
+        </div>
+        <ul class="list-group">
+            <!-- Display companies in list form: -->
+            <?php foreach ($companies as $company): ?>
+                <li class="list-group-item list-group-item-action">
+                    <a href="<?= $_ENV['SUBDIRECTORY'] . "/companies/" . $company->getId() ?>"
+                       id="noLeft"><?= $company->getName() ?></a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </main>
 </div>
 
 <?php
