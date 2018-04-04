@@ -23,25 +23,28 @@
     <title><?= $title ?> | In Their Own Words </title>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <!-- Our Stylesheet -->
-    <!--link rel="stylesheet" href="<?= $_ENV['SUBDIRECTORY'] ?>/public/css/Style.css"/-->
+    <link rel="stylesheet" href="<?= $_ENV['SUBDIRECTORY'] ?>/public/css/style-bs.css"/>
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 </head>
 
 <body onload="<?= $js_init ?>">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="<?= $_ENV['SUBDIRECTORY'] ?>/">In Their Own Words: World War II</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary justify-content-between">
+    <a class="navbar-brand" href="<?= $_ENV['SUBDIRECTORY'] ?>/">In Their Own Words: World War II</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a class="nav-link" href="<?= $_ENV['SUBDIRECTORY'] ?>/">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
@@ -50,32 +53,35 @@
                 <li class="nav-item">
                     <a class="nav-link" href="<?= $_ENV['SUBDIRECTORY'] ?>/companies">Companies</a>
                 </li>
-                <?php if($this->getLoggedInUser() != null): ?>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="<?= $_ENV['SUBDIRECTORY'] ?>/users" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <li class="nav-item dropdown">
+                    <?php if ($this->getLoggedInUser() != null): ?>
+                        <a class="nav-link dropdown-toggle" href="<?= $_ENV['SUBDIRECTORY'] ?>/users"
+                           id="navbarDropdown"
+                           role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <?= $this->getLoggedInUser()->getUsername() ?>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="<?= $_ENV['SUBDIRECTORY'] ?>/users/logout">Log Out</a>
                             <a class="dropdown-item" href="<?= $_ENV['SUBDIRECTORY'] ?>/users">User Profile</a>
                         </div>
-                    </li>
-                <?php else: ?>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="<?= $_ENV['SUBDIRECTORY'] ?>/users/login" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <?php else: ?>
+                        <a class="nav-link dropdown-toggle" href="<?= $_ENV['SUBDIRECTORY'] ?>/users/login"
+                           id="navbarDropdown"
+                           role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Log In
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="<?= $_ENV['SUBDIRECTORY'] ?>/users/login">Log In</a>
                             <a class="dropdown-item" href="<?= $_ENV['SUBDIRECTORY'] ?>/users/new">Create Account</a>
                         </div>
-                    </li>
-                <?php endif; ?>
-            </ul>
+                    <?php endif; ?>
+                </li>
+             </ul>
         </div>
-    </nav>
+    </div>
+</nav>
 
-    <div id = "whiteTextDiv">
+<div id="whiteTextDiv">
     <div id="flashes">
         <i>
             <?php
@@ -86,7 +92,7 @@
             ?>
         </i>
     </div>
-    </div>
+</div>
 
-    <div class="<?= $container_class ?>" id="<?= $container_id ?>">
-        <!-- Page content goes here -->
+<div class="<?= $container_class ?>" id="<?= $container_id ?>">
+    <!-- Page content goes here -->
