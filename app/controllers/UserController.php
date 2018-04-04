@@ -196,7 +196,7 @@ class UserController extends BaseController
      * Full path: 'GET /users/login'
      */
     public function loginForm($params) {
-        if($this->is_logged_in()) {
+        if($this->is_logged_in(true)) {
             error_log("logging out already logged-in user.");
             $this->logout([]);
         }

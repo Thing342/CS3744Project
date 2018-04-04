@@ -23,17 +23,25 @@ use lib\Controller;
 abstract class BaseController extends Controller
 {
     /**
+     * @param bool $full_check - check that the token actually exists
      * @return bool true if the user is currently logged in.
      */
-    public function is_logged_in()
+    public function is_logged_in(bool $full_check=false)
     {
         // Check to see if a token exists in the session variable.
         if (session_id() == '') return false;
         if (!isset($_SESSION)) return false;
-        if (array_key_exists('tokenid', $_SESSION)) return true;
+        if (!array_key_exists('tokenid', $_SESSION)) return false;
 
-        error_log(json_encode($_SESSION));
-        return false;
+        if(!$full_check) {
+            return true;
+        }
+
+        // Fetch it from the database to validate its existence
+        $token = Token::fetch($this->getDBConn(), $_SESSION['tokenid']);
+        if ($token == null) return false;
+
+        return true;
     }
 
     /**
@@ -58,7 +66,14 @@ abstract class BaseController extends Controller
 
         // Fetch it from the database to validate its existence
         $token = Token::fetch($this->getDBConn(), $_SESSION['tokenid']);
-        if ($token == null) $fail('invalid / expired token');
+        if ($token == null) {
+            // clear out session to prevent user from using expired token id again
+            session_unset();     // unset $_SESSION variable for the run-time
+            session_destroy();   // destroy session data in storage
+            session_start();
+
+            $fail('invalid / expired token');
+        }
 
         //$new_time = date("Y-m-d H:i:s", time() + 30 * 60);
         //$token->setExpires($new_time);
@@ -75,5 +90,25 @@ abstract class BaseController extends Controller
     public function getLoggedInUser() : ?User {
         if (!$this->is_logged_in() || !array_key_exists('user', $_SESSION)) return null;
         else return $_SESSION['user'];
+    }
+
+    /**
+     * Overrides Controller's on_request method.
+     * @inheritdoc
+     */
+    function on_request(array $route, array $matches)
+    {
+        parent::on_request($route, $matches);
+
+        // autoexpire sessions
+        if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 1800)) {
+            // last request was more than 30 minutes ago
+            session_unset();     // unset $_SESSION variable for the run-time
+            session_destroy();   // destroy session data in storage
+            session_start();
+
+            $this->addFlashMessage('Logged out current user due to inactivity', self::FLASH_LEVEL_INFO);
+        }
+        $_SESSION['LAST_ACTIVITY'] = time();
     }
 }

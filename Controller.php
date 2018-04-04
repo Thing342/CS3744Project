@@ -56,6 +56,8 @@ abstract class Controller {
             if ($route["method"] == $_SERVER["REQUEST_METHOD"] and
                 preg_match(gen_regex($route["pattern"]), $internalpath, $matches) == 1) {
 
+                $this->on_request($route, $matches);
+
                 call_user_func($route["func"], $matches);
                 return true;
             }
@@ -84,6 +86,15 @@ abstract class Controller {
     public function getDBConn(): \PDO
     {
         return $this->pdo;
+    }
+
+    /**
+     * Overridable call that occurs just before request is dispatched to controller.
+     * @param array $route - selected route array
+     * @param array $matches - url param matches
+     */
+    public function on_request(array $route, array $matches) {
+        // method stub for overriding
     }
 
     /**
