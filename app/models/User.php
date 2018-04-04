@@ -201,11 +201,11 @@ class User
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getType(): int
     {
-        return $this->username;
+        return $this->type;
     }
 
     /**

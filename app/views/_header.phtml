@@ -38,10 +38,16 @@
     <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/about">About</a></li>
     <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/companies">Companies</a></li>
     <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/search"">Person Search</a></li>
-    <!--li><button id = "logoutButtonContentSame" class="logoutButtonContentSame" onclick="">Logout</button></li-->
+
     <?php if($this->getLoggedInUser() != null): ?>
         <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/users"><?= $this->getLoggedInUser()->getUsername() ?></a></li>
+        
+        <?php if($this->getLoggedInUser()->getType() == (int)3): ?>
+            <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/admin">Admin Controls</a></li>
+        <?php endif; ?>
+
         <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/users/logout">Log Out</a></li>
+
     <?php else: ?>
         <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/users/new">Create Account</a></li>
         <li><a href="<?= $_ENV['SUBDIRECTORY'] ?>/users/login">Log In</a></li>
