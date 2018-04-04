@@ -15,45 +15,52 @@ $container_id = 'container';
 include "app/views/_header.phtml"
 ?>
 
-<h2>People Search</h2>
-<div class="containerForForm">
-    <form action='<?= $this->url("/search") ?>'>
-        <label for="fname">First Name</label>
-        <input type="text" id="fname" name="firstname" placeholder="First Name">
-        <label for="lname">Last Name</label>
-        <input type="text" id="lname" name="lastname" placeholder="Last Name">
-        <input type="submit" value="Submit" id="submitFancy">
-    </form>
-</div>
+<h2 class="my-4">Search</h2>
 
-<div id="whiteTextDiv" style="margin: 10px">
-<?php if ($isResults): ?>
-    <table>
-        <thead>
-        <tr>
-            <td>Name</td>
-            <td>Company</td>
-        </tr>
-        </thead>
-        <tbody>
-        <?php if (sizeof($results) == 0): ?>
-            <tr>
-                <td colspan="2">No results found.</td>
-            </tr>
-        <?php else: ?>
-            <?php foreach ($results as $result): ?>
+<main class="row">
+    <section class="col col-12 col-md-3 border rounded my-4 p-4">
+        <h6 class="my-2 w-100">Person Search:</h6>
+        <form action='<?= $this->url("/search") ?>'>
+            <label class="" for="fname">First Name</label>
+            <input type="text" class="form-control mb-2" id="fname" name="firstname" placeholder="First Name">
+            <label class="mr-3" for="lname">Last Name</label>
+            <input type="text" class="form-control mb-2" id="lname" name="lastname" placeholder="Last Name">
+            <input class="mb-2 btn btn-primary" type="submit" value="Search" id="submitFancy">
+        </form>
+    </section>
+
+    <section class="col col-12 col-md-9">
+        <?php if ($isResults): ?>
+            <h6 class="my-2 w-100">Search Results:</h6>
+            <table class="table">
+                <thead>
                 <tr>
-                    <td><?= $result['person']->getName() ?></td>
-                    <td><a href="<?= $this->url('/companies/' . $result['person']->getUnitID()) ?>">
-                            <?= $result['unitName'] ?>
-                        </a></td>
+                    <th scope="col">Name</th>
+                    <th scope="col">Company</th>
                 </tr>
-            <?php endforeach; ?>
+                </thead>
+                <tbody>
+                <?php if (sizeof($results) == 0): ?>
+                    <tr>
+                        <td colspan="2">No results found.</td>
+                    </tr>
+                <?php else: ?>
+                    <?php foreach ($results as $result): ?>
+                        <tr>
+                            <td><?= $result['person']->getName() ?></td>
+                            <td><a href="<?= $this->url('/companies/' . $result['person']->getUnitID()) ?>">
+                                    <?= $result['unitName'] ?>
+                                </a></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                </tbody>
+            </table>
         <?php endif; ?>
-        </tbody>
-    </table>
-<?php endif; ?>
-</div>
+    </section>
+</main>
+
+
 
 <?php
 include "app/views/_footer.phtml"
