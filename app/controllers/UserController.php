@@ -89,11 +89,13 @@ class UserController extends BaseController
      */
     public function add($params) {
         try {
+        	$baseType = (int)1;
             // Create a new user and attempt to save it to the database:
             $user = new User();
             $res = $user->setUsername(strtolower($_POST['username']))
                 ->setPassword($_POST['password'])
                 ->setEmail($_POST['email'])
+                ->setType($baseType)
                 ->commit($this->getDBConn());
 
             error_log("Added user ". $user->getUserId());
