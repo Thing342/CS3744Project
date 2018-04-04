@@ -15,8 +15,15 @@ $container_class = 'container';
 $container_id = 'container';
 include "app/views/_header.phtml"
 ?>
+    <style>
+        .carousel-inner img {
+            width: 100%;
+            max-height: 600px;
+        }
+    </style>
+
     <!-- Bootstrap Carousel: https://getbootstrap.com/docs/4.0/components/carousel/ -->
-    <div id="bsCarousel" class="carousel slide" data-ride="carousel">
+    <div id="row bsCarousel" class="carousel slide" data-ride="carousel">
         <!-- indicators -->
         <ol class="carousel-indicators">
             <li data-target="#bsCarousel" data-slide-to="0" class="active"></li>
@@ -32,7 +39,7 @@ include "app/views/_header.phtml"
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="<?= $_ENV['SUBDIRECTORY'] ?>/public/img/war2.JPG" id="bannerPhotos2" alt="Photo of WW2">
+                <img style="" src="<?= $_ENV['SUBDIRECTORY'] ?>/public/img/war2.JPG" id="bannerPhotos2" alt="Photo of WW2">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Follow Their Journey</h5>
                 </div>
@@ -55,17 +62,15 @@ include "app/views/_header.phtml"
         </a>
     </div>
 
-
     <!--Information about the site, on the bottom of the main page-->
-    <div id="bottom">
-        <div id="welcomeTitle">
-            <h2>In Their Own Words: World War II</h2>
-        </div>
-
-        <p class="welcomeText">Follow the journey of 786th Battalion as they fought for the Allied Powers during World
-            War II.</p>
-        <p class="welcomeText">Read, in their own words, the struggles they went through.</p>
-        <p class="welcomeText">Create an account today to begin your journey.</p>
+    <div class="row media" id="bottom">
+        <!--img class="mr-3" src="..." alt="Generic placeholder image"-->
+        <div class="media-body">
+            <h2 class="mt-0">In Their Own Words: World War II</h2>
+            <p class="welcomeText">Follow the journey of 786th Battalion as they fought for the Allied Powers during World
+                War II.</p>
+            <p class="welcomeText">Read, in their own words, the struggles they went through.</p>
+            <p class="welcomeText">Create an account today to begin your journey.</p>        </div>
     </div>
 
 <?php include "app/views/_footer.phtml" ?>
