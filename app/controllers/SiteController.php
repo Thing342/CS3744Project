@@ -39,14 +39,19 @@ class SiteController extends BaseController
     {
         return [
             self::route("GET", "/about", 'about'),
-            self::route("GET", "/units", 'units'),
-            self::route("GET", "/units/add", 'addUnits'),
-            self::route("GET", "/people/:unit/add", 'addPeople'),
-            self::route("GET", "/people/:unit", 'people'),
+            self::route("GET", "/credits", 'credits'),
             self::route("GET", "/", 'index')
         ];
     }
 
+    /**
+     * Full path: '/credits'
+     *
+     * Displays the credits page
+     */
+    public function credits($params) {
+        require "app/views/credits.phtml";
+    }
 
     /**
      * Full path: '/about'
