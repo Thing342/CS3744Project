@@ -106,11 +106,11 @@ abstract class Controller {
     }
 
     // Flash severity levels, equivalent to CSS classes
-    public const FLASH_LEVEL_SERVER_ERR = 'flash_server_err';
-    public const FLASH_LEVEL_USER_ERR = 'flash_user_err';
-    public const FLASH_LEVEL_WARN = 'flash_warning';
-    public const FLASH_LEVEL_INFO = 'flash_info';
-    public const FLASH_LEVEL_SUCCESS = 'flash_success';
+    public const FLASH_LEVEL_SERVER_ERR = 'alert-dark';
+    public const FLASH_LEVEL_USER_ERR = 'alert-danger';
+    public const FLASH_LEVEL_WARN = 'alert-warning';
+    public const FLASH_LEVEL_INFO = 'alert-info';
+    public const FLASH_LEVEL_SUCCESS = 'alert-success';
 
     /**
      * Post a flash message, a short notice that will disappear on the user's next page reload
