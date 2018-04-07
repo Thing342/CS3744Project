@@ -5,32 +5,78 @@
 
 $title = 'About';
 
-$js_init = '';
+$js_init = 'getLocationImages();';
 $container_class = 'container';
 $container_id = 'container';
 include "app/views/_header.phtml"
 ?>
 
+<div class="row">
+    <main class="col-12">
+        <h2 class="mt-4">About Division</h2>
+        <img class="img-fluid" src="public/img/786th.jpg" alt="Picture of Division" style="max-width: 100%"/>
+        <div id="whiteTextDiv" class="mt-4">
+            <i class="mt-2">Picture Source: <a href="http://hollowaypages.com/786th.htm">http://hollowaypages.com/786th.htm</a></i>
+            <p>The 786th Tank Battalion was formed on September 20, 1943. On November 28 of the same year, the battalion
+                sailed
+                off to Europe to help defeat the Axis Powers. The battalion was attached to the 99th Infantry Division.
+                The
+                battalion was disbanded on June 13, 1945 upon the ending of the war. One major contribution the
+                battalion made
+                towards the Allied Powers in World War II was their testing of the gyrostabilizer. The gyrostabilizer
+                was used
+                in tanks and helped keep guns stable while the tank was moving. </p>
+
+            <section class="my-4">
+                <h4>Get Started</h4>
+                <a href="<?= $this->url('/companies') ?>" class="btn btn-primary">View List of Companies</a>
+                <a href="<?= $this->url('/users/new') ?>" class="btn btn-primary">Create Account</a>
+            </section>
+
+            <h3 class="mb-4"> Locations </h3>
+
+            <ul class="list-unstyled">
+                <li class="media">
+                    <img class="mr-3" id="image1" src=""" alt="New York, NY">
+                    <div class="media-body">
+                        <h5 class="mt-0 mb-1"><a href="https://en.wikipedia.org/wiki/New_York_Harbor">New York, New York</a></h5>
+                    </div>
+                </li>
+
+                <li class="media my-4">
+                    <img class="mr-3" id="image2" src=""" alt="Greenock, Scotland">
+                    <div class="media-body">
+                        <h5 class="mt-0 mb-1"><a href="https://en.wikipedia.org/wiki/Greenock">Greenock, Scotland</a></h5>
+                    </div>
+                </li>
+
+                <li class="media my-4">
+                    <img class="mr-3" id="image3" src=""" alt="Macclesfield, England">
+                    <div class="media-body">
+                        <h5 class="mt-0 mb-1"><a href="https://en.wikipedia.org/wiki/Macclesfield">Macclesfield, England</a></h5>
+                    </div>
+                </li>
+
+                <li class="media my-4">
+                    <img class="mr-3" id="image4" src=""" alt="Le Havre, France">
+                    <div class="media-body">
+                        <h5 class="mt-0 mb-1"><a href="https://en.wikipedia.org/wiki/Le_Havre">Le Havre, France</a></h5>
+                    </div>
+                </li>
+
+                <li class="media my-4">
+                    <img class="mr-3" id="image5" src=""" alt="Theux, Belgium">
+                    <div class="media-body">
+                        <h5 class="mt-0 mb-1"><a href="https://en.wikipedia.org/wiki/Theux">Theux, Belgium</a></h5>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+    </main>
+</div>
 <script src="<?= $_ENV['SUBDIRECTORY'] ?>/public/js/scripts.js"></script>
 
-<body onload="getLocationImages();">
-<h2>About Division</h2>
-<img src="public/img/786th.jpg" alt="Picture of Division" style="max-width: 100%"/>
-<div id="whiteTextDiv">
-    <i>Picture Source: http://hollowaypages.com/786th.htm</i>
-    <p>The 786th Tank Battalion was formed on September 20, 1943. On November 28 of the same year, the battalion sailed
-        off to Europe to help defeat the Axis Powers. The battalion was attached to the 99th Infantry Division. The
-        battalion was disbanded on June 13, 1945 upon the ending of the war. One major contribution the battalion made
-        towards the Allied Powers in World War II was their testing of the gyrostabilizer. The gyrostabilizer was used
-        in tanks and helped keep guns stable while the tank was moving. </p>
-        <h3> Locations </h3>
-
-        <div class = "locations" ><a href="https://en.wikipedia.org/wiki/New_York_Harbor"><img id="image1" src="" alt=""/></a><p>New York Harbor, New York</p></div>
-        <div class = "locations" ><a href="https://en.wikipedia.org/wiki/Greenock"><img id="image2" src="" alt=""/></a><p>Greenock, Scotland</p></div>
-        <div class = "locations" ><a href="https://en.wikipedia.org/wiki/Macclesfield"><img id="image3" src="" alt=""/></a><p>Macclesfield, England</p></div>
-        <div class = "locations" ><a href="https://en.wikipedia.org/wiki/Le_Havre"><img id="image4" src="" alt=""/></a><p>Le Havre, France</p></div>
-        <div class = "locations" ><a href="https://en.wikipedia.org/wiki/Theux"><img id="image5" src="" alt=""/></a><p>Theux, Belgium</p></div>
-</br>
 <?php
 include "app/views/_footer.phtml"
 ?>

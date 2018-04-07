@@ -39,6 +39,7 @@ class SiteController extends BaseController
     {
         return [
             self::route("GET", "/about", 'about'),
+            self::route("GET", "/credits", 'credits'),
             self::route("GET", "/units", 'units'),
             self::route("GET", "/admin", 'admin'),
             self::route("GET", "/adminDelete", 'adminDelete'),
@@ -50,9 +51,16 @@ class SiteController extends BaseController
     }
 
     /**
-     * Full path: '/about'
+     * Full path: '/credits'
      *
-     * Displays the about page
+     * Displays the credits page
+     */
+    public function credits($params) {
+        require "app/views/credits.phtml";
+    }
+
+    /**
+     * FIXME
      */
     public function adminDelete($params) {
         echo "tf";
@@ -87,9 +95,9 @@ class SiteController extends BaseController
 
 
     /**
-     * Full path: '/about'
+     * Full path: '/admin'
      *
-     * Displays the about page
+     * Displays the admin page
      */
     public function admin($params) {
         require "app/views/adminControls.php";

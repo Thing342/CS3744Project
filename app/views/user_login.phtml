@@ -14,26 +14,21 @@ $container_class = 'container';
 $container_id = 'container';
 include "app/views/_header.phtml"
 ?>
+    <h2 class="my-4">Login</h2>
 
-<div id = "whiteTextDiv">
+    <span>No account?  <a href="<?= $_ENV['SUBDIRECTORY'] ?>/users/new">Create a new one.</a></span>
 
-<span>No account?  <a href="<?= $_ENV['SUBDIRECTORY'] ?>/users/new">Create a new one.</a></span>
-
-<div class="login" id="loginBox">
-<form action="<?= $_ENV['SUBDIRECTORY'] ?>/users/login" method="post">
-    <label>
-        <!--Username-->
-        <input type="text" name="username" placeholder="Username" id = "username" required>
-    </label>
-    <label>
-        <!--Password-->
-        <input type="password" name="password" placeholder="Password" id = "password" required>
-    </label>
-    
-    <input type="submit" id = "signInButton">
-</form>
-</div>
-</div>
+    <div class="row border rounded my-4 p-4" id="loginBox">
+        <form action="<?= $_ENV['SUBDIRECTORY'] ?>/users/login" method="post">
+            <!--Username-->
+            <label for="username">Username:</label>
+            <input type="text" class="form-control mb-2" name="username" placeholder="Username" id="username" required>
+            <!--Password-->
+            <label for="username">Password:</label>
+            <input type="password" class="form-control mb-2" name="password" placeholder="Password" id="password" required>
+            <input type="submit" id="signInButton" class="btn btn-primary">
+        </form>
+    </div>
 
 <?php
 include "app/views/_footer.phtml"
