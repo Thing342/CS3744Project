@@ -57,6 +57,15 @@
                 <li class="nav-item">
                     <a class="nav-link" href="<?= $_ENV['SUBDIRECTORY'] ?>/search">Search</a>
                 </li>
+
+                <?php if($this->getLoggedInUser() != null): ?>
+                    <?php if($this->getLoggedInUser()->getType() == (int)3): ?>
+                    <li class="nav-item">
+                           <a class="nav-link" href="<?= $_ENV['SUBDIRECTORY'] ?>/admin">Admin Controls</a>
+                    </li>
+                    <?php endif; ?>
+                <?php endif; ?>
+
                 <li class="nav-item dropdown">
                     <?php if ($this->getLoggedInUser() != null): ?>
                         <a class="nav-link dropdown-toggle" href="<?= $_ENV['SUBDIRECTORY'] ?>/users"
