@@ -220,9 +220,11 @@ class User
     $this->email = $email;
     $this->changed = true;
     return $this;
+  }
     /**
     * @return int
     */
+
     public function getType(): int
     {
       return $this->type;
