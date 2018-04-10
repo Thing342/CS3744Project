@@ -56,6 +56,8 @@ abstract class Controller {
             if ($route["method"] == $_SERVER["REQUEST_METHOD"] and
                 preg_match(gen_regex($route["pattern"]), $internalpath, $matches) == 1) {
 
+                $this->on_request($route, $matches);
+
                 call_user_func($route["func"], $matches);
                 return true;
             }
@@ -87,6 +89,15 @@ abstract class Controller {
     }
 
     /**
+     * Overridable call that occurs just before request is dispatched to controller.
+     * @param array $route - selected route array
+     * @param array $matches - url param matches
+     */
+    public function on_request(array $route, array $matches) {
+        // method stub for overriding
+    }
+
+    /**
      * Throw a 404 error.
      * @param string $req_uri - The intended URL
      */
@@ -106,11 +117,11 @@ abstract class Controller {
     }
 
     // Flash severity levels, equivalent to CSS classes
-    public const FLASH_LEVEL_SERVER_ERR = 'flash_server_err';
-    public const FLASH_LEVEL_USER_ERR = 'flash_user_err';
-    public const FLASH_LEVEL_WARN = 'flash_warning';
-    public const FLASH_LEVEL_INFO = 'flash_info';
-    public const FLASH_LEVEL_SUCCESS = 'flash_success';
+    public const FLASH_LEVEL_SERVER_ERR = 'alert-dark';
+    public const FLASH_LEVEL_USER_ERR = 'alert-danger';
+    public const FLASH_LEVEL_WARN = 'alert-warning';
+    public const FLASH_LEVEL_INFO = 'alert-info';
+    public const FLASH_LEVEL_SUCCESS = 'alert-success';
 
     /**
      * Post a flash message, a short notice that will disappear on the user's next page reload

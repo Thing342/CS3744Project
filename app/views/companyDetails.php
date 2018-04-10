@@ -13,52 +13,46 @@ $container_id = 'container';
 include "app/views/_header.phtml"
 ?>
 <div id = "whiteTextDiv">
-    <a href="<?= $_ENV['SUBDIRECTORY'] ?>/companies">Back to List</a>
+    <section class="border rounded p-4 mt-4 mb-4">
+        <!-- Display "Edit" and "Delete" buttons if logged in -->
+        <h2><?=$company->getName()?></h2>
+        <?php if ($this->is_logged_in()): ?>
+            <a href="<?= $this->url('/companies/'. $company->getId() .'/edit') ?>" class="btn btn-primary">Edit</a>
+        <?php else: ?>
+            <p><i>Log in to edit this page.</i></p>
+        <?php endif; ?>
+        <a class="btn btn-secondary" href="<?= $_ENV['SUBDIRECTORY'] ?>/companies">Back to List</a>
+    </section>
 
-    <!-- Display "Edit" and "Delete" buttons if logged in -->
-    <h2><?=$company->getName()?></h2>
-    <?php if ($this->is_logged_in()): ?>
-    <form action="<?= $this->url('/companies/'. $company->getId() .'/edit') ?>">
-        <input type="submit" value="Edit">
-    </form>
-    <?php else: ?>
-    <p><i>Log in to edit this page.</i></p>
-    <?php endif; ?>
-
-    <h3>Members</h3>
-    <section>
-        <table>
-            <thead>
-            <tr>
-                <td><b>Rank</b></td>
-                <td><b>Name</b></td>
-            </tr>
-            </thead>
-            <tbody id="members-tbody">
+    <div class="row">
+        <section class="col col-12 col-lg-4">
+            <h3>Members</h3>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col"><b>Rank</b></th>
+                    <th scope="col"><b>Name</b></th>
+                </tr>
+                </thead>
+                <tbody id="members-tbody">
                 <!--
                     AJAX
                 -->
-            </tbody>
-        </table>
-    </section>
+                </tbody>
+            </table>
+        </section>
 
-    <h3>Events</h3>
-    <section>
-        <table>
-            <thead><tr>
-                <td><b>Image</b></td>
-                <td><b>Name</b></td>
-                <td><b>Date</b></td>
-                <td><b>Description</b></td>
-                <td><b>Location (Lat, Lon)</b></td>
-            </tr></thead>
-            <tbody id="events-tbody">
+        <section class="col col-12 col-md-8">
+            <h3>Events</h3>
+
+            <ul class="list-unstyled list-group" id="events-tbody">
                 <!--
                     AJAX
                 -->
-            </tbody>
-        </table>
-    </section>
+            </ul>
+        </section>
+    </div>
+
 
 </div>
 

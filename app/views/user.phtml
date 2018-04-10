@@ -19,18 +19,26 @@ include "app/views/_header.phtml"
 ?>
 <!--Shows the user's settings and account information-->
 <section id="settings">
-    <h2><?= $user->getUsername() ?></h2>
-    <form action="<?= $_ENV['SUBDIRECTORY'] ?>/users/logout" method="post" onsubmit="return confirm('Are you sure you want to log out?')">
-        <input type="submit" value="Log Out">
-    </form>
+    <h2 class="my-4"><?= $user->getUsername() ?></h2>
+
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group mr-2" role="group" aria-label="second group">
+            <form action="<?= $_ENV['SUBDIRECTORY'] ?>/users/logout" method="post" onsubmit="return confirm('Are you sure you want to log out?')">
+                <input type="submit" class="btn btn-warning" value="Log Out">
+            </form>
+        </div>
+
+        <div class="btn-group mr-2" role="group" aria-label="second group">
+            <form action="<?= $_ENV['SUBDIRECTORY'] ?>/users/delete" method="post" onsubmit="return confirm('Are you sure you want to delete this account? (this cannot be undone)');">
+                <input type="submit" class="btn btn-danger" value="Delete Account">
+            </form>
+        </div>
+    </div>
+
     <br>
-    <form action="<?= $_ENV['SUBDIRECTORY'] ?>/users/delete" method="post" onsubmit="return confirm('Are you sure you want to delete this account? (this cannot be undone)');">
-        <input type="submit" value="Delete Account">
-    </form>
 
-    <p class="setting"><span>E-mail Address</span><?= $user->getEmail() ?></p>
-
-    <p class="setting"><span>Last Logged In</span><?= $token->getCreated() ?></p>
+    <p class="setting"><strong class="mr-2">E-mail Address:</strong><?= $user->getEmail() ?></p>
+    <p class="setting"><strong class="mr-2">Last Logged In:</strong><?= $token->getCreated() ?></p>
 
 </section>
 
