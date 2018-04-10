@@ -104,17 +104,26 @@ CREATE TABLE `user` (
   `username` varchar(128) NOT NULL,
   `pword_hash` varchar(255) NOT NULL,
   `email` text NOT NULL,
-  `type` int(11) NOT NULL DEFAULT '1'
+  `type` int(11) NOT NULL DEFAULT '1',
+  `firstname` varchar(250) NOT NULL,
+  `lastname` varchar(250) NOT NULL,
+  `privacy` varchar(7) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='A user account.';
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`userId`, `username`, `pword_hash`, `email`, `type`) VALUES
-(2, 'levelone', '$2y$10$gXx4IKj7O9FTNDndXIV./OG8gKCnTMovRPvhMFXWIT64QAWjY6YLq', 'leslie6@vt.edu', 1),
-(3, 'leveltwo', '$2y$10$0VZNmMVkZXzeRdbzmpouROdMt0Cd9WY.h96r.S11RKA1TptzsPMmK', 'leslie6@vt.edu', 2),
-(4, 'levelthree', '$2y$10$gJmElM29rboLdeRXt7LuGu1TIWB7dT/Nbn70BK42KMaRUi/7yqjSC', 'leslie6@vt.edu', 3);
+INSERT INTO `user` (`userId`, `username`, `pword_hash`, `email`, `type`, `firstname`, `lastname`, `privacy`) VALUES
+(2, 'levelone', '$2y$10$gXx4IKj7O9FTNDndXIV./OG8gKCnTMovRPvhMFXWIT64QAWjY6YLq', 'leslie6@vt.edu', 1, '', '', '0'),
+(3, 'leveltwo', '$2y$10$0VZNmMVkZXzeRdbzmpouROdMt0Cd9WY.h96r.S11RKA1TptzsPMmK', 'leslie6@vt.edu', 2, '', '', '0'),
+(4, 'levelthree', '$2y$10$gJmElM29rboLdeRXt7LuGu1TIWB7dT/Nbn70BK42KMaRUi/7yqjSC', 'leslie6@vt.edu', 3, '', '', '0'),
+(5, 'admin300', '$2y$10$jTuSPOgw1ehfgPTN8MInU.4mxE2rIrdClUzD1nuq9iW4uWzYpojYu', 'random@gmail.com', 1, '', '', '0'),
+(8, 'admin1000', '$2y$10$ui9se3I/iHBex3l4WnFmS./x9K2wuUMZ7CfBuxX1PVyXmVHYTT9Ue', 'joeschmoe@gmail.com', 1, 'joe', 'schmoe', '1'),
+(9, 'admin2000', '$2y$10$jMHFu3WiLgXdidnsmlIQ8Og6/7BuG1RobRy.xKSYDnKRbrop5VB26', 'sample@yahoo.com', 1, 'hey', 'hi', 'PUBLIC'),
+(10, 'admin3000', '$2y$10$FTxmLVXIy0ww7tIql.p6auzJAXdZn2pj..8eZUaPRdZ1wsjkSVk5O', 'sample@email.com', 1, 'mary', 'doe', 'PRIVATE'),
+(11, 'admin4000', '$2y$10$PbwJ9gsm0N.lRBx.zTX1TeWBJuvw6PoEEnbArF8qMc4krMUVfYrTu', 'sample@email.com', 1, 'john', 'jacobs', 'PUBLIC'),
+(13, 'admin7000', '$2y$10$6RxPZqwwxddhdur8afGQXeAuZnzsSO9sBHMiTYPTLS6QKuVmxxjHO', 'sample@gmail.com', 1, 'joe', 'jacobs', 'PRIVATE');
 
 -- --------------------------------------------------------
 

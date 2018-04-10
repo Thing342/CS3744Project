@@ -5,11 +5,8 @@
 * Date: 2/25/18
 * Time: 1:10 PM
 */
-
 namespace app\models;
-
 use PDO;
-
 /**
 * Class User
 * @package app\models
@@ -18,150 +15,49 @@ use PDO;
 */
 class User
 {
-
-    private $userId = -1; // int, the user's unique ID. Will == -1 if the user has not been committed to the database yet.
-    private $username; // string, the user's unique username
-    private $pword_hash; // string, a hashed representation of the password
-    private $email; // string, the user's email address.
-
-    private $type;
-
-    private $firstname;
-    private $lastname;
-    private $privacy;
-
-    private $changed = false; // bool, true if the model is not in sync with the database
-
-    /**
-     * Builds a User object from a database row.
-     * @param array $row PDO database row.
-     * @return User
-     */
-    public static function build(array $row) : User {
-        $user = new User();
-        $user->userId = (int) $row["userId"];
-        $user->username = $row["username"];
-        $user->pword_hash = $row["pword_hash"];
-        $user->email = $row["email"];
-        $user->type = (int)$row["type"];
-        $user->firstname = $row["firstname"];
-        $user->lastname = $row["lastname"];
-        $user->privacy = $row["privacy"];
-
-        return $user;
+  private $userId = -1; // int, the user's unique ID. Will == -1 if the user has not been committed to the database yet.
+  private $username; // string, the user's unique username
+  private $pword_hash; // string, a hashed representation of the password
+  private $email; // string, the user's email address.
+  private $type;
+  private $firstname;
+  private $lastname;
+  private $privacy;
+  private $changed = false; // bool, true if the model is not in sync with the database
+  /**
+  * Builds a User object from a database row.
+  * @param array $row PDO database row.
+  * @return User
+  */
+  public static function build(array $row) : User {
+    $user = new User();
+    $user->userId = (int) $row["userId"];
+    $user->username = $row["username"];
+    $user->pword_hash = $row["pword_hash"];
+    $user->email = $row["email"];
+    $user->type = (int)$row["type"];
+    $user->firstname = $row["firstname"];
+    $user->lastname = $row["lastname"];
+    $user->privacy = $row["privacy"];
+    return $user;
+  }
+  /**
+  * Fetches a User record from the database and returns a model
+  * @param PDO $db DB connection
+  * @param string $username username to look up
+  * @return User A user object, or null if no matching userId could be found.
+  */
+  public static function fetchByName(\PDO $db, string $username) : ?User {
+    $stmt = $db->prepare('SELECT * FROM User WHERE username = ? LIMIT 1');
+    $res = $stmt->execute([$username]);
+    if($res == false) {
+      error_log("Unable to fetch user object!: ".$stmt->errorCode());
+      return null;
     }
-
-    /**
-     * Fetches a User record from the database and returns a model
-     * @param PDO $db DB connection
-     * @param string $username username to look up
-     * @return User A user object, or null if no matching userId could be found.
-     */
-    public static function fetchByName(\PDO $db, string $username) : ?User {
-        $stmt = $db->prepare('SELECT * FROM User WHERE username = ? LIMIT 1');
-        $res = $stmt->execute([$username]);
-
-        if($res == false) {
-            error_log("Unable to fetch user object!: ".$stmt->errorCode());
-            return null;
-        }
-
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($row == null) return null;
-
-        return self::build($row);
-    }
-
-    /**
-     * Fetches a User record from the database and returns a model
-     * @param PDO $db DB connection
-     * @param int $userId User ID to look up
-     * @return User A user object, or null if no matching userId could be found.
-     */
-    public static function fetch(\PDO $db, int $userId): ?User {
-        $stmt = $db->prepare('SELECT * FROM User WHERE userId = ? LIMIT 1');
-        $res = $stmt->execute([$userId]);
-
-        if($res == false) {
-            error_log("Unable to fetch user object!: ".$stmt->errorCode());
-            return null;
-        }
-
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($row == null) return null;
-
-        return self::build($row);
-    }
-
-    /**
-     * Commits the changes made to this data model to the database.
-     * @param \PDO $db database connection
-     * @return bool True if the changes were successful
-     */
-    public function commit(\PDO $db): bool {
-        $res = false;
-
-        if ($this->userId == -1) { // new object
-
-            $stmt = $db->prepare('INSERT INTO User VALUE (0, :username, :pword_hash, :email, :type, :firstname, :lastname, :privacy)');
-            $res = $stmt->execute([
-                "username"=> $this->username, "pword_hash" => $this->pword_hash, "email" => $this->email, "type" => $this->type, "firstname" => $this->firstname, "lastname" => $this->lastname, "privacy" => $this->privacy
-            ]);
-        } else {
-            $stmt = $db->prepare('UPDATE User SET username = :username, pword_hash = :pword_hash, email = :email, type = :type, firstname = :firstname, lastname = :lastname, privacy = :privacy WHERE userId = :userId');
-            try {
-              $res = $stmt->execute([
-                  "username"=> $this->username, "pword_hash" => $this->pword_hash, "email" => $this->email, "type" => $this->type, "firstname" => $this->firstname, "lastname" => $this->lastname, "privacy" => $this->privacy, "userId" => $this->userId
-              ]);
-            } catch (\PDOException $dbErr) {
-                echo $dbErr->getMessage();
-            }
-        }
-
-        if($res) {
-            $this->changed = false;
-            if ($this->userId == -1) {
-                $this->userId = $db->lastInsertId();
-            }
-        }
-        else error_log("Unable to insert or update user object!: ".$stmt->errorCode());
-        return $res;
-    }
-
-    /**
-     * Deletes this user object from the database.
-     * @param PDO $db database connection
-     * @return bool True if the changes were successful
-     */
-    public static function delete(\PDO $db, int $userId) : bool {
-        $stmt = $db->prepare('DELETE FROM User WHERE userId = ?');
-        $res = $stmt->execute([$userId]);
-
-        if(!$res) {
-            error_log("Unable to delete user object!: ".$stmt->errorCode());
-        }
-
-        return $res;
-    }
-
-    /****
-     * Getter & Setters
-     ****/
-
-    /**
-     * @return int
-     */
-    public function getUserId(): int
-    {
-        return $this->userId;
-    }
-
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($row == null) return null;
-
     return self::build($row);
   }
-
   /**
   * Fetches a User record from the database and returns a model
   * @param PDO $db DB connection
@@ -171,15 +67,12 @@ class User
   public static function fetch(\PDO $db, int $userId): ?User {
     $stmt = $db->prepare('SELECT * FROM User WHERE userId = ? LIMIT 1');
     $res = $stmt->execute([$userId]);
-
     if($res == false) {
       error_log("Unable to fetch user object!: ".$stmt->errorCode());
       return null;
     }
-
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($row == null) return null;
-
     return self::build($row);
   }
   /**
@@ -192,12 +85,10 @@ class User
     $fetch_sql = 'SELECT userId FROM User';
     $stmt = $db->prepare($fetch_sql);
     $res = $stmt->execute();
-
     if ($res == false) {
       error_log("Unable to fetch Users!: " . $stmt->errorCode());
       return null;
     }
-
     $results = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
     $rows = array();
     foreach ($results as $row){
@@ -213,17 +104,16 @@ class User
   public function commit(\PDO $db): bool {
     $res = false;
     if ($this->userId == -1) { // new object
-      $stmt = $db->prepare('INSERT INTO User VALUE (0, :username, :pword_hash, :email, :type)');
+      $stmt = $db->prepare('INSERT INTO User VALUE (0, :username, :pword_hash, :email, :type, :firstname, :lastname, :privacy)');
       $res = $stmt->execute([
-        "username"=> $this->username, "pword_hash" => $this->pword_hash, "email" => $this->email, "type" => $this->type
+          "username"=> $this->username, "pword_hash" => $this->pword_hash, "email" => $this->email, "type" => $this->type, "firstname" => $this->firstname, "lastname" => $this->lastname, "privacy" => $this->privacy
       ]);
     } else {
-      $stmt = $db->prepare('UPDATE User SET username = :username, pword_hash = :pword_hash, email = :email, type = :type WHERE userId = :userId');
+      $stmt = $db->prepare('UPDATE User SET username = :username, pword_hash = :pword_hash, email = :email, type = :type, firstname = :firstname, lastname = :lastname, privacy = :privacy WHERE userId = :userId');
       $res = $stmt->execute([
-        "username"=> $this->username, "pword_hash" => $this->pword_hash, "email" => $this->email, "type" => $this->type
+          "username"=> $this->username, "pword_hash" => $this->pword_hash, "email" => $this->email, "type" => $this->type, "firstname" => $this->firstname, "lastname" => $this->lastname, "privacy" => $this->privacy, "userId" => $this->userId
       ]);
     }
-
     if($res) {
       $this->changed = false;
       if ($this->userId == -1) {
@@ -233,7 +123,6 @@ class User
     else error_log("Unable to insert or update user object!: ".$stmt->errorCode());
     return $res;
   }
-
   /**
   * Deletes this user object from the database.
   * @param PDO $db database connection
@@ -242,18 +131,14 @@ class User
   public static function delete(\PDO $db, int $userId) : bool {
     $stmt = $db->prepare('DELETE FROM User WHERE userId = ?');
     $res = $stmt->execute([$userId]);
-
     if(!$res) {
       error_log("Unable to delete user object!: ".$stmt->errorCode());
     }
-
     return $res;
   }
-
   /****
   * Getter & Setters
   ****/
-
   /**
   * @return int
   */
@@ -261,7 +146,6 @@ class User
   {
     return $this->userId;
   }
-
   /**
   * @return string
   */
@@ -269,7 +153,6 @@ class User
   {
     return $this->username;
   }
-
   /**
   * @param string $username
   * @return User
@@ -280,7 +163,6 @@ class User
     $this->changed = true;
     return $this;
   }
-
   /**
   * @return string
   */
@@ -288,7 +170,6 @@ class User
   {
     return $this->pword_hash;
   }
-
   /**
   * @param string $password
   * @return User
@@ -299,7 +180,6 @@ class User
     $this->changed = true;
     return $this;
   }
-
   /**
   * @return string
   */
@@ -307,7 +187,6 @@ class User
   {
     return $this->email;
   }
-
   /**
   * @param string $email
   * @return User
@@ -317,6 +196,7 @@ class User
     $this->email = $email;
     $this->changed = true;
     return $this;
+  }
     /**
     * @return int
     */
@@ -324,7 +204,6 @@ class User
     {
       return $this->type;
     }
-
     /**
     * @param string $username
     * @return User
@@ -392,5 +271,4 @@ class User
         $this->changed = true;
         return $this;
     }
-
 }
