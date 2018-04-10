@@ -82,7 +82,29 @@ class User
 
         return self::build($row);
     }
+    /**
+     * Fetches the list of Users from the database.
+     * @param PDO $db
+     * @param int $userid
+     * @return User|null - null if the query failed.
+     */
+    public static function fetchAll(PDO $db) : ?array {
+        $fetch_sql = 'SELECT userId FROM User';
+        $stmt = $db->prepare($fetch_sql);
+        $res = $stmt->execute();
 
+        if ($res == false) {
+            error_log("Unable to fetch Users!: " . $stmt->errorCode());
+            return null;
+        }
+
+        $results = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+        $rows = array();
+        foreach ($results as $row){
+          $rows[] = User::fetch($db, $row);
+        }
+        return $rows;
+    }
     /**
      * Commits the changes made to this data model to the database.
      * @param \PDO $db database connection

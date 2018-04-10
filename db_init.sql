@@ -14,6 +14,7 @@ DROP TABLE IF EXISTS UnitEvent;
 DROP TABLE IF EXISTS Unit;
 DROP TABLE IF EXISTS UserToken;
 DROP TABLE IF EXISTS User;
+DROP TABLE IF EXISTS Following;
 
 
 CREATE TABLE User
@@ -90,3 +91,44 @@ INSERT INTO fantasticfour_p4.UnitEvent (id, unitID, eventName, type, date, descr
   (2, 1, 'Sample Battle #2', 'BATTLE', '1945-01-12', 'Lorem ipsum dolor sit amet', 'Somewhere in France', 46.820615, 2.375450);
 INSERT INTO fantasticfour_p4.UnitEvent (id, unitID, eventName, type, date, description, locationName, latitude, longitude) VALUES
   (3, 1, 'Sample Battle #3', 'BATTLE', '1945-01-31', 'Lorem ipsum dolor sit amet', 'Somewhere in Germany', 46.820115, 2.375321);
+
+
+
+
+  CREATE TABLE `following` (
+    `id` int(11) NOT NULL,
+    `userFrom` int(11) NOT NULL,
+    `userTo` int(11) NOT NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+  --
+  -- Dumping data for table `following`
+  --
+
+  INSERT INTO `following` (`id`, `userFrom`, `userTo`) VALUES
+  (1, 1, 2);
+
+  --
+  -- Indexes for dumped tables
+  --
+
+  --
+  -- Indexes for table `following`
+  --
+  ALTER TABLE `following`
+    ADD PRIMARY KEY (`id`);
+
+  --
+  -- AUTO_INCREMENT for dumped tables
+  --
+
+  --
+  -- AUTO_INCREMENT for table `following`
+  --
+  ALTER TABLE `following`
+    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  COMMIT;
+
+  /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+  /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+  /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
