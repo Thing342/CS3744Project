@@ -26,6 +26,10 @@ class User
 
     private $type;
 
+    private $firstname;
+    private $lastname;
+    private $privacy;
+
     private $changed = false; // bool, true if the model is not in sync with the database
 
     /**
@@ -40,6 +44,9 @@ class User
         $user->pword_hash = $row["pword_hash"];
         $user->email = $row["email"];
         $user->type = (int)$row["type"];
+        $user->firstname = $row["firstname"];
+        $user->lastname = $row["lastname"];
+        $user->privacy = $row["privacy"];
 
         return $user;
     }
@@ -93,16 +100,22 @@ class User
      */
     public function commit(\PDO $db): bool {
         $res = false;
+
         if ($this->userId == -1) { // new object
-            $stmt = $db->prepare('INSERT INTO User VALUE (0, :username, :pword_hash, :email, :type)');
+
+            $stmt = $db->prepare('INSERT INTO User VALUE (0, :username, :pword_hash, :email, :type, :firstname, :lastname, :privacy)');
             $res = $stmt->execute([
-                "username"=> $this->username, "pword_hash" => $this->pword_hash, "email" => $this->email, "type" => $this->type
+                "username"=> $this->username, "pword_hash" => $this->pword_hash, "email" => $this->email, "type" => $this->type, "firstname" => $this->firstname, "lastname" => $this->lastname, "privacy" => $this->privacy
             ]);
         } else {
-            $stmt = $db->prepare('UPDATE User SET username = :username, pword_hash = :pword_hash, email = :email, type = :type WHERE userId = :userId');
-            $res = $stmt->execute([
-                "username"=> $this->username, "pword_hash" => $this->pword_hash, "email" => $this->email, "type" => $this->type
-            ]);
+            $stmt = $db->prepare('UPDATE User SET username = :username, pword_hash = :pword_hash, email = :email, type = :type, firstname = :firstname, lastname = :lastname, privacy = :privacy WHERE userId = :userId');
+            try {
+              $res = $stmt->execute([
+                  "username"=> $this->username, "pword_hash" => $this->pword_hash, "email" => $this->email, "type" => $this->type, "firstname" => $this->firstname, "lastname" => $this->lastname, "privacy" => $this->privacy, "userId" => $this->userId
+              ]);
+            } catch (\PDOException $dbErr) {
+                echo $dbErr->getMessage();
+            }
         }
 
         if($res) {
@@ -215,6 +228,63 @@ class User
     public function setType(int $type): User
     {
         $this->type = $type;
+        $this->changed = true;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstname(): string
+    {
+        return $this->firstname;
+    }
+
+    /**
+     * @param string $firstname
+     * @return User
+     */
+    public function setFirstname(string $firstname): User
+    {
+        $this->firstname = $firstname;
+        $this->changed = true;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastname(): string
+    {
+        return $this->lastname;
+    }
+
+    /**
+     * @param string $lastname
+     * @return User
+     */
+    public function setLastname(string $lastname): User
+    {
+        $this->lastname = $lastname;
+        $this->changed = true;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrivacy(): string
+    {
+        return $this->privacy;
+    }
+
+    /**
+     * @param string $privacy
+     * @return User
+     */
+    public function setPrivacy(string $privacy): User
+    {
+        $this->privacy = $privacy;
         $this->changed = true;
         return $this;
     }

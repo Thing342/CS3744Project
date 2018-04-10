@@ -44,6 +44,8 @@ class UserController extends BaseController
     {
         return [
             $this->route('GET', '/login', 'loginForm'),
+            $this->route('GET', '/edit', 'edit'),
+            $this->route('POST', '/editUser', 'editUser'),
             $this->route('POST', '/login', 'login'),
             $this->route('GET', '/logout', 'logout'),
             $this->route('POST', '/logout', 'logout'),
@@ -96,6 +98,9 @@ class UserController extends BaseController
                 ->setPassword($_POST['password'])
                 ->setEmail($_POST['email'])
                 ->setType($baseType)
+                ->setFirstname($_POST['firstname'])
+                ->setLastname($_POST['lastname'])
+                ->setPrivacy($_POST['privacy2'])
                 ->commit($this->getDBConn());
 
             error_log("Added user ". $user->getUserId());
@@ -114,6 +119,43 @@ class UserController extends BaseController
 
         // Some sort of error on adding user; return to form
         $this->redirect("/users/new");
+    }
+
+    public function edit() {
+      $_SESSION['user'] = $token->getUser();
+      require "app/views/userEdit.php";
+    }
+
+    public function editUser($params) {
+      try {
+        $baseType = (int)1;
+          // Create a new user and attempt to save it to the database:
+          $user = User::fetch($this->getDBConn(), $_POST['id']);
+
+          $user->setUsername(strtolower($_POST['username2']));
+          $user->setPassword($_POST['password2']);
+          $user->setEmail($_POST['email2']);
+          $user->setType($baseType);
+          $user->setFirstname($_POST['firstname2']);
+          $user->setLastname($_POST['lastname2']);
+          $user->setPrivacy($_POST['privacy2']);
+          $res = $user->commit($this->getDBConn());
+
+          error_log("Edited user ". $user->getUserId());
+          require "config.php";
+          if ($res) {
+              // display success message and redirect to new user's page
+              $this->addFlashMessage('Edited user: ' . $user->getUsername(), self::FLASH_LEVEL_SUCCESS);
+              $this->redirect("/users/");
+          } else {
+              $this->addFlashMessage('Unknown error adding user. Please try again: ', self::FLASH_LEVEL_SERVER_ERR);
+          }
+      } catch (\PDOException $dbErr) {
+          $this->addFlashMessage('Database error on adding user:<br>'.$dbErr->getMessage(), self::FLASH_LEVEL_SERVER_ERR);
+      }
+
+      // Some sort of error on adding user; return to form
+      //$this->redirect("/users/");
     }
 
     /**

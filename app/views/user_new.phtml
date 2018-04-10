@@ -22,13 +22,29 @@ include "app/views/_header.phtml"
             <small class="form-text text-muted mb-2">Required; must be seven or more characters long; must be unique.
             </small>
 
-            <label for="Password">Password</label>
-            <input type="password" class="form-control" name="password" placeholder="Password" required minlength="7">
-            <small class="form-text text-muted mb-2">Required; must be seven or more characters long.</small>
+            <label for="username">First Name</label>
+            <input type="text" class="form-control" name="firstname" placeholder="First Name">
+
+            <label for="username">Last Name</label>
+            <input type="text" class="form-control" name="lastname" placeholder="Last Name">
 
             <label for="email">Email Address</label>
             <input type="email" class="form-control" name="email" placeholder="sample@email.com" required>
             <small class="form-text text-muted mb-2">Required</small>
+
+            <label for="Password">Password</label>
+            <input type="password" class="form-control" name="password" placeholder="Password" required minlength="7">
+            <small class="form-text text-muted mb-2">Required; must be seven or more characters long.</small>
+            <input id="privacy3" type="hidden" name="privacy2" value="PUBLIC">
+            <div style="margin-bottom: 6em;margin-top: 1em;" class="nav-item dropdown">
+                  <a id="privacy2" style="display: inline;" name="privacy2" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">
+                      PUBLIC
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <a id="public" class="dropdown-item" href="#">PUBLIC</a>
+                      <a id="private" class="dropdown-item" href="#">PRIVATE</a>
+                  </div>
+            </div>
 
             <input type="submit" class="btn btn-primary" value="Create New Account">
         </form>

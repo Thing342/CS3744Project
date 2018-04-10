@@ -33,10 +33,21 @@ include "app/views/_header.phtml"
                 <input type="submit" class="btn btn-danger" value="Delete Account">
             </form>
         </div>
+
+        <div class="btn-group mr-2" role="group" aria-label="second group">
+            <form action="<?= $_ENV['SUBDIRECTORY'] ?>/users/edit">
+                <input type="submit" class="btn btn-danger" value="Edit"/>
+            </form>
+        </div>
+
     </div>
 
     <br>
 
+    <p class="setting"><strong class="mr-2">First Name:</strong><?= $user->getFirstname() ?></p>
+    <p class="setting"><strong class="mr-2">Last Name:</strong><?= $user->getLastname() ?></p>
+    <p class="setting"><strong class="mr-2">Type:</strong><?= $user->getType() ?></p>
+    <p class="setting"><strong class="mr-2">Privacy:</strong><?= $user->getPrivacy() ?></p>
     <p class="setting"><strong class="mr-2">E-mail Address:</strong><?= $user->getEmail() ?></p>
     <p class="setting"><strong class="mr-2">Last Logged In:</strong><?= $token->getCreated() ?></p>
 
