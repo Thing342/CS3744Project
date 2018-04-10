@@ -2,7 +2,7 @@
  * Handles AJAX operations specific to companyEdit and companyPage.
  */
 
-var SUBDIRECTORY = ""; // TODO change this before commit
+var SUBDIRECTORY = "/cs3744/project4/fantasticfour";
 
 /**
  * Wraps URL to make it work when site is hosted in subdirectory
