@@ -1,0 +1,55 @@
+<?php
+/**
+ * The users list.
+ *
+ * @var $users \app\models\User[]
+ */
+$title = 'Users';
+
+$js_init = '';
+$container_class = 'container';
+$container_id = 'container';
+include "app/views/_header.phtml"
+?>
+
+<div id="whiteTextDiv">
+    <h2>Users</h2>
+    <table>
+      <th>Username</th>
+      <th>Follow</th>
+        <!-- Display users in list form: -->
+        <?php foreach ($users as $user):
+          if ($user->getUserId() != $currUser->getUserId()){
+          echo "<tr>";
+
+               echo "<td>";
+               echo $user->getUsername();
+               echo "</td>";
+               echo "<td>";
+               echo "<form method='post' action=";
+
+
+               if ($follow->checkFollow($db, $currUser->getUserId(), $user->getUserId())){
+                 echo $this->url('/users/' . $user->getUserId()) . "/unfollow>";
+                 echo " <input type='submit' value='Unfollow'> </form>";
+
+               }
+               else {
+                 echo $this->url('/users/' . $user->getUserId()) . "/follow";
+                 echo "> <input type='submit' value='Follow'> </form>";
+
+               }
+
+               echo "</button>";
+
+               echo "</td>";
+               echo "</tr>";
+             }
+
+        endforeach; ?>
+    </table>
+</div>
+
+<?php
+include "app/views/_footer.phtml"
+?>

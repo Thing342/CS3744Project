@@ -12,10 +12,12 @@ namespace app\controllers;
 
 require_once "app/models/User.php";
 require_once "app/models/Token.php";
+require_once "app/models/Following.php";
 require_once "app/controllers/BaseController.php";
 
 use app\models\Token;
 use app\models\User;
+use app\models\Following;
 
 /**
  * Class UserController
@@ -53,10 +55,76 @@ class UserController extends BaseController
             $this->route('DELETE', '/delete', 'delete'),
             $this->route('GET', '/new', 'newForm'),
             $this->route('POST', '/new', 'add'),
+            $this->route('GET', '/all', 'viewAll'),
+            $this->route('POST', '/:userId/unfollow', 'unfollow'),
+            $this->route('POST', '/:userId/follow', 'follow'),
             $this->route('GET', '/', 'show')
+
+
         ];
     }
+    /**
+     * Full path: '/users/:userID/unfollow'
+     *
+     * Deletes following association.
+     * Returns 200 and redirects to /companies if successful.
+     */
+    public function unfollow($params)
+    {
+        // Throw 401 if not logged in
+        $token = $this->require_authentication();
+        $currUser = $token->getUser()->getUserId();
+        // Throw 401 if not logged in
+        $id = $params['userId'];
+        if ($id == null) {
+            $this->error404($params[0]);
+        }
 
+        // Delete company model from DB
+        $db = $this->getDBConn();
+        $res = Following::deleteFollow($db, $currUser ,$id); // true if successful
+
+        if ($res) {
+            $this->addFlashMessage("Deleted following relationship!", self::FLASH_LEVEL_SUCCESS);
+            $this->redirect("/users/all");
+        } else {
+            $this->addFlashMessage("Unknown error when deleting following relationship.", self::FLASH_LEVEL_SERVER_ERR);
+            $this->redirect("/users/all");
+        }
+    }
+
+    public function follow($params)
+    {
+
+        // Throw 401 if not logged in
+        $token = $this->require_authentication();
+        $currUser = $token->getUser()->getUserId();
+        // Throw 401 if not logged in
+        $id = $params['userId'];
+      /*  if ($id == null) {
+            $this->error404($params[0]);
+        }*/
+        try {
+        // Delete company model from DB
+        $db = $this->getDBConn();
+        $follow = new Following();
+        $res = $follow->setUserFrom($currUser)
+            ->setUserTo($id)
+            ->commit($this->getDBConn());
+
+            error_log("Added following relationship ". $follow->getFollowId());
+
+            require "config.php";
+          }
+          catch (\PDOException $dbErr) {
+              $this->addFlashMessage('Database error on adding following relationship:<br>'.$dbErr->getMessage(), self::FLASH_LEVEL_SERVER_ERR);
+          }
+
+          // Some sort of error on adding user; return to form
+          $this->redirect("/users/all");
+
+
+    }
     /**
      * ENDPOINT
      * Shows the userpage for the currently logged-in user.
@@ -74,6 +142,30 @@ class UserController extends BaseController
         $user = $token->getUser();
         include_once "app/views/user.phtml";
     }
+
+// shows list of all users in order of username
+    public function viewAll($params){
+      $token = $this->require_authentication();
+
+      if ($token == null) {
+                  $this->error404($params[0]);
+                  return;
+      }
+      $db = $this->getDBConn();
+
+      // Fetch the user list
+      $users = User::fetchAll($db);
+      $currUser = $token->getUser();
+      $follow = new Following();
+      if ($users == null) {
+          $this->addFlashMessage("Unable to fetch users: Unknown Error", self::FLASH_LEVEL_SERVER_ERR);
+          $this->redirect('/');
+      }
+
+
+      include_once "app/views/users.phtml";
+    }
+
 
     /**
      * ENDPOINT
