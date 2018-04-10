@@ -63,6 +63,15 @@
                       <a class="nav-link" href="<?= $_ENV['SUBDIRECTORY'] ?>/users/all">View Users</a>
                   </li>
                 <?php endif; ?>
+
+                <?php if($this->getLoggedInUser() != null): ?>
+                    <?php if($this->getLoggedInUser()->getType() == (int)3): ?>
+                    <li class="nav-item">
+                           <a class="nav-link" href="<?= $_ENV['SUBDIRECTORY'] ?>/admin">Admin Controls</a>
+                    </li>
+                    <?php endif; ?>
+                 <?php endif; ?>
+                 
                 <li class="nav-item dropdown">
                     <?php if ($this->getLoggedInUser() != null): ?>
 
