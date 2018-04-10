@@ -200,6 +200,7 @@ class User
     /**
     * @return int
     */
+
     public function getType(): int
     {
       return $this->type;

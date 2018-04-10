@@ -58,16 +58,24 @@
                 <li class="nav-item">
                     <a class="nav-link" href="<?= $_ENV['SUBDIRECTORY'] ?>/search">Search</a>
                 </li>
+                <?php if ($this->getLoggedInUser() != null): ?>
+                  <li class="nav-item">
+                      <a class="nav-link" href="<?= $_ENV['SUBDIRECTORY'] ?>/users/all">View Users</a>
+                  </li>
+                <?php endif; ?>
                 <li class="nav-item dropdown">
                     <?php if ($this->getLoggedInUser() != null): ?>
+
                         <a class="nav-link dropdown-toggle" href="<?= $_ENV['SUBDIRECTORY'] ?>/users"
                            id="navbarDropdown"
                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <?= $this->getLoggedInUser()->getUsername() ?>
                         </a>
+
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="<?= $_ENV['SUBDIRECTORY'] ?>/users/logout">Log Out</a>
                             <a class="dropdown-item" href="<?= $_ENV['SUBDIRECTORY'] ?>/users">User Profile</a>
+
                         </div>
                     <?php else: ?>
                         <a class="nav-link dropdown-toggle" href="<?= $_ENV['SUBDIRECTORY'] ?>/users/login"
