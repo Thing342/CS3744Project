@@ -210,6 +210,7 @@ ALTER TABLE `user`
 ALTER TABLE `usertoken`
   MODIFY `tokenId` int(11) NOT NULL AUTO_INCREMENT;
 
+
 --
 -- Constraints for dumped tables
 --
@@ -232,6 +233,45 @@ ALTER TABLE `unitevent`
 ALTER TABLE `usertoken`
   ADD CONSTRAINT `UserToken_User_userId_fk` FOREIGN KEY (`user`) REFERENCES `user` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
+
+
+--
+-- Table structure for table `usertoken`
+--
+CREATE TABLE `following` (
+  `id` int(11) NOT NULL,
+  `userFrom` int(11) NOT NULL,
+  `userTo` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `following`
+--
+
+INSERT INTO `following` (`id`, `userFrom`, `userTo`) VALUES
+(4, 5, 2);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `following`
+--
+ALTER TABLE `following`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `following`
+--
+ALTER TABLE `following`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+COMMIT;
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
