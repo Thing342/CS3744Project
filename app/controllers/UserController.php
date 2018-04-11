@@ -214,7 +214,6 @@ class UserController extends BaseController
     }
 
     public function edit() {
-      $_SESSION['user'] = $token->getUser();
       require "app/views/userEdit.php";
     }
 
@@ -246,8 +245,6 @@ class UserController extends BaseController
           $this->addFlashMessage('Database error on adding user:<br>'.$dbErr->getMessage(), self::FLASH_LEVEL_SERVER_ERR);
       }
 
-      // Some sort of error on adding user; return to form
-      //$this->redirect("/users/");
     }
 
     /**
