@@ -11,6 +11,8 @@ USE fantasticfour_p4;
 
 DROP TABLE IF EXISTS Person;
 DROP TABLE IF EXISTS UnitEvent;
+DROP TABLE IF EXISTS Message;
+DROP TABLE IF EXISTS Comment;
 DROP TABLE IF EXISTS Unit;
 DROP TABLE IF EXISTS Following;
 DROP TABLE IF EXISTS UserToken;
@@ -88,6 +90,31 @@ CREATE TABLE UnitEvent
     ON DELETE CASCADE ON UPDATE CASCADE
 );
 ALTER TABLE UnitEvent COMMENT = 'An event that occurred to some Unit along the campaign. Can be a battle, an operation, a diary entry, etc.';
+
+
+CREATE TABLE Comment
+(
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  user INT NOT NULL ,
+  unit INT NOT NULL ,
+  timestamp DATETIME NOT NULL ,
+  text TEXT NOT NULL ,
+  CONSTRAINT Comment_User_userID_fk FOREIGN KEY (user) REFERENCES User(userId) ON DELETE CASCADE ON UPDATE CASCADE ,
+  CONSTRAINT Comment_Unit_unitID_fk FOREIGN KEY (unit) REFERENCES Unit(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+ALTER TABLE Comment COMMENT = 'Represents a single comment left by a User on a Unit page.';
+
+
+CREATE TABLE Message
+(
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  follow INT NOT NULL ,
+  timestamp DATETIME NOT NULL ,
+  text TEXT NOT NULL ,
+  CONSTRAINT Message_Following_id_fk FOREIGN KEY (follow) REFERENCES Following(id) ON DELETE NO ACTION
+);
+ALTER TABLE Message COMMENT = 'Represents a single message sent through a Following relation.';
+
 
 /** Add Sample Data **/
 
