@@ -53,6 +53,45 @@ include "app/views/_header.phtml"
         </section>
     </div>
 
+    <div class="row">
+        <section class="col col-12">
+            <h4 class="my-2">Comments</h4>
+            <ul class="list-unstyled">
+                <?php foreach ([1,2,3,4,5,6,7] as $i): ?>
+                <li class="media p-2 my-2">
+                    <?php if($this->getLoggedInUser()->getType() >= \app\models\User::TYPE_EDITOR): ?>
+                        <button type="button" class="close mx-2" aria-label="Close" onclick="confirm('Really delete this comment?')">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    <?php endif; ?>
+                    <div class="media-body">
+                        <h5 class="mt-0">Joe Bob (joebob1)</h5>
+                        Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                    </div>
+                </li>
+                <?php endforeach; ?>
+                <?php if ($this->is_logged_in() && $this->getLoggedInUser()->getType() >= \app\models\User::TYPE_COMMENTER): ?>
+                <li class="p-2 my-2">
+                    <form action="#">
+                        <div class="form-group">
+                            <label for="commentText">Add New Comment</label>
+                            <textarea class="form-control" id="commentText" rows="5" placeholder="Add a comment..."></textarea>
+                            <small id="commentRulesText" class="form-text text-muted">
+                                Please be sure that your comment adheres to our site rules before posting. Otherwise,
+                                it will likely be flagged and deleted by a moderator or administrator.
+                            </small>
+                            <input type="submit" class="btn btn-primary">
+                            <a href="#" class="btn btn-secondary">Back to top</a>
+                        </div>
+                    </form>
+                </li>
+                <?php else: ?>
+                <i>You must be <a href="<?= $this->url('/users/login') ?>">logged in</a> to leave a comment.</i>
+                <?php endif; ?>
+
+            </ul>
+        </section>
+    </div>
 
 </div>
 
