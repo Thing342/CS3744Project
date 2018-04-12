@@ -18,19 +18,32 @@ $container_class = 'container';
 $container_id = 'container';
 include "app/views/_header.phtml"
 ?>
+<script>
+    function showMsgModal(userid) {
+        // Sets the userID in the modal prior to showing
+        $('#hiddenUserIdControl').val(userid);
+        $('#exampleModal').modal();
+    }
+</script>
+
 <div class="row">
-    <section class="col col-12 col-md-4">
-        <h2 class="my-4"><?= $user->getUsername() ?></h2>
+    <section class="col col-12 col-lg-4">
+        <div class="my-4">
+            <h2><?= $user->getFullName() ?></h2>
+            <small class="text-muted"><?= $user->getUsername() ?></small>
+        </div>
 
         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
             <div class="btn-group mr-2" role="group" aria-label="second group">
-                <form action="<?= $_ENV['SUBDIRECTORY'] ?>/users/logout" method="post" onsubmit="return confirm('Are you sure you want to log out?')">
+                <form action="<?= $_ENV['SUBDIRECTORY'] ?>/users/logout" method="post"
+                      onsubmit="return confirm('Are you sure you want to log out?')">
                     <input type="submit" class="btn btn-warning" value="Log Out">
                 </form>
             </div>
 
             <div class="btn-group mr-2" role="group" aria-label="second group">
-                <form action="<?= $_ENV['SUBDIRECTORY'] ?>/users/delete" method="post" onsubmit="return confirm('Are you sure you want to delete this account? (this cannot be undone)');">
+                <form action="<?= $_ENV['SUBDIRECTORY'] ?>/users/delete" method="post"
+                      onsubmit="return confirm('Are you sure you want to delete this account? (this cannot be undone)');">
                     <input type="submit" class="btn btn-danger" value="Delete Account">
                 </form>
             </div>
@@ -43,27 +56,56 @@ include "app/views/_header.phtml"
 
         </div>
 
-        <br>
+        <div class="mt-4 p-4 list-group-item">
+            <p class="setting"><strong class="mr-2">First Name:</strong><?= $user->getFirstname() ?></p>
+            <p class="setting"><strong class="mr-2">Last Name:</strong><?= $user->getLastname() ?></p>
+            <p class="setting"><strong class="mr-2">Type:</strong><?= $user->getFancyType() ?></p>
+            <p class="setting"><strong class="mr-2">Privacy:</strong><?= $user->getPrivacy() ?></p>
+            <p class="setting"><strong class="mr-2">E-mail Address:</strong><?= $user->getEmail() ?></p>
+            <p class="setting"><strong class="mr-2">Last Logged In:</strong><?= $token->getCreated() ?></p>
+        </div>
 
-        <p class="setting"><strong class="mr-2">First Name:</strong><?= $user->getFirstname() ?></p>
-        <p class="setting"><strong class="mr-2">Last Name:</strong><?= $user->getLastname() ?></p>
-        <p class="setting"><strong class="mr-2">Type:</strong><?= $user->getFancyType() ?></p>
-        <p class="setting"><strong class="mr-2">Privacy:</strong><?= $user->getPrivacy() ?></p>
-        <p class="setting"><strong class="mr-2">E-mail Address:</strong><?= $user->getEmail() ?></p>
-        <p class="setting"><strong class="mr-2">Last Logged In:</strong><?= $token->getCreated() ?></p>
+        <div class="mt-4">
+            <h3>Followed Users</h3>
+            <ul class="list-group">
+                <?php foreach ([1, 2, 3] as $i): ?>
+                    <li class="list-group-item">
+                        <p class="float-sm-left">
+                            Jim Bob (jimbob)
+                        </p>
+                        <div class="float-sm-right">
+                            <a href="#" class="btn btn-dark" onclick="showMsgModal(<?= $i ?>)">Message</a>
+                            <a href="#" class="btn btn-dark">Unfollow</a>
+                        </div>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
     </section>
-    <section class="col col-12 col-md-8">
+
+    <section class="col col-12 col-lg-8">
         <h3 class="my-4">Activity Feed</h3>
         <ul class="list-unstyled">
-            <?php foreach ([1,2,3,4,5,6,7] as $i): ?>
-                <?php if($i % 3 == 0): ?>
-                <li class="alert alert-secondary">
-                    <h5 class="alert-heading">Joe Bob commented on <a href="<?= $this->url('/companies/1') ?>" class="alert-link">Assault Gun Platoon</a>:</h5>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan ultrices luctus. Praesent sodales ex convallis sem laoreet tincidunt. Ut bibendum neque felis, bibendum hendrerit tellus laoreet eget. Nam vehicula sagittis lacus quis tempor. Donec id ex et ligula viverra ornare. Maecenas at mattis nunc, eu hendrerit quam. Praesent lacus magna, blandit volutpat aliquam at, egestas ac felis. Cras accumsan condimentum turpis, id auctor magna. Cras aliquet nunc nisi, id lobortis diam accumsan a. In ac gravida velit. Nulla facilisi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Ut vitae neque velit. Praesent metus tellus, suscipit vitae auctor quis, sodales non arcu.</p>
-                    <hr>
-                    <p><?= $i * 5 ?> minutes ago</p>
-                </li>
-                <?php elseif($i % 3 == 1): ?>
+            <?php foreach ([1, 2, 3, 4, 5, 6, 7] as $i): ?>
+                <?php if ($i % 3 == 0): ?>
+                    <li class="alert alert-secondary">
+                        <h5 class="alert-heading">Joe Bob commented on <a href="<?= $this->url('/companies/1') ?>"
+                                                                          class="alert-link">Assault Gun Platoon</a>:
+                        </h5>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan ultrices luctus.
+                            Praesent sodales ex convallis sem laoreet tincidunt. Ut bibendum neque felis, bibendum
+                            hendrerit tellus laoreet eget. Nam vehicula sagittis lacus quis tempor. Donec id ex et
+                            ligula viverra ornare. Maecenas at mattis nunc, eu hendrerit quam. Praesent lacus magna,
+                            blandit volutpat aliquam at, egestas ac felis. Cras accumsan condimentum turpis, id auctor
+                            magna. Cras aliquet nunc nisi, id lobortis diam accumsan a. In ac gravida velit. Nulla
+                            facilisi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus
+                            mus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
+                            himenaeos. Ut vitae neque velit. Praesent metus tellus, suscipit vitae auctor quis, sodales
+                            non arcu.</p>
+                        <hr>
+                        <p><?= $i * 5 ?> minutes ago</p>
+                    </li>
+                <?php elseif ($i % 3 == 1): ?>
                     <li class="alert alert-success">
                         <h5 class="alert-heading">Joe Bob followed you!:</h5>
                         <p>Click <a href="#" class="alert-link">here</a> to follow them back.</p>
@@ -73,7 +115,16 @@ include "app/views/_header.phtml"
                 <?php else: ?>
                     <li class="alert alert-primary">
                         <h5 class="alert-heading">Joe Bob sent you a message:</h5>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan ultrices luctus. Praesent sodales ex convallis sem laoreet tincidunt. Ut bibendum neque felis, bibendum hendrerit tellus laoreet eget. Nam vehicula sagittis lacus quis tempor. Donec id ex et ligula viverra ornare. Maecenas at mattis nunc, eu hendrerit quam. Praesent lacus magna, blandit volutpat aliquam at, egestas ac felis. Cras accumsan condimentum turpis, id auctor magna. Cras aliquet nunc nisi, id lobortis diam accumsan a. In ac gravida velit. Nulla facilisi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Ut vitae neque velit. Praesent metus tellus, suscipit vitae auctor quis, sodales non arcu.</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan ultrices luctus.
+                            Praesent sodales ex convallis sem laoreet tincidunt. Ut bibendum neque felis, bibendum
+                            hendrerit tellus laoreet eget. Nam vehicula sagittis lacus quis tempor. Donec id ex et
+                            ligula viverra ornare. Maecenas at mattis nunc, eu hendrerit quam. Praesent lacus magna,
+                            blandit volutpat aliquam at, egestas ac felis. Cras accumsan condimentum turpis, id auctor
+                            magna. Cras aliquet nunc nisi, id lobortis diam accumsan a. In ac gravida velit. Nulla
+                            facilisi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus
+                            mus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
+                            himenaeos. Ut vitae neque velit. Praesent metus tellus, suscipit vitae auctor quis, sodales
+                            non arcu.</p>
                         <hr>
                         <p><?= $i * 5 ?> minutes ago</p>
                     </li>
@@ -82,6 +133,31 @@ include "app/views/_header.phtml"
             <a href="#" class="btn btn-secondary">Back to top</a>
         </ul>
     </section>
+</div>
+
+<!-- Messaging Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="#">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Compose Message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="hiddenUserIdControl" value="-1" name="userid">
+                    <label for="messageText">Message Body</label>
+                    <textarea class="form-control" name="messageText" id="messageText" rows="10" placeholder="Message Body"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Send">
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <?php

@@ -112,6 +112,26 @@ class User
         return $rows;
     }
 
+    public static function fetchFollowedUsers(PDO $db, int $userid) {
+        $fetch_sql = 'SELECT User.* FROM User JOIN Following F ON User.userId = F.userTo AND userFrom = ?';
+
+        $stmt = $db->prepare($fetch_sql);
+        $res = $stmt->execute([$userid]);
+        if ($res == false) {
+            error_log("Unable to fetch Users!: " . $stmt->errorCode());
+            return null;
+        }
+
+        $lookup = [];
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $user = self::build($row);
+            $lookup[$user->getUserId()] = $user;
+        }
+
+        return $lookup;
+    }
+
     /**
      * Commits the changes made to this data model to the database.
      * @param \PDO $db database connection
@@ -291,6 +311,11 @@ class User
         $this->lastname = $lastname;
         $this->changed = true;
         return $this;
+    }
+
+    public function getFullName() : string
+    {
+        return $this->getFirstname() . " " . $this->getLastname();
     }
 
     /**
