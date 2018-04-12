@@ -20,8 +20,9 @@ class Following
 {
     private $id = -1;
     private $userFrom = 0;
+    private $userTo = 0;
 
-    private $userTo = 0; // true when the model is no longer in sync with the DB.
+    private $changed = false; // true when the model is no longer in sync with the DB.
 
     /**
      * Build a Following from database params.

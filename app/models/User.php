@@ -232,6 +232,19 @@ class User
     }
 
     /**
+     * @return string
+     */
+    public function getFancyType(): string
+    {
+        switch ($this->getType()) {
+            case self::TYPE_ADMIN: return 'Admin';
+            case self::TYPE_EDITOR: return 'Editor';
+            case self::TYPE_COMMENTER: return 'Commenter';
+            default: return 'Unknown';
+        }
+    }
+
+    /**
      * @param string $username
      * @return User
      */

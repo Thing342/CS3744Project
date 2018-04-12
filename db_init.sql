@@ -94,7 +94,7 @@ ALTER TABLE UnitEvent COMMENT = 'An event that occurred to some Unit along the c
 /** Username: adminuser; Password: mypassword **/
 /** INSERT INTO fantasticfour_p4.User (userId, username, pword_hash, email) VALUES (1, 'adminuser', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'sample@example.com');**/
 INSERT INTO fantasticfour_p4.User (`userId`, `username`, `pword_hash`, `email`, `type`, `firstname`, `lastname`, `privacy`) VALUES
-  (1, 'adminuser', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'sample@example.com', 1, 'Admin', 'User', 'PRIVATE'),
+  (1, 'adminuser', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'sample@example.com', 3, 'Admin', 'User', 'PRIVATE'),
   (2, 'levelone', '$2y$10$gXx4IKj7O9FTNDndXIV./OG8gKCnTMovRPvhMFXWIT64QAWjY6YLq', 'leslie6@vt.edu', 1, '', '', 'PRIVATE'),
   (3, 'leveltwo', '$2y$10$0VZNmMVkZXzeRdbzmpouROdMt0Cd9WY.h96r.S11RKA1TptzsPMmK', 'leslie6@vt.edu', 2, '', '', 'PRIVATE'),
   (4, 'levelthree', '$2y$10$gJmElM29rboLdeRXt7LuGu1TIWB7dT/Nbn70BK42KMaRUi/7yqjSC', 'leslie6@vt.edu', 3, '', '', 'PRIVATE'),

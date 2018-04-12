@@ -218,10 +218,11 @@ class UserController extends BaseController
     }
 
     public function editUser($params) {
+        $token = $this->require_authentication();
+
       try {
-        $baseType = (int)1;
-          // Create a new user and attempt to save it to the database:
-          $user = User::fetch($this->getDBConn(), $_POST['id']);
+        $baseType = USER::TYPE_COMMENTER;
+          $user = $token->getUser();
 
           $user->setUsername(strtolower($_POST['username2']));
           $user->setPassword($_POST['password2']);
@@ -230,10 +231,10 @@ class UserController extends BaseController
           $user->setFirstname($_POST['firstname2']);
           $user->setLastname($_POST['lastname2']);
           $user->setPrivacy($_POST['privacy2']);
+
           $res = $user->commit($this->getDBConn());
 
           error_log("Edited user ". $user->getUserId());
-          require "config.php";
           if ($res) {
               // display success message and redirect to new user's page
               $this->addFlashMessage('Edited user: ' . $user->getUsername(), self::FLASH_LEVEL_SUCCESS);
@@ -273,7 +274,7 @@ class UserController extends BaseController
 
         if ($res) {
             error_log("Deleted user ".$userid);
-            $this->redirect("/users/new");
+            $this->redirect("/");
         } else {
             $this->error404('/users/delete/' . $userid);
         }

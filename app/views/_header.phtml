@@ -63,14 +63,6 @@
                       <a class="nav-link" href="<?= $_ENV['SUBDIRECTORY'] ?>/users/all">View Users</a>
                   </li>
                 <?php endif; ?>
-
-                <?php if($this->getLoggedInUser() != null): ?>
-                    <?php if($this->getLoggedInUser()->getType() == (int)3): ?>
-                    <li class="nav-item">
-                           <a class="nav-link" href="<?= $_ENV['SUBDIRECTORY'] ?>/admin">Admin Controls</a>
-                    </li>
-                    <?php endif; ?>
-                 <?php endif; ?>
                  
                 <li class="nav-item dropdown">
                     <?php if ($this->getLoggedInUser() != null): ?>
@@ -84,7 +76,9 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="<?= $_ENV['SUBDIRECTORY'] ?>/users/logout">Log Out</a>
                             <a class="dropdown-item" href="<?= $_ENV['SUBDIRECTORY'] ?>/users">User Profile</a>
-
+                            <?php if($this->getLoggedInUser()->getType() == \app\models\User::TYPE_ADMIN): ?>
+                                <a class="dropdown-item" href="<?= $this->url('/admin')?>">Admin Controls</a>
+                            <?php endif; ?>
                         </div>
                     <?php else: ?>
                         <a class="nav-link dropdown-toggle" href="<?= $_ENV['SUBDIRECTORY'] ?>/users/login"

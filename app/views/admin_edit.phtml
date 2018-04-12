@@ -1,0 +1,80 @@
+<?php
+/**
+ * The 'edit user' page
+ *
+ * @var \app\models\User $user
+ * @var \app\controllers\BaseController $this
+ */
+
+use app\models\User;
+
+$title = 'Edit Profile';
+
+$js_init = '';
+$container_class = 'container';
+$container_id = 'container';
+include "app/views/_header.phtml"
+?>
+<h2 class="my-4">Edit User</h2>
+<form method="post" action="<?= $this->url("/admin/edit/" . $user->getUserId()) ?>">
+    <label for="username2">New Username</label>
+    <input type="text" class="form-control mx-3" name="username2"
+           value="<?= $user->getUsername() ?>" required minlength="7">
+
+    <label for="firstname2">First Name</label>
+    <input type="text" class="form-control mx-3" name="firstname2"
+           value="<?= $user->getFirstname() ?>" required>
+
+    <label for="lastname2">Last Name</label>
+    <input type="text" class="form-control mx-3" name="lastname2"
+           value="<?= $user->getLastname() ?>" required>
+
+    <label for="email2">E-mail Address</label>
+    <input type="email" class="form-control mx-3" name="email2"
+           value="<?= $user->getEmail() ?>" required>
+
+    <div class="form-group mt-2">
+        <h6>Account Role</h6>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="type2" id="accountRoleCommenter" value="<?= User::TYPE_COMMENTER ?>" <?= ($user->getType() == User::TYPE_COMMENTER) ? 'checked' : '' ?> >
+            <label class="form-check-label" for="accountRoleCommenter">
+                Commenter (default) - Can leave comments on pages
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="type2" id="accountRoleEditor" value="<?= User::TYPE_EDITOR ?>" <?= ($user->getType() == User::TYPE_EDITOR) ? 'checked' : '' ?> >
+            <label class="form-check-label" for="accountRoleEditor">
+                Editor - can edit pages and moderate comments
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="type2" id="accountRoleAdmin" value="<?= User::TYPE_ADMIN ?>" <?= ($user->getType() == User::TYPE_ADMIN) ? 'checked' : '' ?> >
+            <label class="form-check-label" for="accountRoleAdmin">
+                Admin - can add/remove/edit users
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group mt-2">
+        <h6>Account Visibility</h6>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="privacy2" id="accountVisPublic" value="PUBLIC" <?= ($user->getPrivacy() == 'PUBLIC') ? 'checked' : '' ?> >
+            <label class="form-check-label" for="accountVisPublic">
+                Public Visibility
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="privacy2" id="accountVisPrivate" value="PRIVATE" <?= ($user->getPrivacy() == 'PRIVATE') ? 'checked' : '' ?>>
+            <label class="form-check-label" for="accountVisPrivate">
+                Private Visibility (Default)
+            </label>
+        </div>
+    </div>
+
+    <a href="<?= $this->url('/admin') ?>" class="btn btn-secondary">Cancel</a>
+    <input type="submit" class="btn btn-primary" value="Change Details">
+</form>
+
+<?php
+include "app/views/_footer.phtml"
+?>
