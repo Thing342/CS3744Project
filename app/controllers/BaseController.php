@@ -46,9 +46,11 @@ abstract class BaseController extends Controller
 
     /**
      * Validate the user's authentication status, and redirects them to the login page if they aren't logged in.
+     * @param int $user_level - the minimum required user level needed to access this page.
+     *  By default, this is set to `User::TYPE_COMMENTER` (the lowest level)
      * @return Token|null - A Token identifying the user's session if they are logged in, null otherwise.
      */
-    public function require_authentication() : ?Token {
+    public function require_authentication(int $user_level = User::TYPE_COMMENTER) : ?Token {
         // failure state
         $fail = function(string $reason) {
             // User is not logged in / expired token
@@ -75,9 +77,16 @@ abstract class BaseController extends Controller
             $fail('invalid / expired token');
         }
 
-        //$new_time = date("Y-m-d H:i:s", time() + 30 * 60);
-        //$token->setExpires($new_time);
-        //$token->commit($this->getDBConn());
+        // Check user permissions
+        $usertype = $token->getUser()->getType();
+        if ($usertype < $user_level) {
+            // Not high enough user perms
+            $this->addFlashMessage("You do not have the necessary permissions required to view this page.", self::FLASH_LEVEL_USER_ERR);
+            error_log("Inadequate user permissions: (Required $user_level, recieved $usertype) ");
+            header( "HTTP/1.0 401 Unauthorized" );
+            $this->redirect('/');
+            die();
+        }
 
         // Return the token to the user
         return $token;

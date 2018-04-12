@@ -182,8 +182,6 @@ class Following
         return $this;
     }
 
-
-
     public function getChanged(): bool {
         return $this->changed;
     }
