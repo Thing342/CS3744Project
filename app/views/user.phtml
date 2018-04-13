@@ -11,6 +11,7 @@
  * @var \app\models\Token $token - The user's token.
  * @var \app\models\User[] $following - Users that the user has followed
  * @var \app\models\User[] $followers - Users that follow the user.
+ * @var \app\models\UserEvent[] $events - Activity feed objects
  * @var \app\controllers\BaseController $this
  */
 $title = 'My Profile';
@@ -20,6 +21,45 @@ $container_class = 'container';
 $container_id = 'container';
 include "app/views/_header.phtml"
 ?>
+<script type="application/javascript">
+    function unfollow(userId) {
+        // hacky method to submit form from JS
+        if (!confirm('Are you sure you want to unfollow this user?')) {
+            return;
+        }
+
+        var url = '<?= $this->url('/users') ?>' + '/' + userId + '/unfollow';
+        var $form = $('<form>', {
+            action: url,
+            method: 'post'
+        });
+
+        $('<input>').attr({
+            type: "hidden",
+            name: 'ref',
+            value: '/users'
+        }).appendTo($form);
+
+        $form.appendTo('body').submit();
+    }
+
+    function follow(userId) {
+        var url = '<?= $this->url('/users') ?>' + '/' + userId + '/follow';
+        var $form = $('<form>', {
+            action: url,
+            method: 'post'
+        });
+
+        $('<input>').attr({
+            type: "hidden",
+            name: 'ref',
+            value: '/users'
+        }).appendTo($form);
+
+        $form.appendTo('body').submit();
+    }
+</script>
+
 <div class="row">
     <section class="col col-12 col-lg-4">
         <div class="my-4">
@@ -80,7 +120,7 @@ include "app/views/_header.phtml"
                         ?>
                         <div>
                             <a href="<?= $this->url('/messages') ?>" class="btn btn-dark">Message</a>
-                            <a href="#" class="btn btn-dark">Unfollow</a>
+                            <button class="btn btn-dark" onclick="unfollow(<?= $user->getUserId() ?>)">Unfollow</button>
                         </div>
                     </li>
                 <?php endforeach; ?>
@@ -106,7 +146,7 @@ include "app/views/_header.phtml"
                             echo "</h6>";
                         }
                         ?>
-                        <a href="#" class="btn btn-dark">Follow</a>
+                        <button class="btn btn-dark" onclick="follow(<?= $user->getUserId() ?>)">Follow</button>
                     </li>
                 <?php endforeach; ?>
             </ul>
@@ -116,47 +156,26 @@ include "app/views/_header.phtml"
     <section class="col col-12 col-lg-8">
         <h3 class="my-4">Activity Feed</h3>
         <ul class="list-unstyled">
-            <?php foreach ([1, 2, 3, 4, 5, 6, 7] as $i): ?>
-                <?php if ($i % 3 == 0): ?>
+            <?php foreach ($events as $event): ?>
+                <?php if ($event->getEventType() == 'comment'): ?>
                     <li class="alert alert-secondary">
-                        <h5 class="alert-heading">Joe Bob commented on <a href="<?= $this->url('/companies/1') ?>"
-                                                                          class="alert-link">Assault Gun Platoon</a>:
+                        <h5 class="alert-heading">
+                            <?= $event->getUser()->getFullName() ?> commented on a company page:
                         </h5>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan ultrices luctus.
-                            Praesent sodales ex convallis sem laoreet tincidunt. Ut bibendum neque felis, bibendum
-                            hendrerit tellus laoreet eget. Nam vehicula sagittis lacus quis tempor. Donec id ex et
-                            ligula viverra ornare. Maecenas at mattis nunc, eu hendrerit quam. Praesent lacus magna,
-                            blandit volutpat aliquam at, egestas ac felis. Cras accumsan condimentum turpis, id auctor
-                            magna. Cras aliquet nunc nisi, id lobortis diam accumsan a. In ac gravida velit. Nulla
-                            facilisi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus
-                            mus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
-                            himenaeos. Ut vitae neque velit. Praesent metus tellus, suscipit vitae auctor quis, sodales
-                            non arcu.</p>
+                        <p><?= $event->getText() ?></p>
                         <hr>
-                        <p><?= $i * 5 ?> minutes ago</p>
+                        <span><?= \lib\timeAgo($event->getTimestamp()) ?></span>
+                        <a href="<?= $this->url('/companies/' . $event->getUnitID()) ?>" class="d-block-inline alert-link ml-4">Read</a>
                     </li>
-                <?php elseif ($i % 3 == 1): ?>
-                    <li class="alert alert-success">
-                        <h5 class="alert-heading">Joe Bob followed you!:</h5>
-                        <p>Click <a href="#" class="alert-link">here</a> to follow them back.</p>
-                        <hr>
-                        <p><?= $i * 5 ?> minutes ago</p>
-                    </li>
-                <?php else: ?>
+                <?php elseif ($event->getEventType() == 'message'): ?>
                     <li class="alert alert-primary">
-                        <h5 class="alert-heading">Joe Bob sent you a message:</h5>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan ultrices luctus.
-                            Praesent sodales ex convallis sem laoreet tincidunt. Ut bibendum neque felis, bibendum
-                            hendrerit tellus laoreet eget. Nam vehicula sagittis lacus quis tempor. Donec id ex et
-                            ligula viverra ornare. Maecenas at mattis nunc, eu hendrerit quam. Praesent lacus magna,
-                            blandit volutpat aliquam at, egestas ac felis. Cras accumsan condimentum turpis, id auctor
-                            magna. Cras aliquet nunc nisi, id lobortis diam accumsan a. In ac gravida velit. Nulla
-                            facilisi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus
-                            mus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
-                            himenaeos. Ut vitae neque velit. Praesent metus tellus, suscipit vitae auctor quis, sodales
-                            non arcu.</p>
+                        <h5 class="alert-heading"><?= $event->getUser()->getFullName() ?> sent you a message:</h5>
+                        <p><?= \lib\ellipsize($event->getText(), 100) ?></p>
                         <hr>
-                        <p><?= $i * 5 ?> minutes ago</p>
+                        <div>
+                            <span><?= \lib\timeAgo($event->getTimestamp()) ?></span>
+                            <a href="<?= $this->url('/messages/' . $event->getId()) ?>" class="d-block-inline alert-link ml-4">Read</a>
+                        </div>
                     </li>
                 <?php endif; ?>
             <?php endforeach; ?>

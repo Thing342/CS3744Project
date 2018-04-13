@@ -11,7 +11,7 @@ namespace app\models;
 
 use PDO;
 
-class Message
+class Message implements UserEvent
 {
     private $id = -1;
     private $userFrom = null;
@@ -62,7 +62,7 @@ class Message
         return $model;
     }
 
-    public static function fetchAllRecipient(PDO $db, int $recipientID) : ?array {
+    public static function fetchAllRecipient(PDO $db, int $recipientID, int $hoursAgo = -1) : ?array {
         $sql = <<<SQL
 SELECT * 
 FROM Message 
@@ -72,8 +72,22 @@ JOIN User UT ON F.userTo = UT.userId
 WHERE F.userTo = ?
 ORDER BY timestamp
 SQL;
+        $params = [$recipientID];
+        if ($hoursAgo != -1) {
+            $sql = <<<SQL
+SELECT * 
+FROM Message 
+JOIN Following F ON Message.follow = F.id
+JOIN User UF ON F.userFrom = UF.userId
+JOIN User UT ON F.userTo = UT.userId
+WHERE F.userTo = ? AND TIMESTAMPDIFF(HOUR, timestamp, NOW()) < ?
+ORDER BY timestamp
+SQL;
+            array_push($params, $hoursAgo);
+        }
+
         $stmt = $db->prepare($sql);
-        $res = $stmt->execute([$recipientID]);
+        $res = $stmt->execute($params);
 
         if($res == false) {
             error_log("Could not query Message (" . $stmt->queryString ."):" . $stmt->errorCode());
@@ -328,5 +342,15 @@ SQL;
     public function getUserTo() : User
     {
         return $this->userTo;
+    }
+
+    public function getUser(): User
+    {
+        return $this->getUserFrom();
+    }
+
+    public function getEventType(): string
+    {
+        return 'message';
     }
 }

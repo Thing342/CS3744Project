@@ -4,7 +4,7 @@ Creates the database, user, tables, and sample data for the project.
  */
 
 CREATE DATABASE IF NOT EXISTS fantasticfour_p4;
-CREATE USER IF NOT EXISTS 'fantasticfour'@'localhost' IDENTIFIED BY 'cs3744';
+/**CREATE USER IF NOT EXISTS 'fantasticfour'@'localhost' IDENTIFIED BY 'cs3744';**/
 GRANT ALL PRIVILEGES ON fantasticfour_p4.* to 'fantasticfour'@'localhost';
 
 USE fantasticfour_p4;
@@ -111,7 +111,7 @@ CREATE TABLE Message
   follow INT NOT NULL ,
   timestamp DATETIME NOT NULL ,
   text TEXT NOT NULL ,
-  CONSTRAINT Message_Following_id_fk FOREIGN KEY (follow) REFERENCES Following(id) ON DELETE NO ACTION
+  CONSTRAINT Message_Following_id_fk FOREIGN KEY (follow) REFERENCES Following(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 ALTER TABLE Message COMMENT = 'Represents a single message sent through a Following relation.';
 

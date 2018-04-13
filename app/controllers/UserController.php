@@ -11,14 +11,17 @@
 namespace app\controllers;
 
 require_once "app/models/User.php";
+require_once "app/models/UserEvent.php";
 require_once "app/models/Token.php";
 require_once "app/models/Following.php";
 require_once "app/models/Message.php";
 require_once "app/controllers/BaseController.php";
 
+use app\models\Comment;
 use app\models\Message;
 use app\models\Token;
 use app\models\User;
+use app\models\UserEvent;
 use app\models\Following;
 
 /**
@@ -83,50 +86,56 @@ class UserController extends BaseController
             $this->error404($params[0]);
         }
 
+        if(array_key_exists('ref', $_POST)) {
+            $referrer = $_POST['ref'];
+        } else {
+            $referrer = '/users/all';
+        }
+
         // Delete company model from DB
         $db = $this->getDBConn();
         $res = Following::deleteFollow($db, $currUser ,$id); // true if successful
 
         if ($res) {
             $this->addFlashMessage("Deleted following relationship!", self::FLASH_LEVEL_SUCCESS);
-            $this->redirect("/users/all");
+            $this->redirect($referrer);
         } else {
             $this->addFlashMessage("Unknown error when deleting following relationship.", self::FLASH_LEVEL_SERVER_ERR);
-            $this->redirect("/users/all");
+            $this->redirect($referrer);
         }
     }
 
     public function follow($params)
     {
-
         // Throw 401 if not logged in
         $token = $this->require_authentication();
         $currUser = $token->getUser()->getUserId();
         // Throw 401 if not logged in
         $id = $params['userId'];
-      /*  if ($id == null) {
-            $this->error404($params[0]);
-        }*/
+
+        if(array_key_exists('ref', $_POST)) {
+            $referrer = $_POST['ref'];
+        } else {
+            $referrer = '/users/all';
+        }
+
         try {
-        // Delete company model from DB
-        $db = $this->getDBConn();
-        $follow = new Following();
-        $res = $follow->setUserFrom($currUser)
-            ->setUserTo($id)
-            ->commit($this->getDBConn());
+            // Delete company model from DB
+            $db = $this->getDBConn();
+            $follow = new Following();
+            $res = $follow->setUserFrom($currUser)
+                ->setUserTo($id)
+                ->commit($db);
 
-            error_log("Added following relationship ". $follow->getFollowId());
-            $this->addFlashMessage('Now following new user.', self::FLASH_LEVEL_SUCCESS);
-          }
-          catch (\PDOException $dbErr) {
-              $this->addFlashMessage('Database error on adding following relationship:<br>'.$dbErr->getMessage(), self::FLASH_LEVEL_SERVER_ERR);
-          }
+            error_log("Added following relationship " . $follow->getFollowId());
+            $this->addFlashMessage('Now following user.', self::FLASH_LEVEL_SUCCESS);
+        } catch (\PDOException $dbErr) {
+            $this->addFlashMessage('Database error on adding following relationship:<br>' . $dbErr->getMessage(), self::FLASH_LEVEL_SERVER_ERR);
+        }
 
-          // Some sort of error on adding user; return to form
-          $this->redirect("/users/all");
-
-
+        $this->redirect($referrer);
     }
+
     /**
      * ENDPOINT
      * Shows the userpage for the currently logged-in user.
@@ -140,19 +149,35 @@ class UserController extends BaseController
             return;
         }
 
+        $db = $this->getDBConn();
+
         // Fetch user info from token
         $user = $token->getUser();
 
         // Fetch followers and followees
-        $following = User::fetchFollowedUsers($this->getDBConn(), $user->getUserId());
+        $following = User::fetchFollowedUsers($db, $user->getUserId());
         if($following == null) {
-            $this->addFlashMessage('Unable to fetch followed users.', self::FLASH_LEVEL_SERVER_ERR);
+            $following=[];
         }
 
-        $followers = User::fetchFollowingUsers($this->getDBConn(), $user->getUserId());
+        $followers = User::fetchFollowingUsers($db, $user->getUserId());
         if($followers == null) {
-            $this->addFlashMessage('Unable to fetch followed users.', self::FLASH_LEVEL_SERVER_ERR);
+            $followers=[];
         }
+
+        $comments = Comment::fetchByFollow($db, $user->getUserId(), 24);
+        if($comments == null) {
+            $comments=[];
+        }
+
+        $messages = Message::fetchAllRecipient($db, $user->getUserId(), 24);
+        if($messages == null) {
+            $messages=[];
+        }
+
+        // See app/models/UserEvent.php for definition
+        $events = array_merge($messages, $comments);
+        usort($events, "\app\models\UserEvent_sorting_key");
 
         include_once "app/views/user.phtml";
     }

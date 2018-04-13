@@ -17,6 +17,7 @@ use app\models\Person;
 use app\models\UnitEvent;
 
 use app\models\User;
+use app\models\UserEvent;
 use lib\Controller;
 
 /**
@@ -527,6 +528,10 @@ class CompanyController extends BaseController
         }
 
         $this->redirect('/companies/' . $unitid);
+    }
+
+    private function fetchActivityFeed(User $user) : array {
+
     }
 
 }

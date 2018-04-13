@@ -15,7 +15,7 @@ use PDO;
  * Class Comment
  * @package app\models
  */
-class Comment
+class Comment implements UserEvent
 {
     private $id = -1;
     private $user = null;
@@ -79,6 +79,50 @@ class Comment
 
         $stmt = $db->prepare($sql);
         $res = $stmt->execute([$user]);
+
+        if($res == false) {
+            error_log("Could not query Comment (" . $stmt->queryString ."):" . $stmt->errorCode());
+            return null;
+        }
+
+        $results = [];
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $user = User::build($row);
+            array_push($results, self::build($row['id'], $user, $row['unit'], $row['timestamp'], $row['text']));
+        }
+
+        return $results;
+    }
+
+    /**
+     * @param PDO $db
+     * @param int $user
+     * @return Comment[]
+     */
+    public static function fetchByFollow(PDO $db, int $user, int $hoursAgo = -1) : ?array {
+        $sql = <<<SQL
+SELECT * 
+FROM Comment 
+JOIN User U ON Comment.user = U.userId
+JOIN Following F ON U.userId = F.userTo AND F.userFrom = ?
+ORDER BY timestamp
+SQL;
+        $params = [$user];
+        if($hoursAgo != -1) {
+            $sql = <<<SQL
+SELECT * 
+FROM Comment 
+JOIN User U ON Comment.user = U.userId
+JOIN Following F ON U.userId = F.userTo AND F.userFrom = ?
+WHERE TIMESTAMPDIFF(HOUR, timestamp, NOW()) < ?
+ORDER BY timestamp
+SQL;
+            array_push($params, $hoursAgo);
+        }
+
+        $stmt = $db->prepare($sql);
+        $res = $stmt->execute($params);
 
         if($res == false) {
             error_log("Could not query Comment (" . $stmt->queryString ."):" . $stmt->errorCode());
@@ -231,5 +275,10 @@ class Comment
         $this->timestamp = $timestamp;
         $this->changed = true;
         return $this;
+    }
+
+    public function getEventType(): string
+    {
+        return 'comment';
     }
 }
