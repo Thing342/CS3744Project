@@ -9,6 +9,8 @@
  *
  * @var app\models\User $user - The current user.
  * @var \app\models\Token $token - The user's token.
+ * @var \app\models\User[] $following - Users that the user has followed
+ * @var \app\models\User[] $followers - Users that follow the user.
  * @var \app\controllers\BaseController $this
  */
 $title = 'My Profile';
@@ -18,14 +20,6 @@ $container_class = 'container';
 $container_id = 'container';
 include "app/views/_header.phtml"
 ?>
-<script>
-    function showMsgModal(userid) {
-        // Sets the userID in the modal prior to showing
-        $('#hiddenUserIdControl').val(userid);
-        $('#exampleModal').modal();
-    }
-</script>
-
 <div class="row">
     <section class="col col-12 col-lg-4">
         <div class="my-4">
@@ -68,15 +62,51 @@ include "app/views/_header.phtml"
         <div class="mt-4">
             <h3>Followed Users</h3>
             <ul class="list-group">
-                <?php foreach ([1, 2, 3] as $i): ?>
+                <?php foreach ($following as $user): ?>
                     <li class="list-group-item">
-                        <p class="float-sm-left">
-                            Jim Bob (jimbob)
-                        </p>
-                        <div class="float-sm-right">
-                            <a href="#" class="btn btn-dark" onclick="showMsgModal(<?= $i ?>)">Message</a>
+                        <?php
+                        if ($user->getType() == \app\models\User::TYPE_ADMIN) {
+                            echo "<h6 class='mt-0 text-danger'> " . $user->getFullName() . " (" . $user->getUsername() . ")";
+                            echo "<span class=\"ml-2 badge badge-secondary\">Administrator</span>";
+                            echo "</h6>";
+                        } elseif ($user->getType() == \app\models\User::TYPE_EDITOR) {
+                            echo "<h6 class='mt-0 text-primary'> " . $user->getFullName() . " (" . $user->getUsername() . ")";
+                            echo "<span class=\"ml-2 badge badge-secondary\">Editor</span>";
+                            echo "</h6>";
+                        } else {
+                            echo "<h6 class='mt-0'> " . $user->getFullName() . " (" . $user->getUsername() . ")";
+                            echo "</h6>";
+                        }
+                        ?>
+                        <div>
+                            <a href="<?= $this->url('/messages') ?>" class="btn btn-dark">Message</a>
                             <a href="#" class="btn btn-dark">Unfollow</a>
                         </div>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+
+        <div class="mt-4">
+            <h3>Following Users</h3>
+            <ul class="list-group">
+                <?php foreach ($followers as $user): ?>
+                    <li class="list-group-item">
+                        <?php
+                        if ($user->getType() == \app\models\User::TYPE_ADMIN) {
+                            echo "<h6 class='mt-0 text-danger'> " . $user->getFullName() . " (" . $user->getUsername() . ")";
+                            echo "<span class=\"ml-2 badge badge-secondary\">Administrator</span>";
+                            echo "</h6>";
+                        } elseif ($user->getType() == \app\models\User::TYPE_EDITOR) {
+                            echo "<h6 class='mt-0 text-primary'> " . $user->getFullName() . " (" . $user->getUsername() . ")";
+                            echo "<span class=\"ml-2 badge badge-secondary\">Editor</span>";
+                            echo "</h6>";
+                        } else {
+                            echo "<h6 class='mt-0'> " . $user->getFullName() . " (" . $user->getUsername() . ")";
+                            echo "</h6>";
+                        }
+                        ?>
+                        <a href="#" class="btn btn-dark">Follow</a>
                     </li>
                 <?php endforeach; ?>
             </ul>
@@ -133,31 +163,6 @@ include "app/views/_header.phtml"
             <a href="#" class="btn btn-secondary">Back to top</a>
         </ul>
     </section>
-</div>
-
-<!-- Messaging Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form action="#">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Compose Message</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" id="hiddenUserIdControl" value="-1" name="userid">
-                    <label for="messageText">Message Body</label>
-                    <textarea class="form-control" name="messageText" id="messageText" rows="10" placeholder="Message Body"></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-primary" value="Send">
-                </div>
-            </form>
-        </div>
-    </div>
 </div>
 
 <?php

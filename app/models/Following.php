@@ -107,20 +107,19 @@ class Following
      * @param PDO $db
      * @param int $userFrom - user who is doing the following
      * @param int $userTo - user who is being followed
-     * @return bool - true if $userFrom follows $userTo, false if otherwise
+     * @return bool - the id of the follow relation (truthy) if the users follow each other, 0 (falsy) otherwise.
      */
-    public function checkFollow(PDO $db, int $follower, int $followee): bool {
+    public function checkFollow(PDO $db, int $follower, int $followee): int {
 
-      $stmt = $db->prepare('SELECT COUNT(id) FROM Following WHERE userFrom = ? AND userTo = ?');
-      $stmt->execute([
-          $follower, $followee]);
-      $numRows = $stmt->fetch(PDO::FETCH_NUM);
-    //  if ($numRows == 0){
-        //return false;
+      $stmt = $db->prepare('SELECT id FROM Following WHERE userFrom = ? AND userTo = ? LIMIT 1');
+      $stmt->execute([$follower, $followee]);
 
+      $result = 0;
+      if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+          $result = $row[0];
+      }
 
-    //  }
-      return $numRows[0];
+      return $result;
     }
 
     /**

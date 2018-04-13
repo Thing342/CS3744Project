@@ -27,3 +27,7 @@ function gen_regex(string $pattern): string {
 
     return "@^" . $pattern . "$@D";
 }
+
+function ellipsize(string $in, int $n = 50) : string {
+    return strlen($in) > $n ? substr($in,0,$n)."..." : $in;
+}

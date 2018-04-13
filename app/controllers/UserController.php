@@ -13,8 +13,10 @@ namespace app\controllers;
 require_once "app/models/User.php";
 require_once "app/models/Token.php";
 require_once "app/models/Following.php";
+require_once "app/models/Message.php";
 require_once "app/controllers/BaseController.php";
 
+use app\models\Message;
 use app\models\Token;
 use app\models\User;
 use app\models\Following;
@@ -28,6 +30,7 @@ use app\models\Following;
  * Responsibilities:
  *  - Managing user accounts (creation, showing, updating, deletion)
  *  - Managing user sessions (login, logout, tokens)
+ *  - Logging out inactive users
  *  - Logging out inactive users
  */
 class UserController extends BaseController
@@ -139,6 +142,18 @@ class UserController extends BaseController
 
         // Fetch user info from token
         $user = $token->getUser();
+
+        // Fetch followers and followees
+        $following = User::fetchFollowedUsers($this->getDBConn(), $user->getUserId());
+        if($following == null) {
+            $this->addFlashMessage('Unable to fetch followed users.', self::FLASH_LEVEL_SERVER_ERR);
+        }
+
+        $followers = User::fetchFollowingUsers($this->getDBConn(), $user->getUserId());
+        if($followers == null) {
+            $this->addFlashMessage('Unable to fetch followed users.', self::FLASH_LEVEL_SERVER_ERR);
+        }
+
         include_once "app/views/user.phtml";
     }
 

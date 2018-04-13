@@ -1,0 +1,174 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: wes
+ * Date: 4/13/18
+ * Time: 12:37 PM
+ *
+ * @var \app\models\Message[] $recieved
+ * @var \app\models\Message[] $sent
+ * @var \app\models\Message $message
+ * @var \app\models\User[] $messageableUsers
+ * @var \app\controllers\BaseController $this
+ */
+$title = 'Message Inbox';
+
+$js_init = '';
+$container_class = 'container';
+$container_id = 'container';
+include "app/views/_header.phtml"
+?>
+<script>
+    function showMsgModal(userid, username) {
+        // Sets the userID in the modal prior to showing
+        $('#hiddenUserIdControl').val(userid);
+        $('#exampleModalLabel').text('Compose message to ' + username + ':');
+        $('#exampleModal').modal();
+    }
+
+    function deleteComment(msgId) {
+        // hacky method to submit form from JS
+        if (!confirm('Are you sure you want to delete this message?')) {
+            return;
+        }
+
+        var url = '<?= $this->url('/messages') ?>' + '/' + msgId + '/delete';
+        var $form = $('<form>', {
+            action: url,
+            method: 'post'
+        });
+        $form.appendTo('body').submit();
+    }
+</script>
+
+<h2 class="my-4">Message Inbox</h2>
+<div class="row">
+    <section class="col col-12 col-lg-6 pull-right">
+        <?php if ($message): ?>
+            <div class="card">
+                <div class="card-body">
+                    <?php
+                    $user = $message->getUserFrom();
+                    if ($user->getType() == \app\models\User::TYPE_ADMIN) {
+                        echo "<h5 class='card-title text-danger'> " . $user->getFullName() . " (" . $user->getUsername() . ")";
+                        echo "<span class=\"ml-2 badge badge-secondary\">Administrator</span>";
+                        echo "</h5>";
+                    } elseif ($user->getType() == \app\models\User::TYPE_EDITOR) {
+                        echo "<h5 class='card-title text-primary'> " . $user->getFullName() . " (" . $user->getUsername() . ")";
+                        echo "<span class=\"ml-2 badge badge-secondary\">Editor</span>";
+                        echo "</h6>";
+                    } else {
+                        echo "<h5 class='card-title'> " . $user->getFullName() . " (" . $user->getUsername() . ")";
+                        echo "</h6>";
+                    }
+                    ?>
+                    <h6 class="card-subtitle mb-2 text-muted"><?= $message->getTimestamp() ?></h6>
+                    <p class="card-text"><?= $message->getText() ?></p>
+                    <button class="card-link btn btn-primary" onclick="showMsgModal(<?= $message->getUserFrom()->getUserId() ?>, '<?= $message->getUserFrom()->getUsername() ?>')">Reply</button>
+                    <button class="card-link btn btn-secondary" onclick="deleteComment(<?= $message->getId() ?>)">Delete</button>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <div class="card mt-4" style="max-width: 100%">
+            <div class="card-header"><h4>Recieved Messages</h4></div>
+            <ul class="list-group list-group-flush">
+                <?php foreach ($recieved as $messagei): ?>
+                    <li class="list-group-item list-group-item-action <?= ($message != null && $message->getId() == $messagei->getId()) ? 'active' : '' ?>"
+                        onclick="window.location.href='<?= $this->url('/messages/' . $messagei->getId()) ?>'">
+                        <div>
+                            <button type="button" class="close" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+
+                            <?php
+                            $user = $messagei->getUserFrom();
+                            if ($user->getType() == \app\models\User::TYPE_ADMIN) {
+                                echo "<h6 class='mt-0 text-danger'> " . $user->getFullName() . " (" . $user->getUsername() . ")";
+                                echo "<span class=\"ml-2 badge badge-secondary\">Administrator</span>";
+                                echo "</h6>";
+                            } elseif ($user->getType() == \app\models\User::TYPE_EDITOR) {
+                                echo "<h6 class='mt-0 text-primary'> " . $user->getFullName() . " (" . $user->getUsername() . ")";
+                                echo "<span class=\"ml-2 badge badge-secondary\">Editor</span>";
+                                echo "</h6>";
+                            } else {
+                                echo "<h6 class='mt-0'> " . $user->getFullName() . " (" . $user->getUsername() . ")";
+                                echo "</h6>";
+                            }
+                            ?>
+                            <p><?= $messagei->getTimestamp() ?></p>
+                            <p><?= \lib\ellipsize($messagei->getText(), 200) ?></p>
+                        </div>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+
+        <div class="card mt-4" style="max-width: 100%">
+            <div class="card-header"><h4>Sent Messages</h4></div>
+            <ul class="list-group list-group-flush">
+                <?php foreach ($sent as $messagei): ?>
+                    <li class="list-group-item">
+                        <div>
+                            <button type="button" class="close" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+
+                            <h6>To: <?= $messagei->getUserTo()->getFullName() ?> (<?= $messagei->getUserTo()->getUsername() ?>)</h6>
+                            <p><?= $messagei->getTimestamp() ?></p>
+                            <p><?= \lib\ellipsize($messagei->getText(), 200) ?></p>
+                        </div>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </section>
+
+    <section class="col col-12 col-lg-6 pull-left">
+        <div class="mt-4">
+            <h3>Followed Users</h3>
+            <ul class="list-group">
+                <?php foreach ($messageableUsers as $followid => $user): ?>
+                    <li class="list-group-item">
+                        <p class="float-sm-left">
+                            <span><?= $user->getFullName() ?></span>
+                            <small class="text-muted"><?= $user->getUsername() ?></small>
+                        </p>
+                        <div class="float-sm-right">
+                            <a class="btn btn-dark" onclick="showMsgModal(<?= $user->getUserId() ?>, '<?= $user->getUsername() ?>')">Message</a>
+                        </div>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </section>
+</div>
+
+<!-- Messaging Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="<?= $this->url('/messages/create') ?>" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Compose Message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="hiddenUserIdControl" value="-1" name="recipientId">
+                    <label for="messageText">Message Body</label>
+                    <textarea class="form-control" name="messageText" id="messageText" rows="10" placeholder="Message Body"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Send">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<?php
+include "app/views/_footer.phtml";
+?>
