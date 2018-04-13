@@ -174,6 +174,19 @@ class User
         }
         return $res;
     }
+
+    public function serialize() : array {
+        return [
+            "id" => $this->getUserId(),
+            "username" => $this->getUsername(),
+            "type" => $this->getType(),
+            "type_str" => $this->getFancyType(),
+            "firstname" => $this->getFirstname(),
+            "lastname" => $this->getLastname(),
+            "privacy" => $this->getPrivacy(),
+        ];
+    }
+
     /****
      * Getter & Setters
      ****/

@@ -9,7 +9,9 @@
 namespace app\controllers;
 
 require_once 'app/models/UnitEvent.php';
+require_once 'app/models/Comment.php';
 
+use app\models\Comment;
 use app\models\Unit;
 use app\models\Person;
 use app\models\UnitEvent;
@@ -51,6 +53,9 @@ class CompanyController extends BaseController
             self::route("POST", "/:companyID/personDelete/:personID", 'companyDeletePersonJSON'),
             self::route("GET",  "/:companyID/events", 'companyEventsJSON'),
             self::route("GET",  "/:companyID/people", 'companyPeopleJSON'),
+
+            self::route("POST",  "/:companyID/submitComment", 'submitComment'),
+            self::route("GET",  "/:companyID/deleteComment/:commentID", 'deleteComment'),
 
             self::route("POST", "/:companyID/changeName", 'companyChangeName'),
             self::route("POST", "/:companyID/delete", 'companyDelete'),
@@ -437,6 +442,9 @@ class CompanyController extends BaseController
             $this->error404($params[0]);
         }
 
+        // Fetch comments
+        $comments = Comment::fetchByUnit($db, $id);
+
         // Display page, passing in company object.
         require "app/views/companyDetails.php";
     }
@@ -487,6 +495,37 @@ class CompanyController extends BaseController
 
         // Display the page, passing in $companies as a variable
         require "app/views/companies.phtml";
+    }
+
+    public function submitComment($params)
+    {
+        $unitid = $params['companyID'];
+        $token = $this->require_authentication();
+
+        $commentText = $_POST['commentText'];
+        $comment = Comment::build(-1, $token->getUser(), $unitid, date('Y-m-d H:i:s'), $commentText);
+
+        if (!$comment->commit($this->getDBConn())) {
+            $this->addFlashMessage("Failed to send comment: " . $this->getDBConn()->errorCode(), self::FLASH_LEVEL_SERVER_ERR);
+        } else {
+            $this->addFlashMessage("Sent comment.", self::FLASH_LEVEL_INFO);
+        }
+
+        $this->redirect('/companies/' . $unitid);
+    }
+
+    public function deleteComment($params) {
+        $unitid = $params['companyID'];
+        $commentid = $params['commentID'];
+        $token = $this->require_authentication(2);
+
+        if(!Comment::delete($this->getDBConn(), $commentid)) {
+            $this->addFlashMessage("Failed to delete comment: " . $this->getDBConn()->errorCode(), self::FLASH_LEVEL_SERVER_ERR);
+        } else {
+            $this->addFlashMessage("Deleted comment.", self::FLASH_LEVEL_INFO);
+        }
+
+        $this->redirect('/companies/' . $unitid);
     }
 
 }

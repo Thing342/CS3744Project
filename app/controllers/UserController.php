@@ -113,8 +113,7 @@ class UserController extends BaseController
             ->commit($this->getDBConn());
 
             error_log("Added following relationship ". $follow->getFollowId());
-
-            require "config.php";
+            $this->addFlashMessage('Now following new user.', self::FLASH_LEVEL_SUCCESS);
           }
           catch (\PDOException $dbErr) {
               $this->addFlashMessage('Database error on adding following relationship:<br>'.$dbErr->getMessage(), self::FLASH_LEVEL_SERVER_ERR);
