@@ -16,6 +16,7 @@ use app\models\Unit;
 use app\models\Person;
 use app\models\UnitEvent;
 
+use app\models\User;
 use lib\Controller;
 
 /**
@@ -75,7 +76,7 @@ class CompanyController extends BaseController
     public function companyChangeName($params)
     {
         // Throw 401 if not logged in
-        $token = $this->require_authentication();
+        $token = $this->require_authentication(User::TYPE_EDITOR);
 
         // Validate url params
         $id = $params['companyID'];
@@ -109,7 +110,7 @@ class CompanyController extends BaseController
     public function companyDelete($params)
     {
         // Throw 401 if not logged in
-        $token = $this->require_authentication();
+        $token = $this->require_authentication(User::TYPE_EDITOR);
 
         // Throw 401 if not logged in
         $id = $params['companyID'];
@@ -139,7 +140,7 @@ class CompanyController extends BaseController
     public function companyAdd($params)
     {
         // Throw 401 if not logged in
-        $token = $this->require_authentication();
+        $token = $this->require_authentication(User::TYPE_EDITOR);
 
         $db = $this->getDBConn();
 
@@ -169,7 +170,7 @@ class CompanyController extends BaseController
     public function companyAddEventJSON($params)
     {
         // Throw 401 if not logged in
-        $token = $this->require_authentication();
+        $token = $this->require_authentication(User::TYPE_EDITOR);
 
         header("Content-type:application/json");
 
@@ -225,7 +226,7 @@ class CompanyController extends BaseController
     public function companyAddPersonJSON($params)
     {
         // Throw 401 if not logged in
-        $token = $this->require_authentication();
+        $token = $this->require_authentication(User::TYPE_EDITOR);
 
         header("Content-type:application/json");
 
@@ -279,7 +280,7 @@ class CompanyController extends BaseController
     public function companyDeletePersonJSON($params)
     {
         // Throw 401 if not authenticated
-        $token = $this->require_authentication();
+        $token = $this->require_authentication(User::TYPE_EDITOR);
 
         header("Content-type:application/json");
 
@@ -320,7 +321,7 @@ class CompanyController extends BaseController
     public function companyDeleteEventJSON($params)
     {
         // Throw 401 if not authenticated
-        $token = $this->require_authentication();
+        $token = $this->require_authentication(User::TYPE_EDITOR);
 
         header("Content-type:application/json");
 
@@ -456,7 +457,7 @@ class CompanyController extends BaseController
      */
     public function companyEditPage($params)
     {
-        $token = $this->require_authentication();
+        $token = $this->require_authentication(User::TYPE_EDITOR);
 
         // Validate url params
         $id = $params['companyID'];
