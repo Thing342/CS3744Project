@@ -213,14 +213,16 @@ class UserController extends BaseController
     }
 
     public function edit() {
+      $token = $this->require_authentication();
+      $user = $token->getUser();
       require "app/views/userEdit.php";
     }
 
     public function editUser($params) {
-        $token = $this->require_authentication();
+          $token = $this->require_authentication();
 
       try {
-        $baseType = USER::TYPE_COMMENTER;
+          $baseType = USER::TYPE_COMMENTER;
           $user = $token->getUser();
 
           $user->setUsername(strtolower($_POST['username2']));
