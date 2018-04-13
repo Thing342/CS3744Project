@@ -20,6 +20,22 @@ include "app/views/_header.phtml"
                 window.location.href = action;
             }
         }
+
+        function follow(userId) {
+            var url = '<?= $this->url('/users') ?>' + '/' + userId + '/follow';
+            var $form = $('<form>', {
+                action: url,
+                method: 'post'
+            });
+
+            $('<input>').attr({
+                type: "hidden",
+                name: 'ref',
+                value: '/companies/<?= $company->getId() ?>'
+            }).appendTo($form);
+
+            $form.appendTo('body').submit();
+        }
     </script>
 
     <div id="whiteTextDiv">
@@ -100,8 +116,8 @@ include "app/views/_header.phtml"
                                         </button>
 
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                            <a class="dropdown-item">Follow User</a>
-                                            <a class="dropdown-item">Message User</a>
+                                            <button onclick="follow(<?= $comment->getUser()->getUserId() ?>)" class="dropdown-item">Follow User</button>
+                                            <a href="<?= $this->url('/messages') ?>" class="dropdown-item">Message User</a>
                                             <?php if ($this->is_logged_in() && $this->getLoggedInUser()->getType() >= \app\models\User::TYPE_EDITOR): ?>
                                                 <a class="dropdown-item"
                                                    onclick="deleteComment(<?= $comment->getId() ?>)">Delete Post</a>
