@@ -119,8 +119,14 @@ include "app/views/_header.phtml"
                         }
                         ?>
                         <div>
-                            <a href="<?= $this->url('/messages') ?>" class="btn btn-dark">Message</a>
-                            <button class="btn btn-dark" onclick="unfollow(<?= $user->getUserId() ?>)">Unfollow</button>
+                            <?php
+                              if ($user->getPrivacy() == "PUBLIC") {
+                                ?>
+                                <a href='<?= $this->url('/messages') ?>' class='btn btn-dark'>Message</a>
+                                <?php
+                              }
+                              ?>
+                            <a href="#" class="btn btn-dark">Unfollow</a>
                         </div>
                     </li>
                 <?php endforeach; ?>
