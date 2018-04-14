@@ -4,7 +4,7 @@ Creates the database, user, tables, and sample data for the project.
  */
 
 CREATE DATABASE IF NOT EXISTS fantasticfour_p5;
-/**CREATE USER IF NOT EXISTS 'fantasticfour'@'localhost' IDENTIFIED BY 'cs3744';**/
+CREATE USER IF NOT EXISTS 'fantasticfour'@'localhost' IDENTIFIED BY 'cs3744';
 GRANT ALL PRIVILEGES ON fantasticfour_p5.* to 'fantasticfour'@'localhost';
 
 USE fantasticfour_p5;
@@ -118,19 +118,20 @@ ALTER TABLE Message COMMENT = 'Represents a single message sent through a Follow
 
 /** Add Sample Data **/
 
-/** Username: adminuser; Password: mypassword **/
-/** INSERT INTO fantasticfour_p5.User (userId, username, pword_hash, email) VALUES (1, 'adminuser', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'sample@example.com');**/
+/** Admin Username: adminuser; Password: mypassword **/
+/** Editor Username: leveltwo; Password: mypassword **/
+/** Commentor Username: levelone; Password: mypassword **/
 INSERT INTO fantasticfour_p5.User (`userId`, `username`, `pword_hash`, `email`, `type`, `firstname`, `lastname`, `privacy`) VALUES
   (1, 'adminuser', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'sample@example.com', 3, 'Admin', 'User', 'PRIVATE'),
-  (2, 'levelone', '$2y$10$gXx4IKj7O9FTNDndXIV./OG8gKCnTMovRPvhMFXWIT64QAWjY6YLq', 'leslie6@vt.edu', 1, '', '', 'PRIVATE'),
-  (3, 'leveltwo', '$2y$10$0VZNmMVkZXzeRdbzmpouROdMt0Cd9WY.h96r.S11RKA1TptzsPMmK', 'leslie6@vt.edu', 2, '', '', 'PRIVATE'),
-  (4, 'levelthree', '$2y$10$gJmElM29rboLdeRXt7LuGu1TIWB7dT/Nbn70BK42KMaRUi/7yqjSC', 'leslie6@vt.edu', 3, '', '', 'PRIVATE'),
-  (5, 'admin300', '$2y$10$jTuSPOgw1ehfgPTN8MInU.4mxE2rIrdClUzD1nuq9iW4uWzYpojYu', 'random@gmail.com', 1, '', '', 'PRIVATE'),
-  (8, 'admin1000', '$2y$10$ui9se3I/iHBex3l4WnFmS./x9K2wuUMZ7CfBuxX1PVyXmVHYTT9Ue', 'joeschmoe@gmail.com', 1, 'joe', 'schmoe', 'PRIVATE'),
-  (9, 'admin2000', '$2y$10$jMHFu3WiLgXdidnsmlIQ8Og6/7BuG1RobRy.xKSYDnKRbrop5VB26', 'sample@yahoo.com', 1, 'hey', 'hi', 'PUBLIC'),
-  (10, 'admin3000', '$2y$10$FTxmLVXIy0ww7tIql.p6auzJAXdZn2pj..8eZUaPRdZ1wsjkSVk5O', 'sample@email.com', 1, 'mary', 'doe', 'PRIVATE'),
-  (11, 'admin4000', '$2y$10$PbwJ9gsm0N.lRBx.zTX1TeWBJuvw6PoEEnbArF8qMc4krMUVfYrTu', 'sample@email.com', 1, 'john', 'jacobs', 'PUBLIC'),
-  (13, 'admin7000', '$2y$10$6RxPZqwwxddhdur8afGQXeAuZnzsSO9sBHMiTYPTLS6QKuVmxxjHO', 'sample@gmail.com', 1, 'joe', 'jacobs', 'PRIVATE');
+  (2, 'levelone', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'leslie6@vt.edu', 1, 'Comment', 'User', 'PRIVATE'),
+  (3, 'leveltwo', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'leslie6@vt.edu', 2, 'Editor', 'User', 'PRIVATE'),
+  (4, 'levelthree', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'leslie6@vt.edu', 3, '', '', 'PRIVATE'),
+  (5, 'admin300', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'random@gmail.com', 1, '', '', 'PRIVATE'),
+  (8, 'admin1000', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'joeschmoe@gmail.com', 1, 'joe', 'schmoe', 'PRIVATE'),
+  (9, 'admin2000', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'sample@yahoo.com', 2, 'hey', 'hi', 'PUBLIC'),
+  (10, 'admin3000', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'sample@email.com', 1, 'Mary', 'Doe', 'PRIVATE'),
+  (11, 'admin4000', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'sample@email.com', 11, 'John', 'Jacobs', 'PUBLIC'),
+  (13, 'admin7000', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'sample@gmail.com', 1, 'Joe', 'Jacobs', 'PRIVATE');
 
 INSERT INTO fantasticfour_p5.Unit (id, name) VALUES (1, 'Assault Gun Platoon');
 INSERT INTO fantasticfour_p5.Unit (id, name) VALUES (2, 'Reconaissance Platoon');
@@ -147,3 +148,22 @@ INSERT INTO fantasticfour_p5.UnitEvent (id, unitID, eventName, type, date, descr
   (2, 1, 'Sample Battle #2', 'BATTLE', '1945-01-12', 'Lorem ipsum dolor sit amet', 'Somewhere in France', 46.820615, 2.375450);
 INSERT INTO fantasticfour_p5.UnitEvent (id, unitID, eventName, type, date, description, locationName, latitude, longitude) VALUES
   (3, 1, 'Sample Battle #3', 'BATTLE', '1945-01-31', 'Lorem ipsum dolor sit amet', 'Somewhere in Germany', 46.820115, 2.375321);
+
+INSERT INTO Following (id, userFrom, userTo) VALUES
+  (1, 1, 2), (2, 2, 1), (3, 1, 9), (4, 11, 1);
+
+INSERT INTO Comment(id, user, unit, timestamp, text) VALUES
+  (1, 1, 1, NOW(), 'Sample Administrator Comment!'),
+  (2, 2, 1, NOW(), 'Sample Commenter Comment!'),
+  (3, 3, 1, NOW(), 'Sample Editor Comment!'),
+  (4, 13, 1, NOW(), '<marquee>Comments support HTML!</marquee>'),
+  (5, 1, 2, NOW(), 'Sample Administrator Comment!'),
+  (6, 2, 2, NOW(), 'Sample Commenter Comment!'),
+  (7, 3, 2, NOW(), 'Sample Editor Comment!'),
+  (8, 13, 2, NOW(), '<marquee>Comments support HTML!</marquee>');
+
+INSERT INTO Message(id, follow, timestamp, text) VALUES
+  (1, 1, NOW(), 'Hello, Commenter User'),
+  (2, 2, NOW(), 'Hello, Admin User'),
+  (3, 4, NOW(), 'Hello, Admin User'),
+  (4, 4, NOW(), '<h1>Messages Support HTML</h1>');
