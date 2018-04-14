@@ -17,6 +17,17 @@ use app\models\User;
 use lib\Controller;
 
 
+/**
+ * Class AdminController
+ * @package app\controllers
+ *
+ * Endpoint for admin control panel.
+ * Prefix: '/admin'
+ * Responsibilities:
+ *  - Administrating user accounts
+ *  - Editing, promoting/demoting, deleting other users accounts
+ *  - Only accessible to users with administrator privileges
+ */
 class AdminController extends BaseController
 {
 
@@ -40,6 +51,12 @@ class AdminController extends BaseController
         ];
     }
 
+    /**
+     * Full path: GET '/admin'
+     *
+     * Show the main admin page.
+     * Requires ADMIN permissions.
+     */
     public function index($params) {
         $token = $this->require_authentication(User::TYPE_ADMIN);
 
@@ -48,14 +65,23 @@ class AdminController extends BaseController
         require "app/views/admin.phtml";
     }
 
+    /**
+     * Full path: POST '/admin/edit/:userID'
+     *
+     * Updates the fields in a user account.
+     * Requires ADMIN permissions.
+     * Returns 200 and redirects to /admin if successful
+     */
     public function editUser($params) {
         $token = $this->require_authentication(User::TYPE_ADMIN);
 
+        // Fetch account
         $user = User::fetch($this->getDBConn(), $params['userid']);
         if ($user == null) {
             $this->error404($params[0]);
         }
 
+        // Change fields
         $user->setUsername(strtolower($_POST['username2']));
         $user->setEmail($_POST['email2']);
         $user->setType($_POST['type2']);
@@ -63,23 +89,31 @@ class AdminController extends BaseController
         $user->setLastname($_POST['lastname2']);
         $user->setPrivacy($_POST['privacy2']);
 
+        // Save back
         $res = $user->commit($this->getDBConn());
         error_log("Edited user ". $user->getUserId());
 
         error_log("Edited user ". $user->getUserId());
         if ($res) {
-            // display success message and redirect to new user's page
+            // display success message and redirect to admin page
             $this->addFlashMessage('Edited user: ' . $user->getUsername(), self::FLASH_LEVEL_SUCCESS);
         } else {
-            $this->addFlashMessage('Unknown error adding user. Please try again: ', self::FLASH_LEVEL_SERVER_ERR);
+            $this->addFlashMessage('Unknown error editing. Please try again: ', self::FLASH_LEVEL_SERVER_ERR);
         }
 
         $this->redirect('/admin');
     }
 
+    /**
+     * Full path: GET '/admin/edit/:userID'
+     *
+     * Shows the form for editing a user account.
+     * Requires ADMIN permissions.
+     */
     public function editUserForm($params) {
         $token = $this->require_authentication(User::TYPE_ADMIN);
 
+        // Fetch user object to fill in fields
         $user = User::fetch($this->getDBConn(), $params['userid']);
         if ($user == null) {
             $this->error404($params[0]);
@@ -88,6 +122,13 @@ class AdminController extends BaseController
         require 'app/views/admin_edit.phtml';
     }
 
+    /**
+     * Full path: POST '/admin/delete/:userID'
+     *
+     * Deletes a user account.
+     * Requires ADMIN permissions.
+     * Returns 200 and redirects to /admin if successful
+     */
     public function deleteUser($params) {
         $token = $this->require_authentication(User::TYPE_ADMIN);
         $userid = $params['userid'];

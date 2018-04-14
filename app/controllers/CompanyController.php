@@ -499,6 +499,11 @@ class CompanyController extends BaseController
         require "app/views/companies.phtml";
     }
 
+    /**
+     * Full path: POST '/companies/:companyID/submitComment'
+     *
+     * Submits a comment to the company page.
+     */
     public function submitComment($params)
     {
         $unitid = $params['companyID'];
@@ -516,6 +521,12 @@ class CompanyController extends BaseController
         $this->redirect('/companies/' . $unitid);
     }
 
+    /**
+     * Full path: POST '/companies/:companyID/deleteComment/:commentId'
+     *
+     * Deletes a comment from a company page.
+     * Requires EDITOR permissions.
+     */
     public function deleteComment($params) {
         $unitid = $params['companyID'];
         $commentid = $params['commentID'];
@@ -528,10 +539,6 @@ class CompanyController extends BaseController
         }
 
         $this->redirect('/companies/' . $unitid);
-    }
-
-    private function fetchActivityFeed(User $user) : array {
-
     }
 
 }

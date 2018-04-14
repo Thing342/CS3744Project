@@ -12,26 +12,29 @@ namespace app\models;
 use PDO;
 
 /**
+ * Represents a comment left by a User on a Unit page.
+ *
  * Class Comment
  * @package app\models
  */
 class Comment implements UserEvent
 {
-    private $id = -1;
-    private $user = null;
-    private $unit = -1;
-    private $timestamp = "";
-    private $text = "";
+    private $id = -1; // The comment ID
+    private $user = null; // A User object representing the user that left this comment
+    private $unit = -1; // The ID of the Unit that this comment was left on.
+    private $timestamp = ""; // String timestamp for the time this comment was left.
+    private $text = ""; // The comment text.
 
-    private $changed = false;
+    private $changed = false; // True if the comment model is out of sync with the database.
 
     /**
-     * @param int $id
-     * @param int $user
-     * @param int $unit
-     * @param string $timestamp
-     * @param string $text
-     * @return Comment
+     * Convenience method that builds a Comment object.
+     * @param int $id The comment ID
+     * @param int $user A User object representing the user that left this comment
+     * @param int $unit The ID of the Unit that this comment was left on.
+     * @param string $timestamp String timestamp for the time this comment was left.
+     * @param string $text The comment text.
+     * @return Comment - A Comment object.
      */
     public static function build(int $id, User $user, int $unit, string $timestamp, string $text) : Comment {
         $model = new Comment();
@@ -44,8 +47,9 @@ class Comment implements UserEvent
     }
 
     /**
+     * Fetches all of the Comments left on a Unit page.
      * @param PDO $db
-     * @param int $unit
+     * @param int $unit - The Unit ID
      * @return Comment[]
      */
     public static function fetchByUnit(PDO $db, int $unit) : ?array {
@@ -70,8 +74,9 @@ class Comment implements UserEvent
     }
 
     /**
+     * Fetches all of the comments left by a User.
      * @param PDO $db
-     * @param int $user
+     * @param int $user - The user's ID
      * @return Comment[]
      */
     public static function fetchByUser(PDO $db, int $user) : ?array {
@@ -96,8 +101,10 @@ class Comment implements UserEvent
     }
 
     /**
+     * Fetches all off the comments left by the user's followed users within a certain duration.
      * @param PDO $db
-     * @param int $user
+     * @param int $user - The user's ID
+     * @param int $hoursAgo - The duration (in hours) to search. By default, it is unlimited
      * @return Comment[]
      */
     public static function fetchByFollow(PDO $db, int $user, int $hoursAgo = -1) : ?array {
@@ -109,7 +116,7 @@ JOIN Following F ON U.userId = F.userTo AND F.userFrom = ?
 ORDER BY timestamp
 SQL;
         $params = [$user];
-        if($hoursAgo != -1) {
+        if($hoursAgo != -1) { // limit by duration
             $sql = <<<SQL
 SELECT * 
 FROM Comment 
@@ -140,9 +147,10 @@ SQL;
     }
 
     /**
+     * Deletes a comment.
      * @param PDO $db
-     * @param int $commentid
-     * @return bool
+     * @param int $commentid - ID of comment to delete.
+     * @return bool - true if successful.
      */
     public static function delete(PDO $db, int $commentid): bool {
         $stmt = $db->prepare('DELETE FROM Comment WHERE id = ?');
@@ -187,6 +195,9 @@ SQL;
         return $res;
     }
 
+    /**
+     * Convert this Comment object into a serializable associative array.
+     */
     public function serialize() {
         return [
             "id" => $this->getId(),
@@ -197,6 +208,11 @@ SQL;
         ];
     }
 
+    /**
+     * Parse a comment from a serialized associative array
+     * @param $row
+     * @return Comment
+     */
     public static function deserialize($row) : Comment {
         return self::build($row['id'], null, $row['unit'], $row['timestamp'], $row['text']);
     }
@@ -277,6 +293,9 @@ SQL;
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getEventType(): string
     {
         return 'comment';

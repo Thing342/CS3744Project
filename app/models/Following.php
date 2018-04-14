@@ -158,30 +158,50 @@ class Following
      * Getters and Setters
      ***/
 
+    /**
+     * @return int
+     */
     public function getUserFrom(): int {
         return $this->userFrom;
     }
 
+    /**
+     * @return int
+     */
     public function getFollowId(): int {
         return $this->id;
     }
 
+    /**
+     * @return int
+     */
     public function getUserTo(): int {
         return $this->userTo;
     }
 
+    /**
+     * @param int $userId
+     * @return Following
+     */
     public function setUserFrom(int $userId): Following {
         $this->userFrom = $userId;
         $this->changed = true;
         return $this;
     }
 
+    /**
+     * @param int $userId
+     * @return Following
+     */
     public function setUserTo(int $userId): Following {
         $this->userTo = $userId;
         $this->changed = true;
         return $this;
     }
 
+    /**
+     * @return bool
+     */
     public function getChanged(): bool {
         return $this->changed;
     }

@@ -5,7 +5,9 @@
  * Date: 4/13/18
  * Time: 12:37 PM
  *
- * @var \app\models\Message[] $recieved
+ * Inbx UI for user messages
+ *
+ * @var \app\models\Message[] $recieved - list
  * @var \app\models\Message[] $sent
  * @var \app\models\Message $message
  * @var \app\models\User[] $messageableUsers
@@ -126,7 +128,7 @@ include "app/views/_header.phtml"
 
     <section class="col col-12 col-lg-6 pull-left">
         <div class="mt-4">
-            <h3>Followed Users</h3>
+            <h3>Messageable Users</h3>
             <ul class="list-group">
                 <?php foreach ($messageableUsers as $followid => $user): ?>
                     <li class="list-group-item">

@@ -62,17 +62,6 @@ class SiteController extends BaseController
         require "app/views/about.phtml";
     }
 
-
-
-    /**
-     * Full path: '/admin'
-     *
-     * Displays the admin page
-     */
-    public function admin($params) {
-        require "app/views/adminControls.php";
-    }
-
     /**
      * Full path: '/' (site root)
      *

@@ -3,11 +3,11 @@ Configuration file for the project's database.
 Creates the database, user, tables, and sample data for the project.
  */
 
-CREATE DATABASE IF NOT EXISTS fantasticfour_p4;
+CREATE DATABASE IF NOT EXISTS fantasticfour_p5;
 /**CREATE USER IF NOT EXISTS 'fantasticfour'@'localhost' IDENTIFIED BY 'cs3744';**/
-GRANT ALL PRIVILEGES ON fantasticfour_p4.* to 'fantasticfour'@'localhost';
+GRANT ALL PRIVILEGES ON fantasticfour_p5.* to 'fantasticfour'@'localhost';
 
-USE fantasticfour_p4;
+USE fantasticfour_p5;
 
 DROP TABLE IF EXISTS Person;
 DROP TABLE IF EXISTS UnitEvent;
@@ -119,8 +119,8 @@ ALTER TABLE Message COMMENT = 'Represents a single message sent through a Follow
 /** Add Sample Data **/
 
 /** Username: adminuser; Password: mypassword **/
-/** INSERT INTO fantasticfour_p4.User (userId, username, pword_hash, email) VALUES (1, 'adminuser', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'sample@example.com');**/
-INSERT INTO fantasticfour_p4.User (`userId`, `username`, `pword_hash`, `email`, `type`, `firstname`, `lastname`, `privacy`) VALUES
+/** INSERT INTO fantasticfour_p5.User (userId, username, pword_hash, email) VALUES (1, 'adminuser', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'sample@example.com');**/
+INSERT INTO fantasticfour_p5.User (`userId`, `username`, `pword_hash`, `email`, `type`, `firstname`, `lastname`, `privacy`) VALUES
   (1, 'adminuser', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'sample@example.com', 3, 'Admin', 'User', 'PRIVATE'),
   (2, 'levelone', '$2y$10$gXx4IKj7O9FTNDndXIV./OG8gKCnTMovRPvhMFXWIT64QAWjY6YLq', 'leslie6@vt.edu', 1, '', '', 'PRIVATE'),
   (3, 'leveltwo', '$2y$10$0VZNmMVkZXzeRdbzmpouROdMt0Cd9WY.h96r.S11RKA1TptzsPMmK', 'leslie6@vt.edu', 2, '', '', 'PRIVATE'),
@@ -132,18 +132,18 @@ INSERT INTO fantasticfour_p4.User (`userId`, `username`, `pword_hash`, `email`, 
   (11, 'admin4000', '$2y$10$PbwJ9gsm0N.lRBx.zTX1TeWBJuvw6PoEEnbArF8qMc4krMUVfYrTu', 'sample@email.com', 1, 'john', 'jacobs', 'PUBLIC'),
   (13, 'admin7000', '$2y$10$6RxPZqwwxddhdur8afGQXeAuZnzsSO9sBHMiTYPTLS6QKuVmxxjHO', 'sample@gmail.com', 1, 'joe', 'jacobs', 'PRIVATE');
 
-INSERT INTO fantasticfour_p4.Unit (id, name) VALUES (1, 'Assault Gun Platoon');
-INSERT INTO fantasticfour_p4.Unit (id, name) VALUES (2, 'Reconaissance Platoon');
+INSERT INTO fantasticfour_p5.Unit (id, name) VALUES (1, 'Assault Gun Platoon');
+INSERT INTO fantasticfour_p5.Unit (id, name) VALUES (2, 'Reconaissance Platoon');
 
-INSERT INTO fantasticfour_p4.Person (id, unitID, rank, firstname, lastname) VALUES (1, 1, 'Pfc', 'Lawrence', 'Clark');
-INSERT INTO fantasticfour_p4.Person (id, unitID, rank, firstname, lastname) VALUES (2, 1, 'Pvt', 'Chester', 'Harej');
-INSERT INTO fantasticfour_p4.Person (id, unitID, rank, firstname, lastname) VALUES (3, 1, 'Pfc', 'Vito', 'Mikalauski');
-INSERT INTO fantasticfour_p4.Person (id, unitID, rank, firstname, lastname) VALUES (4, 2, 'Cpl', 'Harvey', 'Keller');
-INSERT INTO fantasticfour_p4.Person (id, unitID, rank, firstname, lastname) VALUES (5, 2, 'Pvt', 'Jessie', 'Staggs');
+INSERT INTO fantasticfour_p5.Person (id, unitID, rank, firstname, lastname) VALUES (1, 1, 'Pfc', 'Lawrence', 'Clark');
+INSERT INTO fantasticfour_p5.Person (id, unitID, rank, firstname, lastname) VALUES (2, 1, 'Pvt', 'Chester', 'Harej');
+INSERT INTO fantasticfour_p5.Person (id, unitID, rank, firstname, lastname) VALUES (3, 1, 'Pfc', 'Vito', 'Mikalauski');
+INSERT INTO fantasticfour_p5.Person (id, unitID, rank, firstname, lastname) VALUES (4, 2, 'Cpl', 'Harvey', 'Keller');
+INSERT INTO fantasticfour_p5.Person (id, unitID, rank, firstname, lastname) VALUES (5, 2, 'Pvt', 'Jessie', 'Staggs');
 
-INSERT INTO fantasticfour_p4.UnitEvent (id, unitID, eventName, type, date, description, locationName, latitude, longitude) VALUES
+INSERT INTO fantasticfour_p5.UnitEvent (id, unitID, eventName, type, date, description, locationName, latitude, longitude) VALUES
   (1, 1, 'Sample Battle #1', 'BATTLE', '1944-12-10', 'Lorem ipsum dolor sit amet', 'Somewhere in France', 46.820675, 2.375450);
-INSERT INTO fantasticfour_p4.UnitEvent (id, unitID, eventName, type, date, description, locationName, latitude, longitude) VALUES
+INSERT INTO fantasticfour_p5.UnitEvent (id, unitID, eventName, type, date, description, locationName, latitude, longitude) VALUES
   (2, 1, 'Sample Battle #2', 'BATTLE', '1945-01-12', 'Lorem ipsum dolor sit amet', 'Somewhere in France', 46.820615, 2.375450);
-INSERT INTO fantasticfour_p4.UnitEvent (id, unitID, eventName, type, date, description, locationName, latitude, longitude) VALUES
+INSERT INTO fantasticfour_p5.UnitEvent (id, unitID, eventName, type, date, description, locationName, latitude, longitude) VALUES
   (3, 1, 'Sample Battle #3', 'BATTLE', '1945-01-31', 'Lorem ipsum dolor sit amet', 'Somewhere in Germany', 46.820115, 2.375321);

@@ -105,6 +105,12 @@ class UserController extends BaseController
         }
     }
 
+    /**
+     * Full path: POST '/:userid/follow'
+     *
+     * Add a follow between to logged-in user and the selected user.
+     * If 'ref' is set in $_POST, redirect to it once done, otherwise redirect to /users/all
+     */
     public function follow($params)
     {
         // Throw 401 if not logged in
@@ -113,6 +119,7 @@ class UserController extends BaseController
         // Throw 401 if not logged in
         $id = $params['userId'];
 
+        // See if there is a ref param to redirect to
         if(array_key_exists('ref', $_POST)) {
             $referrer = $_POST['ref'];
         } else {
@@ -120,7 +127,7 @@ class UserController extends BaseController
         }
 
         try {
-            // Delete company model from DB
+            // Add to DB
             $db = $this->getDBConn();
             $follow = new Following();
             $res = $follow->setUserFrom($currUser)
@@ -165,6 +172,7 @@ class UserController extends BaseController
             $followers=[];
         }
 
+        // Fetch new comments for activity feed
         $comments = Comment::fetchByFollow($db, $user->getUserId(), 24);
         if($comments == null) {
             $comments=[];
@@ -175,7 +183,7 @@ class UserController extends BaseController
             $messages=[];
         }
 
-        // See app/models/UserEvent.php for definition
+        // Activity feed array
         $events = array_merge($messages, $comments);
         usort($events, "\app\models\UserEvent_sorting_key");
 
@@ -252,12 +260,22 @@ class UserController extends BaseController
         $this->redirect("/users/new");
     }
 
+    /**
+     * Full path: GET '/users/edit'
+     *
+     * Show the form for editing the current user.
+     */
     public function edit() {
       $token = $this->require_authentication();
       $user = $token->getUser();
       require "app/views/userEdit.php";
     }
 
+    /**
+     * Full path: GET '/users/edit'
+     *
+     * Edits the current user.
+     */
     public function editUser($params) {
           $token = $this->require_authentication();
 

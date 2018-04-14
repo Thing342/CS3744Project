@@ -26,10 +26,11 @@ class User
     private $username; // string, the user's unique username
     private $pword_hash; // string, a hashed representation of the password
     private $email; // string, the user's email address.
-    private $type;
-    private $firstname;
-    private $lastname;
-    private $privacy;
+    private $type; // int - the permissions level for this account. (See above for values)
+    private $firstname; // string - the user's first name
+    private $lastname; // string - the user's last name
+    private $privacy; // string - If 'PUBLIC', the user is open to messages. otherwise, the user is not open to messages
+
     private $changed = false; // bool, true if the model is not in sync with the database
 
     /**
@@ -112,7 +113,13 @@ class User
         return $rows;
     }
 
-    public static function fetchFollowedUsers(PDO $db, int $userid) {
+    /**
+     * Fetches the Users followed by a User.
+     * @param PDO $db
+     * @param int $userid - the user to search.
+     * @return array|null- a dict mapping the follow ID to the user object for each of this person's follows
+     */
+    public static function fetchFollowedUsers(PDO $db, int $userid) : ?array {
         $fetch_sql = 'SELECT User.* FROM User JOIN Following F ON User.userId = F.userTo AND userFrom = ?';
 
         $stmt = $db->prepare($fetch_sql);
@@ -132,6 +139,12 @@ class User
         return $lookup;
     }
 
+    /**
+     * Fetches the Users following a User.
+     * @param PDO $db
+     * @param int $userid - The user to search.
+     * @return array|null - a dict mapping the follow ID to the user object for each of this person's followers.
+     */
     public static function fetchFollowingUsers(PDO $db, int $userid) {
         $fetch_sql = 'SELECT User.* FROM User JOIN Following F ON User.userId = F.userFrom AND userTo = ?';
 
@@ -195,6 +208,9 @@ class User
         return $res;
     }
 
+    /**
+     * Convert this user into an easily-serializable array.
+     */
     public function serialize() : array {
         return [
             "id" => $this->getUserId(),
