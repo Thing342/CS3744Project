@@ -23,6 +23,8 @@ class Unit
 
     private $changed = false; // true when the model is no longer in sync with the DB.
 
+    const DEFAULT_PHOTO_PATH = "public/img/786th.jpg"; // TODO: replace
+
     /**
      * Build a Unit from database params.
      * @param int $id - Public key of the Unit.
@@ -128,6 +130,33 @@ class Unit
         }
 
         return $res;
+    }
+
+    /**
+     * Returns the external (client-facing) URL for this image. (Use this for client stuff)
+     * Example: /cs3744/project6/fantasticfour/uploads/images/companies/5.jpg
+     * @return string
+     */
+    public function getPhotoFileURL(): string {
+        return $_ENV['SUBDIRECTORY'] . "/uploads/images/companies/" .$this->getId(). '.jpg';
+    }
+
+    /**
+     * Returns the internal (server-side) path for this image file. (Use this for server stuff)
+     * Example: uploads/images/companies/5.jpg
+     * @return string
+     */
+    public function getPhotoFilePath(): string {
+        return self::getPhotoFilePathID($this->getId());
+    }
+
+    /**
+     * Returns the internal (server-side) path for this image file. (Use this for server stuff)
+     * Example: uploads/images/companies/5.jpg
+     * @return string
+     */
+    public static function getPhotoFilePathID(int $id): string {
+        return "uploads/images/companies/" .$id. '.jpg';
     }
 
     /***

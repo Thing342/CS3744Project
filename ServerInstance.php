@@ -48,8 +48,10 @@ class ServerInstance
         $req_uri = str_replace($this->config['Subdirectory'], '', $req_uri);
 
         // Check if we're requesting a static resource (PHP Builtin Only)
-        if ($this->config['Server'] == 'builtin' && preg_match("/public\/([\w-_+\/]+\.(".PUBLIC_MEDIA_TYPES."))$/", strtolower($_SERVER["REQUEST_URI"]))) {
-            return false;
+        if ($this->config['Server'] == 'builtin') {
+            $is_static_file = preg_match("/public\/([\w-_+\/]+\.(".PUBLIC_MEDIA_TYPES."))$/", strtolower($_SERVER["REQUEST_URI"]))
+                || preg_match("/uploads\/([\w-_+\/]+\.(".PUBLIC_MEDIA_TYPES."))$/", strtolower($_SERVER["REQUEST_URI"]));
+            if($is_static_file) return false;
         }
 
         // Try and find a matching controller prefix, then dispatch the request to it.

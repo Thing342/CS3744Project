@@ -39,17 +39,22 @@ include "app/views/_header.phtml"
     </script>
 
     <div id="whiteTextDiv">
-        <section class="border rounded p-4 mt-4 mb-4">
-            <!-- Display "Edit" and "Delete" buttons if logged in -->
-            <h2><?= $company->getName() ?></h2>
-            <?php if ($this->is_logged_in() && $this->getLoggedInUser()->getType() >= \app\models\User::TYPE_EDITOR): ?>
-                <a href="<?= $this->url('/companies/' . $company->getId() . '/edit') ?>"
-                   class="btn btn-primary">Edit</a>
-            <?php else: ?>
+        <div class="jumbotron py-2 my-4">
+            <div class="text-center my-2">
+                <img src="<?= $company->getPhotoFileURL() ?>" alt="Company Image" class="image-fluid mw-100">
+            </div>
+            <h2 class="display-4"><?= $company->getName() ?></h2>
+            <hr class="my-2">
+            <p class="lead">
+                <?php if ($this->is_logged_in() && $this->getLoggedInUser()->getType() >= \app\models\User::TYPE_EDITOR): ?>
+                    <a href="<?= $this->url('/companies/' . $company->getId() . '/edit') ?>"
+                       class="btn btn-primary">Edit</a>
+                <?php else: ?>
                 <p><i>You must be an Editor to edit this page.</i></p>
-            <?php endif; ?>
-            <a class="btn btn-secondary" href="<?= $_ENV['SUBDIRECTORY'] ?>/companies">Back to List</a>
-        </section>
+                <?php endif; ?>
+                <a class="btn btn-secondary" href="<?= $_ENV['SUBDIRECTORY'] ?>/companies">Back to List</a>
+            </p>
+        </div>
 
         <div class="row">
             <section class="col col-12 col-lg-4">
@@ -83,6 +88,7 @@ include "app/views/_header.phtml"
         <div class="row">
             <section class="col col-12">
                 <h4 class="my-2">Comments</h4>
+                <hr class="my-2">
                 <ul class="list-unstyled">
                     <?php foreach ($comments as $comment): ?>
                         <li class="media p-2 my-2">

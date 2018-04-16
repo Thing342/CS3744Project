@@ -42,7 +42,8 @@ class Comment implements UserEvent
         $model->user = $user;
         $model->unit = $unit;
         $model->timestamp = $timestamp;
-        $model->text = $text;
+        $model->text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');;
+
         return $model;
     }
 

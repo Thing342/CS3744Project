@@ -39,7 +39,7 @@ class Message implements UserEvent
         $model = new Message();
         $model->id = $id;
         $model->timestamp = $timestamp;
-        $model->text = $text;
+        $model->text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');;
         $model->followId = $followId;
         return $model;
     }

@@ -60,6 +60,7 @@ class CompanyController extends BaseController
             self::route("GET",  "/:companyID/deleteComment/:commentID", 'deleteComment'),
 
             self::route("POST", "/:companyID/changeName", 'companyChangeName'),
+            self::route("POST", "/:companyID/changePhoto", 'companyChangePhoto'),
             self::route("POST", "/:companyID/delete", 'companyDelete'),
 
             self::route("GET", "/:companyID/edit", 'companyEditPage'),
@@ -123,6 +124,13 @@ class CompanyController extends BaseController
         $db = $this->getDBConn();
         $res = Unit::delete($db, $id); // true if successful
 
+        // Remove photo from /uploads
+        $photofile = Unit::getPhotoFilePathID($id);
+        if (file_exists($photofile)) {
+            $res = $res && unlink($photofile);
+            error_log("Deleted " . $photofile);
+        }
+
         if ($res) {
             $this->addFlashMessage("Deleted company!", self::FLASH_LEVEL_SUCCESS);
             $this->redirect("/companies");
@@ -151,8 +159,12 @@ class CompanyController extends BaseController
 
         $res = $company->commit($db); // true if successful
 
+        // New company should have the default company image
+        $res = $res && copy(Unit::DEFAULT_PHOTO_PATH, $company->getPhotoFilePath()); // Stays true if successful
+
         // Redirect to new page on success
         if ($res) {
+            error_log("Copied new file: " . $company->getPhotoFilePath());
             $this->addFlashMessage("Added new company!", self::FLASH_LEVEL_SUCCESS);
             $this->redirect("/companies/" . $company->getId() . "/edit");
         } else {
@@ -539,6 +551,74 @@ class CompanyController extends BaseController
         }
 
         $this->redirect('/companies/' . $unitid);
+    }
+
+    /**
+     * Full Path: POST "/companies/:companyID/changePhoto"
+     *
+     * Changes a company's profile page photo.
+     * Requires EDITOR permissions.
+     *
+     * POST param: companyPhotoUpload - binary data of photo to upload
+     */
+    public function companyChangePhoto($params) {
+        $unitid = $params['companyID'];
+        $token = $this->require_authentication(User::TYPE_EDITOR);
+
+        $db = $this->getDBConn();
+
+        // Fetch company to verify existence
+        $company = Unit::fetch($db, $unitid);
+        if ($company == null) {
+            $this->error404($params[0]);
+        }
+
+        $res = $this->handleUploadedFile("companyPhotoUpload", $company->getPhotoFilePath());
+        if (!$res['success']) {
+            $this->addFlashMessage("Failed to upload photo: " . $res["reason"], self::FLASH_LEVEL_USER_ERR);
+        } else {
+            error_log("Uploaded file " . $company->getPhotoFilePath());
+            $this->addFlashMessage("Successfully updated photo!", self::FLASH_LEVEL_SUCCESS);
+        }
+
+        $this->redirect('/companies/' . $unitid . '/edit');
+    }
+
+    /**
+     * Handles a photo upload. Will convert to JPEG and save at the given position.
+     *
+     * @param string $field - FILES field to pull the photo data from
+     * @param string $dst - destination path
+     * @return array - [bool "success", string "reason"]
+     */
+    private function handleUploadedFile(string $field, string $dst): array {
+        $imageFileType = strtolower(pathinfo($dst, PATHINFO_EXTENSION));
+        // Check if image file is a actual image or fake image
+        if (isset($_POST["submit"])) {
+            $check = getimagesize($_FILES[$field]["tmp_name"]);
+            if ($check !== false) {
+                error_log("File is an image - " . $check["mime"] . ".");
+            } else {
+                return ["success" => false, "reason" => "File is not an image."];
+            }
+        }
+
+        // Check file size
+        if ($_FILES[$field]["size"] > 5000000) {
+            return ["success" => false, "reason" => "File is too large, must be <5MB"];
+        }
+
+        // Allow certain file formats
+        if ($imageFileType != "jpg" &&  $imageFileType != "jpeg") {
+            return ["success" => false, "reason" => "File must be JPG or JPEG"];
+        }
+
+        // Copy file
+        if (move_uploaded_file($_FILES[$field]["tmp_name"], $dst)) {
+            return ["success" => true];
+        } else {
+            return ["success" => false, "reason" => "Unknown error copying file."];
+        }
     }
 
 }

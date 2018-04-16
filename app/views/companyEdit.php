@@ -39,6 +39,17 @@ include "app/views/_header.phtml"
         </section>
 
         <section class="my-4">
+            <h3>Upload Unit Photo</h3>
+            <img src="<?= $company->getPhotoFileURL() ?>" alt="Company Photo Thumbnail" class="img-thumbnail my-4 mw-75">
+            <form class="form-inline" action="<?= $this->url('/companies/' . $company->getId()) . '/changePhoto' ?>"
+                  method="post" enctype="multipart/form-data">
+                <label for="companyPhotoUpload">New Company Photo:</label>
+                <input type="file" class="ml-4" id="companyPhotoUpload" name="companyPhotoUpload" accept="image/jpeg">
+                <input type="submit" class="btn btn-primary" value="Upload Photo">
+            </form>
+        </section>
+
+        <section class="my-4">
             <h3>Members</h3>
             <table class="table">
                 <thead>
