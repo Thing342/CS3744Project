@@ -12,10 +12,10 @@ namespace app\models;
 use PDO;
 
 /**
- * Class UnitEvent
+ * Class TimelineEntry
  * @package app\models
  *
- * Represents a single event belonging to a Unit.
+ * Represents a single event in the batallion's timeline.
  */
 class TimelineEntry
 {
@@ -70,6 +70,41 @@ class TimelineEntry
         } else {
             return $rows[0];
         }
+    }
+
+    /**
+     * Fetches all the events.
+     * @param PDO $db - DB connection
+     *
+     * @param string $sql - optional field to use differing SQL query
+     * @param array $params - array or map to use as prepared stament values for this query
+     *
+     * @return array|null - An array of events, or null if there's an error.
+     */
+    public static function fetchAll(PDO $db, string $sql = "", array $params=[]) : ?array {
+        // Use default statement if `$sql` is not set
+        if ($sql == "") {
+            $sql = "SELECT * FROM TimelineEntry";
+        }
+        $params = [];
+        $stmt = $db->prepare($sql);
+        $res = $stmt->execute($params);
+        if($res == false) {
+            error_log("Could not query TimelineEntrys (" . $stmt->queryString . "):" . $stmt->errorCode());
+            return null;
+        }
+        $rows = $stmt->fetchAll(PDO::FETCH_FUNC, 'app\models\TimelineEntry::build');
+        return $rows;
+    }
+
+    /**
+     * Wrapper for fetchAll, filters by event type.
+     * @param string $type - type of event to filter for
+     */
+    public static function fetchAllByType(PDO $db, string $type) : ?array {
+        $query = 'SELECT * FROM TimelineEntry WHERE type = :type';
+        $params = ['type' => $type];
+        return self::fetchAll($db, $query, $params);
     }
 
     /**

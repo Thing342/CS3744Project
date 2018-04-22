@@ -17,7 +17,7 @@ use app\models\Person;
 use app\models\UnitNote;
 
 use app\models\User;
-use app\models\UserEvent;
+
 use lib\Controller;
 
 /**
