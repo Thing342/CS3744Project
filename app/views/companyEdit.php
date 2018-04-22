@@ -39,7 +39,7 @@ include "app/views/_header.phtml"
         </section>
 
         <section class="my-4">
-            <h3>Upload Unit Photo</h3>
+            <h3>Upload Company Photo</h3>
             <img src="<?= $company->getPhotoFileURL() ?>" alt="Company Photo Thumbnail" class="img-thumbnail my-4 mw-75">
             <form class="form-inline" action="<?= $this->url('/companies/' . $company->getId()) . '/changePhoto' ?>"
                   method="post" enctype="multipart/form-data">

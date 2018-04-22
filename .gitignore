@@ -2,4 +2,4 @@ config.bak
 .idea/dataSources*
 .DS_Store
 .idea/*
-uploads
+uploads/*/*.jpg
