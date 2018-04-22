@@ -8,13 +8,13 @@
 
 namespace app\controllers;
 
-require_once 'app/models/UnitEvent.php';
+require_once 'app/models/UnitNote.php';
 require_once 'app/models/Comment.php';
 
 use app\models\Comment;
 use app\models\Unit;
 use app\models\Person;
-use app\models\UnitEvent;
+use app\models\UnitNote;
 
 use app\models\User;
 use app\models\UserEvent;
@@ -24,12 +24,12 @@ use lib\Controller;
  * Class CompanyController
  * @package app\controllers
  *
- * Endpoint for company, event, and person operations.
+ * Endpoint for company, note, and person operations.
  * Prefix: '/companies'
  * Responsibilities:
  *  - Managing companies (add, edit, delete)
  *  - Managing company personnel (add, delete)
- *  - Managing company events (add, delete)
+ *  - Managing company notes (add, delete)
  */
 class CompanyController extends BaseController
 {
@@ -49,11 +49,11 @@ class CompanyController extends BaseController
         return [
             self::route("POST", "/add", 'companyAdd'),
 
-            self::route("POST", "/:companyID/eventAdd", 'companyAddEventJSON'),
+            self::route("POST", "/:companyID/noteAdd", 'companyAddNoteJSON'),
             self::route("POST", "/:companyID/personAdd", 'companyAddPersonJSON'),
-            self::route("POST", "/:companyID/eventDelete/:eventID", 'companyDeleteEventJSON'),
+            self::route("POST", "/:companyID/noteDelete/:noteID", 'companyDeleteNoteJSON'),
             self::route("POST", "/:companyID/personDelete/:personID", 'companyDeletePersonJSON'),
-            self::route("GET",  "/:companyID/events", 'companyEventsJSON'),
+            self::route("GET",  "/:companyID/notes", 'companyNotesJSON'),
             self::route("GET",  "/:companyID/people", 'companyPeopleJSON'),
 
             self::route("POST",  "/:companyID/submitComment", 'submitComment'),
@@ -106,7 +106,7 @@ class CompanyController extends BaseController
     /**
      * Full path: '/companies/:companyID/delete'
      *
-     * Deletes company and all associated events and people.
+     * Deletes company and all associated notes and people.
      * Returns 200 and redirects to /companies if successful.
      */
     public function companyDelete($params)
@@ -174,13 +174,13 @@ class CompanyController extends BaseController
     }
 
     /**
-     * Full path: '/companies/:companyID/eventAdd'
+     * Full path: '/companies/:companyID/noteAdd'
      *
      * Used for AJAX requests.
-     * Adds a new event based on the JSON sent in the request.
+     * Adds a new note based on the JSON sent in the request.
      * Responds with object containing success value of operation, plus either the error or newly-created object.
      */
-    public function companyAddEventJSON($params)
+    public function companyAddNoteJSON($params)
     {
         // Throw 401 if not logged in
         $token = $this->require_authentication(User::TYPE_EDITOR);
@@ -202,22 +202,19 @@ class CompanyController extends BaseController
 
         $db = $this->getDBConn();
 
-        // Fill event fields and save
-        $event = new UnitEvent();
-        $event->setUnitID($id)
-            ->setEvent($data['eventName'])
-            ->setType($data['type'])
-            ->setDate($data['date'])
-            ->setDescription($data['description'])
-            ->setLocationName($data['locationName'])
-            ->setLatitude($data['latitude'])
-            ->setLongitude($data['longitude']);
-        $res = $event->commit($db); // true if successful
+        // Fill note fields and save
+        $note = new UnitNote();
+        $note->setUnitID($id)
+            ->setTitle($data['eventName'])
+            ->setContent($data['description'])
+            ->setImageURL($data['imageURL']);
+
+        $res = $note->commit($db); // true if successful
 
         if ($res) { // encode results object and send
             $json = [
                 "result" => "success",
-                "value" => $event->serialize() // convert model into JSONizeable array
+                "value" => $note->serialize() // convert model into JSONizeable array
             ];
             echo json_encode($json);
         } else {
@@ -230,7 +227,7 @@ class CompanyController extends BaseController
     }
 
     /**
-     * Full path: '/companies/:companyID/eventAdd'
+     * Full path: '/companies/:companyID/noteAdd'
      *
      * Used for AJAX requests.
      * Adds a new person based on the JSON sent in the request.
@@ -325,13 +322,13 @@ class CompanyController extends BaseController
     }
 
     /**
-     * Full path: '/companies/:companyID/eventDelete/:eventID'
+     * Full path: '/companies/:companyID/noteDelete/:noteID'
      *
      * Used for AJAX requests.
-     * Deletes the the event with given company and event ID.
+     * Deletes the the note with given company and note ID.
      * Responds with object containing success value of operation, plus either the error if unsuccessful.
      */
-    public function companyDeleteEventJSON($params)
+    public function companyDeleteNoteJSON($params)
     {
         // Throw 401 if not authenticated
         $token = $this->require_authentication(User::TYPE_EDITOR);
@@ -340,14 +337,14 @@ class CompanyController extends BaseController
 
         // validate url params
         $id = $params['companyID'];
-        $eventid = $params['eventID'];
-        if ($id == null || $eventid == null) {
+        $noteid = $params['noteID'];
+        if ($id == null || $noteid == null) {
             $this->error404($params[0]);
         }
 
-        // delete event from DB
+        // delete note from DB
         $db = $this->getDBConn();
-        $res = UnitEvent::delete($db, $eventid);
+        $res = UnitNote::delete($db, $noteid);
 
         // encode response data
         if ($res) {
@@ -366,13 +363,13 @@ class CompanyController extends BaseController
     }
 
     /**
-     * Full path: '/companies/:companyID/events'
+     * Full path: '/companies/:companyID/notes'
      *
      * Used for AJAX requests.
-     * Fetches the list of events for this company.
-     * Responds with a JSON-encoded list of the events for this company.
+     * Fetches the list of notes for this company.
+     * Responds with a JSON-encoded list of the notes for this company.
      */
-    public function companyEventsJSON($params)
+    public function companyNotesJSON($params)
     {
         header("Content-type:application/json");
 
@@ -385,15 +382,15 @@ class CompanyController extends BaseController
         $db = $this->getDBConn();
 
         // Fetch all models under this Company from the DB
-        $events = UnitEvent::fetchAllInUnit($db, $id);
-        if ($events == null) {
-            $this->error404($params[0]);
+        $notes = UnitNote::fetchAllInUnit($db, $id);
+        if ($notes == null) {
+            $notes = [];
         }
 
         // Convert the model objects into JSON-izable arrays and stuff them into a list
         $serialized = [];
-        foreach ($events as $event) {
-            array_push($serialized, $event->serialize());
+        foreach ($notes as $note) {
+            array_push($serialized, $note->serialize());
         }
 
         // send out encoded JSON

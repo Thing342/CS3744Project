@@ -8,11 +8,11 @@
 
 namespace app\controllers;
 
-require_once 'app/models/UnitEvent.php';
+require_once 'app/models/UnitNote.php';
 
 use app\models\Unit;
 use app\models\Person;
-use app\models\UnitEvent;
+use app\models\UnitNote;
 
 /**
  * Class SearchyController

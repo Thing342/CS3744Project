@@ -8,7 +8,7 @@
 
 namespace app\controllers;
 
-require_once 'app/models/UnitEvent.php';
+require_once 'app/models/UnitNote.php';
 require_once 'app/models/Comment.php';
 
 use app\models\Token;

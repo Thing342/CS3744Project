@@ -2,7 +2,7 @@
  * Handles AJAX operations specific to companyEdit and companyPage.
  */
 
-var SUBDIRECTORY = "/cs3744/project5/fantasticfour";
+var SUBDIRECTORY = "/cs3744/project6/fantasticfour";
 
 /**
  * Wraps URL to make it work when site is hosted in subdirectory
@@ -27,14 +27,18 @@ function jsonifyArray(array) {
     return dict;
 }
 
+function isEmpty(str) {
+    return (!str || 0 === str.length);
+}
+
 //-----------------------
 
 /**
- * List to keep tract of events and people data, as well as their corresponding nodes.
+ * List to keep tract of notes and people data, as well as their corresponding nodes.
  */
 var data_state = {
     "people": {},
-    "events": {}
+    "notes": {}
 };
 
 //-------------------------
@@ -47,33 +51,36 @@ function fullname(person) {
 }
 
 /**
- * Returns a pretty version of the location info
- */
-function location_str(event) {
-    return event.locationName + " (" + event.latitude + ", " + event.longitude + ")";
-}
-
-/**
- * Shortcut function to generate an IMG tag for event table
- * @param event event to generate tag for
+ * Shortcut function to generate an IMG tag for note table
+ * @param note note to generate tag for
+ * @param edit
  * @returns {string} html string
  */
-function img_tag(event) {
-    return "<img id='image-event-" + event.id + "' alt='" + event.locationName + "' class='mr-3 image-thumbnail' width='200px'>"
+function img_tag(note, edit) {
+    if (edit) {
+        if(isEmpty(note.imageURL)) {
+            return "<p>No image.</p>"
+        } else {
+            return "<img id='image-note-" + note.id + "' alt='" + note.title + "' src='" + note.imageURL + "' class='mr-3 image-thumbnail' width='200px'>"
+        }
+    } else {
+        if(isEmpty(note.imageURL)) { return "" }
+        else {
+            return "<div class='text-center'><img class='image-fluid mw-75 mb-4' src='" + note.imageURL + "' alt='" + note.title + "'></div>"
+        }
+    }
 }
 
-function event_html(event, edit) {
-    if (!edit) return "<li class=\"media my-4\">" +
-                img_tag(event) +
+function note_html(note, edit) {
+    if (!edit) return "<li class=\"media my-2\">" +
                 "<div class=\"media-body\">" +
-                    "<h5 class=\"mt-0\">" + event.eventName + "</h5>" +
-                    "<p>" + event.date +"</p>" +
-                    "<p>" + event.description + "</p>" +
-                    "<p><i>" + location_str(event) +"</i></p>" +
+                     img_tag(note, edit) +
+                    "<h3 class=\"mt-0\">" + note.eventName + "</h3>" +
+                    "<p>" + note.description + "</p>" +
                 "</div>" +
             "</li>";
-    else return "<tr style='display: none'><td>" + img_tag(event) + "</td><td>" + event.eventName +  "</td><td>" + event.date + "</td><td>" + event.description +
-        "</td><td>" + location_str(event) + "</td><td><button onclick='remove_event(" + event.id + ", " + event.unitID + ")'>X</button></td></tr>"
+    else return "<tr style='display: none'><td>" + img_tag(note, edit) + "</td><td>" + note.eventName +  "</td><td>" + note.description +
+        "</td><td><button class='btn btn-secondary' onclick='remove_note(" + note.id + ", " + note.unitID + ")'>X</button></td></tr>"
 }
 
 //-------------------------
@@ -109,28 +116,25 @@ function getWikipediaImageAJAX(queryString, selector) {
 //--------------------------
 
 /**
- * Adds an event to the page
- * @param event - data object to add
+ * Adds an note to the page
+ * @param note - data object to add
  * @param edit - true if in edit mode
  */
-function add_event(event, edit) {
-    var html_str = event_html(event, edit);
+function add_note(note, edit) {
+    var html_str = note_html(note, edit);
 
     // create new DOM element
     var node = $(html_str);
 
     // add to global register
-    data_state.events[event.id] = {
+    data_state.notes[note.id] = {
         "node": node,
-        "value": event
+        "value": note
     };
 
     // fade in
-    $('#events-tbody').append(node);
+    $('#notes-tbody').append(node);
     node.show("fast");
-
-    // load wiki image
-    getWikipediaImageAJAX(event.locationName, '#image-event-' + event.id);
 }
 
 /**
@@ -196,29 +200,29 @@ function remove_person(personId, unitId) {
 
 /**
  * AJAX
- * Removes the event with given ID from the server database
- * @param eventId - id of event to remove
- * @param unitId - unit id of event to remove
+ * Removes the note with given ID from the server database
+ * @param noteId - id of note to remove
+ * @param unitId - unit id of note to remove
  */
-function remove_event(eventId, unitId) {
+function remove_note(noteId, unitId) {
     function failure(reason) {
         console.log(reason)
     }
 
     var _this = this; // capture external context
-    if(!confirm("Really delete this event?")) return; // show confirm dialog, abort if no
+    if(!confirm("Really delete this note?")) return; // show confirm dialog, abort if no
 
     // send ajax request
     $.ajax({
-        'url': url('/companies/' + unitId + '/eventDelete/' + eventId),
+        'url': url('/companies/' + unitId + '/noteDelete/' + noteId),
         'type': 'POST',
         'success': function (result) {
             if ('result' in result && result.result === 'success') {
                 // iff successful, remove from local record and DOM
-                var event = data_state.events[eventId];
-                event.node.fadeOut('normal', function () {
+                var note = data_state.notes[noteId];
+                note.node.fadeOut('normal', function () {
                     $(_this).remove();
-                    delete data_state.events[eventId];
+                    delete data_state.notes[noteId];
                 });
             } else {
                 // else, log result
@@ -251,10 +255,11 @@ function init_ajax(company_id, edit) {
         });
     });
 
-    // fetch events and add them
-    $.getJSON(url('/companies/' + company_id + '/events'), function (results) {
-        results.forEach(function (event) {
-            return add_event(event, edit)
+    // fetch notes and add them
+    $.getJSON(url('/companies/' + company_id + '/notes'), function (results) {
+        results.forEach(function (note) {
+            console.log(note);
+            return add_note(note, edit)
         });
     });
 
@@ -281,21 +286,21 @@ function init_ajax(company_id, edit) {
     });
 
     // Configure add event form
-    var eventAdd = $('#eventAdd');
-    eventAdd.on("submit", function (e) {
+    var noteAdd = $('#noteAdd');
+    noteAdd.on("submit", function (e) {
         // called when add button is clicked
         e.preventDefault(); // prevent page redirect
-        data = jsonifyArray(eventAdd.serializeArray()); // fix form data
-        eventAdd.find(":input").val(""); // reset form
-        eventAdd.find("input[type=submit]").val("Add"); // because jquery keeps clearing out the button as well
+        data = jsonifyArray(noteAdd.serializeArray()); // fix form data
+        noteAdd.find(":input").val(""); // reset form
+        noteAdd.find("input[type=submit]").val("Add"); // because jquery keeps clearing out the button as well
         console.log(data);
 
         // send AJAX request
-        $.post(url('/companies/' + company_id + '/eventAdd'), JSON.stringify(data), function (result) {
+        $.post(url('/companies/' + company_id + '/noteAdd'), JSON.stringify(data), function (result) {
             console.log(result);
-            // add event iff successful, otherwise log result
+            // add note iff successful, otherwise log result
             if ('result' in result && result.result === 'success') {
-                return add_event(result.value, edit);
+                return add_note(result.value, edit);
             } else {
                 failure(result);
             }

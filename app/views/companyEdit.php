@@ -80,37 +80,24 @@ include "app/views/_header.phtml"
         </section>
 
         <section>
-            <h3>Events</h3>
-            <form id="eventAdd" class="p-4 my-4 border rounded container">
-                <h6>Add New Event:</h6>
+            <h3>Notes</h3>
+            <form id="noteAdd" class="p-4 my-4 border rounded container">
+                <h6>Add New Note:</h6>
                 <div class="form-group row">
                     <div class="form-group col col-12 col-lg-4">
-                        <label for="type">Event Type</label>
-                        <select class="form-control" name="type" id="" required>
-                            <option value="event">Event</option>
-                            <option value="battle">Battle</option>
-                            <option value="diary">Diary</option>
-                        </select>
-                        <label for="eventName">Name</label>
+                        <label for="eventName">Note Title</label>
                         <input type="text" class="form-control" name="eventName" placeholder="Name" required>
-                        <label for="date">Event Date</label>
-                        <input type="date" class="form-control" name="date" value="1944-01-01" required>
 
                         <hr class="my-4">
 
-                        <label for="locationName" >Location</label>
-                        <input type="text" class="form-control" name="locationName" placeholder="Location Name" required>
-
-                        <label for="latitude">Latitude</label>
-                        <input type="number" class="form-control" name="latitude" placeholder="46.8207" step="any" required>
-                        <label for="longitude">Longitude</label>
-                        <input type="number" class="form-control" name="longitude" placeholder="-2.37545" step="any" required>
+                        <label for="title">Image URL (optional)</label>
+                        <input type="text" class="form-control" name="imageURL" placeholder="http://ec2-54-198-251-177.compute-1.amazonaws.com/CS3744Project/public/img/786th.jpg">
 
                         <input type="submit" class="btn btn-primary my-4 w-100" value="Add">
                     </div>
                     <div class="form-group col col-12 col-lg-8">
-                        <label for="description">Event Notes</label>
-                        <textarea name="description" class="form-control w-100 h-100" placeholder="Description of Event" required></textarea>
+                        <label for="description">Text</label>
+                        <textarea name="description" class="form-control w-100 h-100" placeholder="Note Text" required></textarea>
                     </div>
                 </div>
 
@@ -119,14 +106,12 @@ include "app/views/_header.phtml"
                 <thead>
                 <tr>
                     <th scope="col">Image</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Location (Lat, Lon)</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Text</th>
                     <th scope="col">Action</th>
                 </tr>
                 </thead>
-                <tbody id="events-tbody">
+                <tbody id="notes-tbody">
                 <!--
                     AJAX
                 -->

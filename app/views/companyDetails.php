@@ -75,9 +75,7 @@ include "app/views/_header.phtml"
             </section>
 
             <section class="col col-12 col-md-8">
-                <h3>Events</h3>
-
-                <ul class="list-unstyled list-group" id="events-tbody">
+                <ul class="list-unstyled list-group" id="notes-tbody">
                     <!--
                         AJAX
                     -->
