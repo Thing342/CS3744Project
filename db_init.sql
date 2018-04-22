@@ -11,6 +11,7 @@ USE fantasticfour_p6;
 
 DROP TABLE IF EXISTS Person;
 DROP TABLE IF EXISTS UnitNote;
+DROP TABLE IF EXISTS TimelineEntry;
 DROP TABLE IF EXISTS Message;
 DROP TABLE IF EXISTS Comment;
 DROP TABLE IF EXISTS Unit;
@@ -110,6 +111,21 @@ CREATE TABLE Message
   CONSTRAINT Message_Following_id_fk FOREIGN KEY (follow) REFERENCES Following(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 ALTER TABLE Message COMMENT = 'Represents a single message sent through a Following relation.';
+
+
+CREATE TABLE TimelineEntry
+(
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  eventName VARCHAR(64) NOT NULL,
+  type VARCHAR(32) NOT NULL ,
+  date DATE NOT NULL ,
+  description TEXT NOT NULL ,
+  locationName TEXT NOT NULL ,
+  latitude FLOAT NOT NULL ,
+  longitude FLOAT NOT NULL
+);
+ALTER TABLE TimelineEntry COMMENT = 'An event that occurred along the campaign. Can be a battle, an operation, a diary entry, etc.';
+
 
 
 /** Add Sample Data **/
