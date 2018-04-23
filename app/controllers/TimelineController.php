@@ -8,6 +8,8 @@
 
 namespace app\controllers;
 
+require_once 'app/models/TimelineEntry.php';
+
 use app\models\TimelineEntry;
 use app\models\User;
 use lib\Controller;

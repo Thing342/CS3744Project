@@ -1,11 +1,13 @@
 <?php
 /**
  * The "about" page.
+ *
+ * @var $this \app\controllers\BaseController
  */
 
 $title = 'About';
 
-$js_init = 'getLocationImages();';
+$js_init = 'getLocationImages(); init_ajax(\''. $_ENV['SUBDIRECTORY'] .'\', false, '. $this->getLoggedInUserType() .');';
 $container_class = 'container';
 $container_id = 'container';
 include "app/views/_header.phtml"
@@ -28,9 +30,23 @@ include "app/views/_header.phtml"
                 in tanks and helped keep guns stable while the tank was moving. </p>
 
             <section class="my-4">
-                <h4>Get Started</h4>
+                <h3>Get Started</h3>
                 <a href="<?= $this->url('/companies') ?>" class="btn btn-primary">View List of Companies</a>
                 <a href="<?= $this->url('/users/new') ?>" class="btn btn-primary">Create Account</a>
+            </section>
+
+            <section class="my-4">
+                <h3 class="my-2">
+                    Timeline of Events
+                    <?php if ($this->getLoggedInUserType() >=  2): ?>
+                        <button class="btn btn-dark mx-4" id="eventAddBtn">Add</button>
+                    <?php endif; ?>
+                </h3>
+                <ul class="list-unstyled" id="events-tbody">
+                    <!--
+                        AJAX
+                     -->
+                </ul>  
             </section>
 
             <h3 class="mb-4"> Locations </h3>
@@ -75,7 +91,115 @@ include "app/views/_header.phtml"
         </div>
     </main>
 </div>
+
+<?php if ($this->getLoggedInUser() && $this->getLoggedInUser()->getType() >= 2): ?>
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form id="eventAdd">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLabel">Add New Event</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="form-group col col-12 col-lg-4">
+                            <label for="type">Event Type</label>
+                            <select class="form-control" name="type" id="" required>
+                                <option value="event">Event</option>
+                                <option value="battle">Battle</option>
+                                <option value="diary">Diary</option>
+                            </select>
+
+                            <label for="eventName">Name</label>
+                            <input type="text" class="form-control" name="eventName" placeholder="Name" required>
+
+                            <label for="date">Event Date</label>
+                            <input type="date" class="form-control" name="date" value="1944-01-01" required>
+
+                            <label for="locationName" >Picture Query Term</label>
+                            <input type="text" class="form-control" name="locationName" placeholder="Location Name" required>
+
+                            <hr class="my-4">
+
+                            <label for="latitude">Latitude</label>
+                            <input type="number" class="form-control" name="latitude" placeholder="46.8207" step="any" required>
+                            <label for="longitude">Longitude</label>
+                            <input type="number" class="form-control" name="longitude" placeholder="-2.37545" step="any" required>
+
+                            <input type="submit" class="btn btn-primary my-4 w-100" value="Add">
+                        </div>
+                        <div class="form-group col col-12 col-lg-8">
+                            <label for="description">Event Notes</label>
+                            <textarea name="description" class="form-control w-100 h-100" placeholder="Description of Event" required></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Submit">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form id="eventEdit">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Add New Event</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="form-group col col-12 col-lg-4">
+                            <label for="editType">Event Type</label>
+                            <select class="form-control" name="type" id="editType" required>
+                                <option value="event" selected>Event</option>
+                                <option value="battle">Battle</option>
+                                <option value="diary">Diary</option>
+                            </select>
+
+                            <label for="editName">Name</label>
+                            <input type="text" class="form-control" name="eventName" placeholder="Name" id="editName" required>
+
+                            <label for="editDate">Event Date</label>
+                            <input type="date" class="form-control" name="date" value="1944-01-01" id="editDate" required>
+
+                            <label for="editLocationName" >Picture Query Term</label>
+                            <input type="text" class="form-control" name="locationName" id="editLocationName" placeholder="Location Name" required>
+
+                            <hr class="my-4">
+
+                            <label for="editLatitude">Latitude</label>
+                            <input type="number" class="form-control" name="latitude" id="editLatitude" placeholder="46.8207" step="any" required>
+                            <label for="editLongitude">Longitude</label>
+                            <input type="number" class="form-control" name="longitude" id="editLongitude" placeholder="-2.37545" step="any" required>
+                        </div>
+                        <div class="form-group col col-12 col-lg-8">
+                            <label for="description">Event Notes</label>
+                            <textarea id="editDescription" name="description" class="form-control w-100 h-100" placeholder="Description of Event" required></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Submit">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
 <script src="<?= $_ENV['SUBDIRECTORY'] ?>/public/js/scripts.js"></script>
+<script src="<?= $_ENV['SUBDIRECTORY'] ?>/public/js/timeline_ajax.js"></script>
 
 <?php
 include "app/views/_footer.phtml"

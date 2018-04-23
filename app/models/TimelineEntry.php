@@ -86,6 +86,9 @@ class TimelineEntry
         if ($sql == "") {
             $sql = "SELECT * FROM TimelineEntry";
         }
+
+        $sql .= " ORDER BY date ASC";
+
         $params = [];
         $stmt = $db->prepare($sql);
         $res = $stmt->execute($params);

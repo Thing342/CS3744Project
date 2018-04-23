@@ -30,7 +30,7 @@ class UnitNote
     /**
      * Builds a UnitNote object from the parameters. (Used by the DB querying code)
      */
-    public static function build(int $id, int $unitID, string $title, string $description, string $imageURL) : UnitNote {
+    public static function build(int $id, int $unitID, string $title, string $description, ?string $imageURL) : UnitNote {
         $event = new UnitNote();
         $event->id = $id;
         $event->unitID = $unitID;
@@ -233,11 +233,7 @@ class UnitNote
      */
     public function getImageURL(): ?string
     {
-        if (ctype_space($this->imageURL)) {
-            return $this->imageURL;
-        } else {
-            return null;
-        }
+        return $this->imageURL;
     }
 
     /**
@@ -245,11 +241,7 @@ class UnitNote
      */
     public function setImageURL(?string $imageURL): UnitNote
     {
-        if (ctype_space($imageURL)) {
-            $this->imageURL = $imageURL;
-        } else {
-            $this->imageURL = null;
-        }
+        $this->imageURL = $imageURL;
 
         $this->changed = true;
         return $this;
