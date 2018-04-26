@@ -345,6 +345,8 @@ class UserController extends BaseController
      * Full path: 'POST /users/login'
      */
     public function login($params) {
+      //validates form by preventing extra characters from being read
+        $params = htmlspecialchars($params);
         // failure state
         $fail = function() {
             $this->addFlashMessage("Unable to log in: Error in usename or password.", self::FLASH_LEVEL_USER_ERR);

@@ -73,6 +73,9 @@ class AdminController extends BaseController
      * Returns 200 and redirects to /admin if successful
      */
     public function editUser($params) {
+      //validates form by preventing extra characters from being read
+        $params = htmlspecialchars($params);
+
         $token = $this->require_authentication(User::TYPE_ADMIN);
 
         // Fetch account
@@ -111,6 +114,9 @@ class AdminController extends BaseController
      * Requires ADMIN permissions.
      */
     public function editUserForm($params) {
+      //validates form by preventing extra characters from being read
+        $params = htmlspecialchars($params);
+
         $token = $this->require_authentication(User::TYPE_ADMIN);
 
         // Fetch user object to fill in fields
@@ -130,6 +136,8 @@ class AdminController extends BaseController
      * Returns 200 and redirects to /admin if successful
      */
     public function deleteUser($params) {
+
+        
         $token = $this->require_authentication(User::TYPE_ADMIN);
         $userid = $params['userid'];
 

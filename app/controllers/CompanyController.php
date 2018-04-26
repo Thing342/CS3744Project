@@ -77,6 +77,8 @@ class CompanyController extends BaseController
      */
     public function companyChangeName($params)
     {
+      //validates form by preventing extra characters from being read
+        $params = htmlspecialchars($params);
         // Throw 401 if not logged in
         $token = $this->require_authentication(User::TYPE_EDITOR);
 
@@ -111,6 +113,8 @@ class CompanyController extends BaseController
      */
     public function companyDelete($params)
     {
+      //validates form by preventing extra characters from being read
+        $params = htmlspecialchars($params);
         // Throw 401 if not logged in
         $token = $this->require_authentication(User::TYPE_EDITOR);
 
@@ -148,6 +152,8 @@ class CompanyController extends BaseController
      */
     public function companyAdd($params)
     {
+      //validates form by preventing extra characters from being read
+        $params = htmlspecialchars($params);
         // Throw 401 if not logged in
         $token = $this->require_authentication(User::TYPE_EDITOR);
 
@@ -182,6 +188,8 @@ class CompanyController extends BaseController
      */
     public function companyAddNoteJSON($params)
     {
+      //validates form by preventing extra characters from being read
+        $params = htmlspecialchars($params);
         // Throw 401 if not logged in
         $token = $this->require_authentication(User::TYPE_EDITOR);
 
@@ -235,6 +243,8 @@ class CompanyController extends BaseController
      */
     public function companyAddPersonJSON($params)
     {
+      //validates form by preventing extra characters from being read
+        $params = htmlspecialchars($params);
         // Throw 401 if not logged in
         $token = $this->require_authentication(User::TYPE_EDITOR);
 
@@ -289,6 +299,9 @@ class CompanyController extends BaseController
      */
     public function companyDeletePersonJSON($params)
     {
+      //validates form by preventing extra characters from being read
+        $params = htmlspecialchars($params);
+
         // Throw 401 if not authenticated
         $token = $this->require_authentication(User::TYPE_EDITOR);
 
@@ -330,6 +343,9 @@ class CompanyController extends BaseController
      */
     public function companyDeleteNoteJSON($params)
     {
+      //validates form by preventing extra characters from being read
+        $params = htmlspecialchars($params);
+
         // Throw 401 if not authenticated
         $token = $this->require_authentication(User::TYPE_EDITOR);
 
@@ -371,6 +387,9 @@ class CompanyController extends BaseController
      */
     public function companyNotesJSON($params)
     {
+      //validates form by preventing extra characters from being read
+        $params = htmlspecialchars($params);
+
         header("Content-type:application/json");
 
         // Validate url params
@@ -406,6 +425,9 @@ class CompanyController extends BaseController
      */
     public function companyPeopleJSON($params)
     {
+      //validates form by preventing extra characters from being read
+        $params = htmlspecialchars($params);
+
         header("Content-type:application/json");
 
         // Validate url params
@@ -439,6 +461,9 @@ class CompanyController extends BaseController
      */
     public function companyPage($params)
     {
+      //validates form by preventing extra characters from being read
+        $params = htmlspecialchars($params);
+
         // Validate url params
         $id = $params['companyID'];
         if ($id == null) {
@@ -467,6 +492,9 @@ class CompanyController extends BaseController
      */
     public function companyEditPage($params)
     {
+      //validates form by preventing extra characters from being read
+        $params = htmlspecialchars($params);
+
         $token = $this->require_authentication(User::TYPE_EDITOR);
 
         // Validate url params
@@ -494,6 +522,7 @@ class CompanyController extends BaseController
      */
     public function companies($params)
     {
+    
         $db = $this->getDBConn();
 
         // Fetch the company list
@@ -515,6 +544,9 @@ class CompanyController extends BaseController
      */
     public function submitComment($params)
     {
+      //validates form by preventing extra characters from being read
+        $params = htmlspecialchars($params);
+
         $unitid = $params['companyID'];
         $token = $this->require_authentication();
 
@@ -537,6 +569,9 @@ class CompanyController extends BaseController
      * Requires EDITOR permissions.
      */
     public function deleteComment($params) {
+      //validates form by preventing extra characters from being read
+        $params = htmlspecialchars($params);
+
         $unitid = $params['companyID'];
         $commentid = $params['commentID'];
         $token = $this->require_authentication(2);
@@ -558,7 +593,11 @@ class CompanyController extends BaseController
      *
      * POST param: companyPhotoUpload - binary data of photo to upload
      */
+
     public function companyChangePhoto($params) {
+      //validates form by preventing extra characters from being read
+        $params = htmlspecialchars($params);
+
         $unitid = $params['companyID'];
         $token = $this->require_authentication(User::TYPE_EDITOR);
 
