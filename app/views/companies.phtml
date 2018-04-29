@@ -13,6 +13,7 @@ include "app/views/_header.phtml"
 ?>
 
 <div class="row">
+    <h2 class="mt-4">Companies</h2>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <script type="application/javascript">
         // testing values for NPM seerver
@@ -23,17 +24,7 @@ include "app/views/_header.phtml"
     <script type="text/javascript" src="<?= $_ENV['SUBDIRECTORY'] ?>/public/js/companyViz.js"></script>
 
     <main id="whiteTextDiv" class="col-12">
-        <h2 class="mt-4">Companies</h2>
-        <div class="mt-4 mb-4">
-            <?php if ($this->is_logged_in()): ?>
-                <!-- Display 'add' button if logged in: -->
-                <form action="<?= $this->url('/companies/add') ?>" method="post">
-                    <input class="btn btn-primary" type="submit" value="Add New Company...">
-                </form>
-            <?php else: ?>
-                <p><i>Log in to add new companies.</i></p>
-            <?php endif; ?>
-        </div>
+        <h3 class="mt-4">Index</h3>
         <ul class="list-group">
             <!-- Display companies in list form: -->
             <?php foreach ($companies as $company): ?>
@@ -52,7 +43,6 @@ include "app/views/_header.phtml"
 </div>
 
 <?php
-
 include "app/views/_footer.phtml"
 ?>
 
