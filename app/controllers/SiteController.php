@@ -13,6 +13,9 @@ require_once "app/models/Unit.php";
 require_once "app/models/Person.php";
 
 use lib\Controller;
+use app\models\User;
+use app\models\Comment;
+use app\models\Message;
 
 /**
  * Class SampleController
@@ -68,7 +71,50 @@ class SiteController extends BaseController
      * Displays the site homepage.
      */
     public function index($params) {
-        require "app/views/index.phtml";
+      if ($this->is_logged_in(true)) {
+        $token = $this->require_authentication();
+
+        if ($token == null) {
+            $this->error404($params[0]);
+            return;
+        }
+
+        $db = $this->getDBConn();
+
+        // Fetch user info from token
+        $user = $token->getUser();
+
+        // Fetch followers and followees
+        $following = User::fetchFollowedUsers($db, $user->getUserId());
+        if($following == null) {
+            $following=[];
+        }
+
+        $followers = User::fetchFollowingUsers($db, $user->getUserId());
+        if($followers == null) {
+            $followers=[];
+        }
+
+        // Fetch new comments for activity feed
+        $comments = Comment::fetchByFollow($db, $user->getUserId(), 24);
+        if($comments == null) {
+            $comments=[];
+        } else {
+            foreach(Comment::fetchByUser($db, $user->getUserId()) as $comment) {
+              array_push($comments, $comment);
+            }
+        }
+
+        $messages = Message::fetchAllRecipient($db, $user->getUserId(), 24);
+        if($messages == null) {
+            $messages=[];
+        }
+
+        // Activity feed array
+        $events = array_merge($messages, $comments);
+        usort($events, "\app\models\UserEvent_sorting_key");
+      }
+      require "app/views/index.phtml";
     }
 
 }

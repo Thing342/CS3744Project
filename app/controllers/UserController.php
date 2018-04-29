@@ -176,8 +176,12 @@ class UserController extends BaseController
         $comments = Comment::fetchByFollow($db, $user->getUserId(), 24);
         if($comments == null) {
             $comments=[];
+        } else {
+            foreach(Comment::fetchByUser($db, $user->getUserId()) as $comment) {
+              array_push($comments, $comment);
+            }
         }
-
+        //print_r($comments);
         $messages = Message::fetchAllRecipient($db, $user->getUserId(), 24);
         if($messages == null) {
             $messages=[];

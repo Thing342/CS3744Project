@@ -73,4 +73,35 @@ include "app/views/_header.phtml"
             <a class="btn btn-primary btn-lg" href="<?= $_ENV['SUBDIRECTORY'] ?>/about" role="button">Learn more</a>
         </p>
     </div>
+    <?php if ($this->getLoggedInUser() != null): ?>
+    <section class="col col-12 col-lg-8">
+        <h3 class="my-4">Activity Feed</h3>
+        <ul class="list-unstyled">
+            <?php foreach ($events as $event): ?>
+                <?php if ($event->getEventType() == 'comment'): ?>
+                    <li class="alert alert-secondary">
+                        <h5 class="alert-heading">
+                            <?= $event->getUser()->getFullName() ?> commented on a company page:
+                        </h5>
+                        <p><?= $event->getText() ?></p>
+                        <hr>
+                        <span><?= \lib\timeAgo($event->getTimestamp()) ?></span>
+                        <a href="<?= $this->url('/companies/' . $event->getUnitID()) ?>" class="d-block-inline alert-link ml-4">Read</a>
+                    </li>
+                <?php elseif ($event->getEventType() == 'message'): ?>
+                    <li class="alert alert-primary">
+                        <h5 class="alert-heading"><?= $event->getUser()->getFullName() ?> sent you a message:</h5>
+                        <p><?= \lib\ellipsize($event->getText(), 100) ?></p>
+                        <hr>
+                        <div>
+                            <span><?= \lib\timeAgo($event->getTimestamp()) ?></span>
+                            <a href="<?= $this->url('/messages/' . $event->getId()) ?>" class="d-block-inline alert-link ml-4">Read</a>
+                        </div>
+                    </li>
+                <?php endif; ?>
+            <?php endforeach; ?>
+            <a href="#" class="btn btn-secondary">Back to top</a>
+        </ul>
+    </section>
+    <?php endif; ?>
 <?php include "app/views/_footer.phtml" ?>
