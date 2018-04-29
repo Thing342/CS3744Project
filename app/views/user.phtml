@@ -66,7 +66,7 @@ include "app/views/_header.phtml"
             <h2><?= $user->getFullName() ?></h2>
             <small class="text-muted"><?= $user->getUsername() ?></small>
         </div>
-
+        <?php if ($this->getLoggedInUser()->getUserId() == $id): ?>
         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
             <div class="btn-group mr-2" role="group" aria-label="second group">
                 <form action="<?= $_ENV['SUBDIRECTORY'] ?>/users/logout" method="post"
@@ -81,7 +81,6 @@ include "app/views/_header.phtml"
                     <input type="submit" class="btn btn-danger" value="Delete Account">
                 </form>
             </div>
-            <?php if ($this->getLoggedInUser()->getUserId() == $id): ?>
             <div class="btn-group mr-2" role="group" aria-label="second group">
                 <form action="<?= $_ENV['SUBDIRECTORY'] ?>/users/edit">
                     <input type="submit" class="btn btn-danger" value="Edit"/>
