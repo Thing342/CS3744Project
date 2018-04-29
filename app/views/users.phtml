@@ -22,9 +22,15 @@ include "app/views/_header.phtml"
           if ($user->getUserId() != $currUser->getUserId()){
           echo "<tr>";
 
+
                echo "<td>";
+               echo "<a href=";
+               echo $_ENV['SUBDIRECTORY'];
+               echo "/users/";
+               echo $user->getUserId();
+               echo ">";
                echo $user->getUsername();
-               echo "</td>";
+               echo "</a></td>";
                echo "<td>";
                echo "<form method='post' action=";
 

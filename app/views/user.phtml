@@ -14,7 +14,7 @@
  * @var \app\models\UserEvent[] $events - Activity feed objects
  * @var \app\controllers\BaseController $this
  */
-$title = 'My Profile';
+$title =  $user->getFullName()."'s Profile";
 
 $js_init = '';
 $container_class = 'container';
@@ -81,12 +81,14 @@ include "app/views/_header.phtml"
                     <input type="submit" class="btn btn-danger" value="Delete Account">
                 </form>
             </div>
-
+            <?php if ($this->getLoggedInUser()->getUserId() == $id): ?>
             <div class="btn-group mr-2" role="group" aria-label="second group">
                 <form action="<?= $_ENV['SUBDIRECTORY'] ?>/users/edit">
                     <input type="submit" class="btn btn-danger" value="Edit"/>
                 </form>
             </div>
+          <?php endif; ?>
+
 
         </div>
 
