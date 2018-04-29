@@ -13,6 +13,15 @@ include "app/views/_header.phtml"
 ?>
 
 <div class="row">
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <script type="application/javascript">
+        // testing values for NPM seerver
+        window.backend = "<?= $_ENV['SUBDIRECTORY'] ?>";
+        window.userlevel = <?= $this->getLoggedInUserType() ?>;
+    </script>
+    <div class="container p-4" id="root"></div>
+    <script type="text/javascript" src="<?= $_ENV['SUBDIRECTORY'] ?>/public/js/companyViz.js"></script>
+
     <main id="whiteTextDiv" class="col-12">
         <h2 class="mt-4">Companies</h2>
         <div class="mt-4 mb-4">
@@ -40,12 +49,10 @@ include "app/views/_header.phtml"
             <?php endforeach; ?>
         </ul>
     </main>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div class="container p-4" id="root"></div>
-    <script type="text/javascript" src="<?= $_ENV['SUBDIRECTORY'] ?>/public/js/companyViz.js"></script>
 </div>
 
 <?php
+
 include "app/views/_footer.phtml"
 ?>
 
