@@ -50,6 +50,9 @@ class CompanyController extends BaseController
             self::route("POST", "/add", 'companyAdd'),
 
             self::route("GET", "/json", 'readJSON'),
+            self::route("POST", "/json", 'createJSON'),
+            self::route("OPTIONS", "/json", 'corsJSON'),
+            self::route("POST", "/json/delete/:companyID", 'deleteJSON'),
 
             self::route("POST", "/:companyID/noteAdd", 'companyAddNoteJSON'),
             self::route("POST", "/:companyID/personAdd", 'companyAddPersonJSON'),
@@ -623,14 +626,119 @@ class CompanyController extends BaseController
     }
 
     /**
-     * Full path: POST '/companies/json'
+     * Full path: GET '/companies/json'
      *
      * Gets a JSON id:Unit dict of the units.
      */
     public function readJSON($params) {
-        $db = $this->getDBConn();
+        header("Content-type:application/json");
+        $dict = $this->unitDict();
+        echo json_encode($dict);
+    }
+
+    /**
+     * Full path: POST '/companies/json'
+     *
+     * Adds a new unit based on the JSON submitted.
+     * Returns the newly updated state.
+     */
+    public function createJSON($params) {
+        // Throw 401 if not logged in
+        $token = $this->require_authentication(User::TYPE_EDITOR);
+
         header("Content-type:application/json");
 
+        // Read parsed request data
+        $data = $this->get_post_json();
+        if ($data == null) {
+            http_response_code(400);
+            return;
+        }
+
+        $db = $this->getDBConn();
+        $unit = new Unit();
+        $res = $unit->setName($data['name'])
+                    ->setUnitParentID($data['unitParentID'])
+                    ->commit($db);
+
+        if(!$res) { // Error saving new unit
+            $json = [
+                "result" => "error",
+                "error" => $db->errorInfo()
+            ];
+            echo json_encode($json);
+            return;
+        }
+
+        $dict = $this->unitDict();
+        if(!$dict) { // Error fetching new state
+            $json = [
+                "result" => "error",
+                "error" => $db->errorInfo()
+            ];
+            echo json_encode($json);
+            return;
+        }
+
+        $json = [
+            "resourceID" => $unit->getId(),
+            "result" => "success",
+            "value" => $dict // convert model into JSONizeable array
+        ];
+
+        echo json_encode($json);
+    }
+
+    /**
+     * Full path: POST '/companies/json/delete/:companyID'
+     *
+     * Deletes the unit with the specified ID.
+     * Returns the newly updated state.
+     */
+    public function deleteJSON($params) {
+        // Throw 401 if not logged in
+        $token = $this->require_authentication(User::TYPE_EDITOR);
+        header("Content-type:application/json");
+        $id = $params['companyID'];
+
+        $db = $this->getDBConn();
+        $res = Unit::delete($db, $id);
+
+        if(!$res) { // Error deleting unit
+            $json = [
+                "result" => "error",
+                "error" => $db->errorInfo()
+            ];
+            echo json_encode($json);
+            return;
+        }
+
+        $dict = $this->unitDict();
+        if(!$dict) { // Error fetching new state
+            $json = [
+                "result" => "error",
+                "error" => $db->errorInfo()
+            ];
+            echo json_encode($json);
+            return;
+        }
+
+        $json = [
+            "resourceID" => $id,
+            "result" => "success",
+            "value" => $dict // convert model into JSONizeable array
+        ];
+
+        echo json_encode($json);
+    }
+
+    public function corsJSON($params) {
+        echo "OK";
+    }
+
+
+    private function unitDict(): array {
+        $db = $this->getDBConn();
         $companies = Unit::fetchAll($db);
         if($companies == null) {
             $companies = [];
@@ -648,7 +756,7 @@ class CompanyController extends BaseController
             $dict[$company->getId()] = $company->serialize();
         }
 
-        echo json_encode($dict);
+        return $dict;
     }
 
     /**
