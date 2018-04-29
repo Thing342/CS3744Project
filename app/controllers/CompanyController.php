@@ -49,6 +49,8 @@ class CompanyController extends BaseController
         return [
             self::route("POST", "/add", 'companyAdd'),
 
+            self::route("GET", "/json", 'readJSON'),
+
             self::route("POST", "/:companyID/noteAdd", 'companyAddNoteJSON'),
             self::route("POST", "/:companyID/personAdd", 'companyAddPersonJSON'),
             self::route("POST", "/:companyID/noteDelete/:noteID", 'companyDeleteNoteJSON'),
@@ -579,6 +581,35 @@ class CompanyController extends BaseController
         }
 
         $this->redirect('/companies/' . $unitid . '/edit');
+    }
+
+    /**
+     * Full path: POST '/companies/json'
+     *
+     * Gets a JSON id:Unit dict of the units.
+     */
+    public function readJSON($params) {
+        $db = $this->getDBConn();
+        header("Content-type:application/json");
+
+        $companies = Unit::fetchAll($db);
+        if($companies == null) {
+            $companies = [];
+        }
+
+        $dict = [
+            -1 => [
+                "id" => "-1",
+                "name" => "786th Tank Batallion",
+                "subunitIDs" => Unit::getTopLevelUnitIDs($db)
+            ]
+        ];
+
+        foreach ($companies as $company) {
+            $dict[$company->getId()] = $company->serialize();
+        }
+
+        echo json_encode($dict);
     }
 
     /**
