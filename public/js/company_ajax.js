@@ -2,7 +2,7 @@
  * Handles AJAX operations specific to companyEdit and companyPage.
  */
 
-var SUBDIRECTORY = "/cs3744/project6/fantasticfour";
+var SUBDIRECTORY = "";
 
 /**
  * Wraps URL to make it work when site is hosted in subdirectory
@@ -240,13 +240,16 @@ function remove_note(noteId, unitId) {
 /**
  * Does inital fetch of data, and sets up callbacks for form data
  * this is called by body onLoad.
+ * @param subdir - subdirectory of site
  * @param company_id - id of company for this page (set by PHP)
  * @param edit - true if in edit mode (set by PHP)
  */
-function init_ajax(company_id, edit) {
+function init_ajax(subdir, company_id, edit) {
     function failure(reason) {
         console.log(reason)
     }
+
+    SUBDIRECTORY = subdir
 
     // fetch people and add them
     $.getJSON(url('/companies/' + company_id + '/people'), function (results) {

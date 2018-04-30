@@ -40,6 +40,9 @@ include "app/views/_header.phtml"
             <?php endforeach; ?>
         </ul>
     </main>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div class="container p-4" id="root"></div>
+    <script type="text/javascript" src="<?= $_ENV['SUBDIRECTORY'] ?>/public/js/companyViz.js"></script>
 </div>
 
 <?php

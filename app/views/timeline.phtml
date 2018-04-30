@@ -5,9 +5,8 @@
  * @var $this \app\controllers\BaseController
  */
 
-$title = 'About';
+$title = 'Timeline';
 
-$js_init = 'getLocationImages(); init_ajax(\''. $_ENV['SUBDIRECTORY'] .'\', false, '. $this->getLoggedInUserType() .');';
 $container_class = 'container';
 $container_id = 'container';
 include "app/views/_header.phtml"
@@ -15,25 +14,8 @@ include "app/views/_header.phtml"
 
 <div class="row">
     <main class="col-12">
-        <h2 class="mt-4">About Division</h2>
-        <img class="img-fluid" src="public/img/786th.jpg" alt="Picture of Division" style="max-width: 100%"/>
-        <div id="whiteTextDiv" class="mt-4">
-            <i class="mt-2">Picture Source: <a href="http://hollowaypages.com/786th.htm">http://hollowaypages.com/786th.htm</a></i>
-            <p>The 786th Tank Battalion was formed on September 20, 1943. On November 28 of the same year, the battalion
-                sailed
-                off to Europe to help defeat the Axis Powers. The battalion was attached to the 99th Infantry Division.
-                The
-                battalion was disbanded on June 13, 1945 upon the ending of the war. One major contribution the
-                battalion made
-                towards the Allied Powers in World War II was their testing of the gyrostabilizer. The gyrostabilizer
-                was used
-                in tanks and helped keep guns stable while the tank was moving. </p>
-
-            <section class="my-4">
-                <h3>Get Started</h3>
-                <a href="<?= $this->url('/companies') ?>" class="btn btn-primary">View List of Companies</a>
-                <a href="<?= $this->url('/users/new') ?>" class="btn btn-primary">Create Account</a>
-            </section>
+        <h2 class="mt-4">Event Timeline for Battalion</h2>
+      <div>
 
             <section class="my-4">
                 <h3 class="my-2">

@@ -64,7 +64,7 @@ class UserController extends BaseController
             $this->route('GET', '/all', 'viewAll'),
             $this->route('POST', '/:userId/unfollow', 'unfollow'),
             $this->route('POST', '/:userId/follow', 'follow'),
-            $this->route('GET', '/', 'show')
+            $this->route('GET', '/:userId', 'show')
 
 
         ];
@@ -155,11 +155,12 @@ class UserController extends BaseController
             $this->error404($params[0]);
             return;
         }
+        $id = $params['userId'];
 
         $db = $this->getDBConn();
 
         // Fetch user info from token
-        $user = $token->getUser();
+        $user = User::fetch($db, $id);
 
         // Fetch followers and followees
         $following = User::fetchFollowedUsers($db, $user->getUserId());
@@ -190,7 +191,6 @@ class UserController extends BaseController
         // Activity feed array
         $events = array_merge($messages, $comments);
         usort($events, "\app\models\UserEvent_sorting_key");
-
         include_once "app/views/user.phtml";
     }
 
@@ -349,6 +349,8 @@ class UserController extends BaseController
      * Full path: 'POST /users/login'
      */
     public function login($params) {
+      //validates form by preventing extra characters from being read
+        $params = htmlspecialchars($params);
         // failure state
         $fail = function() {
             $this->addFlashMessage("Unable to log in: Error in usename or password.", self::FLASH_LEVEL_USER_ERR);
@@ -384,7 +386,7 @@ class UserController extends BaseController
 
         // Notify user of success
         $this->addFlashMessage("Welcome, $username!", self::FLASH_LEVEL_SUCCESS);
-        $this->redirect('/users/');
+        $this->redirect('/users/'.$token->getUser()->getUserId());
     }
 
     /**

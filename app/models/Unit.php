@@ -20,6 +20,8 @@ class Unit
 {
     private $id = -1;
     private $name = "Noname";
+    private $subunits = [];
+    private $unitParentID = -1;
 
     private $changed = false; // true when the model is no longer in sync with the DB.
 
@@ -31,10 +33,26 @@ class Unit
      * @param string $name - The name of the unit.
      * @return Unit
      */
-    public static function build(int $id, string $name): Unit {
+    public static function build(int $id, string $name, ?int $unitParent, ?string $subunits_str): Unit {
         $unit  = new Unit();
         $unit->id = $id;
         $unit->name = $name;
+
+        if($unitParent != null) {
+            $unit->unitParentID = $unitParent;
+        } else {
+            $unit->unitParentID = -1;
+        }
+
+        if($subunits_str != null) {
+            $unit->subunits = [];
+            foreach (explode(',', $subunits_str) as $subunitID_str) {
+                array_push($unit->subunits, intval($subunitID_str));
+            }
+        } else {
+            $unit->subunits = [];
+        }
+
         return $unit;
     }
 
@@ -45,7 +63,17 @@ class Unit
      * @return Unit|null - null if no such unit was found, or if the query failed.
      */
     public static function fetch(PDO $db, int $unitid) : ?Unit {
-        $fetch_sql = 'SELECT * FROM Unit WHERE id = ? LIMIT 1';
+        $fetch_sql = <<<SQL
+SELECT U.*, S.children
+FROM Unit U
+LEFT JOIN (
+    SELECT unitParent, GROUP_CONCAT(id) as children
+    FROM Unit
+    GROUP BY unitParent
+    ) AS S ON S.unitParent = U.id
+WHERE U.id = ?
+LIMIT 1
+SQL;
         $stmt = $db->prepare($fetch_sql);
         $res = $stmt->execute([$unitid]);
 
@@ -67,10 +95,18 @@ class Unit
      * Fetches the list of Units from the database.
      * @param PDO $db
      * @param int $unitid
-     * @return Unit|null - null if the query failed.
+     * @return [Unit]|null - null if the query failed.
      */
     public static function fetchAll(PDO $db) : ?array {
-        $fetch_sql = 'SELECT * FROM Unit';
+        $fetch_sql = <<<SQL
+SELECT U.*, S.children
+FROM Unit U
+LEFT JOIN (
+    SELECT unitParent, GROUP_CONCAT(id) as children
+    FROM Unit
+    GROUP BY unitParent
+    ) AS S ON S.unitParent = U.id
+SQL;
         $stmt = $db->prepare($fetch_sql);
         $res = $stmt->execute();
 
@@ -108,14 +144,17 @@ class Unit
     public function commit(PDO $db): bool {
         $res = false;
         if ($this->id == -1) { // new object
-            $stmt = $db->prepare('INSERT INTO Unit VALUE (0,?)');
+            $stmt = $db->prepare('INSERT INTO Unit VALUE (0,?,?)');
             $res = $stmt->execute([
-                $this->name
+                $this->name,
+                ($this->unitParentID == -1) ? null : $this->unitParentID
             ]);
         }  else { // update existing
-            $stmt = $db->prepare('UPDATE Unit SET name = ? WHERE id = ?');
+            $stmt = $db->prepare('UPDATE Unit SET name = ?, unitParent = ? WHERE id = ?');
             $res = $stmt->execute([
-                $this->name, $this->id
+                $this->name,
+                ($this->unitParentID == -1) ? null : $this->unitParentID,
+                $this->id
             ]);
         }
 
@@ -130,6 +169,39 @@ class Unit
         }
 
         return $res;
+    }
+
+    /**
+     * Gets the IDs of the top-level units in the batallion (for whom no parent exists)
+     * @param PDO $db
+     * @return [int]|null - null if the query failed.
+     */
+    public static function getTopLevelUnitIDs(PDO $db) : ?array {
+        $stmt = $db->prepare("SELECT GROUP_CONCAT(id) FROM Unit WHERE unitParent IS NULL");
+        $res = $stmt->execute();
+
+        if(!$res) {
+            error_log("Unable to query top-level units: " . $stmt->errorCode());
+            return null;
+        }
+
+        $result = $stmt->fetchColumn();
+        $ids = [];
+
+        foreach (explode(',', $result) as $subunitID_str) {
+            array_push($ids, intval($subunitID_str));
+        }
+
+        return $ids;
+    }
+
+    public function serialize(): array {
+        return [
+            "id" => $this->id,
+            "name" => $this->name,
+            "unitParent" => $this->unitParentID,
+            "subunitIDs" => $this->subunits
+        ];
     }
 
     /**
@@ -173,6 +245,33 @@ class Unit
 
     public function setName(string $name): Unit {
         $this->name = $name;
+        $this->changed = true;
+        return $this;
+    }
+
+    /**
+     * @return array[int]
+     */
+    public function getSubunits(): array
+    {
+        return $this->subunits;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUnitParentID(): int
+    {
+        return $this->unitParentID;
+    }
+
+    /**
+     * @param int $unitParentID
+     * @return Unit
+     */
+    public function setUnitParentID(int $unitParentID): Unit
+    {
+        $this->unitParentID = $unitParentID;
         $this->changed = true;
         return $this;
     }

@@ -46,6 +46,7 @@ class SearchController extends BaseController
      * Search endpoint
      */
     public function search($params) {
+    
         if (array_key_exists('firstname', $_GET) && array_key_exists('lastname', $_GET)) {
             $this->showSearchResults($_GET['firstname'], $_GET['lastname']);
         } else {

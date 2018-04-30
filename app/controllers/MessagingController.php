@@ -57,6 +57,8 @@ class MessagingController extends BaseController
      * Displays the message inbox UI with no message selected.
      */
     public function inbox($params) {
+
+
         $token = $this->require_authentication();
         $this->showInboxUI($token->getUser());
     }
@@ -67,6 +69,8 @@ class MessagingController extends BaseController
      * Displays the message inbox UI with one message selected.
      */
     public function read($params) {
+
+
         $token = $this->require_authentication();
         $msgId = $params['msgID'];
         $db = $this->getDBConn();
@@ -89,6 +93,8 @@ class MessagingController extends BaseController
      * Deletes a message from the server. Only a the sender or recipient can delete a message.
      */
     public function delete($params) {
+
+
         $token = $this->require_authentication();
         $msgId = $params['msgID'];
 
@@ -124,6 +130,7 @@ class MessagingController extends BaseController
      * Deletes all of the messages sent to the user and redirects back to the message page
      */
     public function clear($params) {
+
         $token = $this->require_authentication();
 
         if (Message::deleteToReciever($this->getDBConn(), $token->getUser()->getUserId())) {
@@ -141,6 +148,8 @@ class MessagingController extends BaseController
      * Creates a message on the server.
      */
     public function create($params) {
+    
+
         $token = $this->require_authentication();
         $recipientID = $_POST['recipientId'];
         $msgText = $_POST['messageText'];

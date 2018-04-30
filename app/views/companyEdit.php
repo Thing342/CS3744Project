@@ -6,7 +6,7 @@
  */
 $title = $company->getName();
 
-$js_init = 'init_ajax(' . $company->getId() . ', true)';
+$js_init = 'init_ajax(\''. $_ENV['SUBDIRECTORY'] . '\',' . $company->getId() . ', true)';
 $container_class = 'container';
 $container_id = 'container';
 include "app/views/_header.phtml"

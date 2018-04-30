@@ -11,6 +11,7 @@ USE fantasticfour_p6;
 
 DROP TABLE IF EXISTS Person;
 DROP TABLE IF EXISTS UnitNote;
+DROP TABLE IF EXISTS TimelineEntry;
 DROP TABLE IF EXISTS Message;
 DROP TABLE IF EXISTS Comment;
 DROP TABLE IF EXISTS Unit;
@@ -58,8 +59,11 @@ ALTER TABLE Following COMMENT = 'Represents a one-way user following relation.';
 CREATE TABLE Unit
 (
   id INT PRIMARY KEY AUTO_INCREMENT,
-  name VARCHAR(255) NOT NULL
+  name VARCHAR(255) NOT NULL,
+  unitParent INT,
+  CONSTRAINT Unit_unitParent_fk FOREIGN KEY (unitParent) REFERENCES Unit(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+ALTER TABLE Unit COMMENT = 'Represents a Unit in the batallion. unitParent refers to the parent Unit, null implies that it is a top-level unit.';
 
 
 CREATE TABLE Person
@@ -112,6 +116,21 @@ CREATE TABLE Message
 ALTER TABLE Message COMMENT = 'Represents a single message sent through a Following relation.';
 
 
+CREATE TABLE TimelineEntry
+(
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  eventName VARCHAR(64) NOT NULL,
+  type VARCHAR(32) NOT NULL ,
+  date DATE NOT NULL ,
+  description TEXT NOT NULL ,
+  locationName TEXT NOT NULL ,
+  latitude FLOAT NOT NULL ,
+  longitude FLOAT NOT NULL
+);
+ALTER TABLE TimelineEntry COMMENT = 'An event that occurred along the campaign. Can be a battle, an operation, a diary entry, etc.';
+
+
+
 /** Add Sample Data **/
 
 /** Admin Username: adminuser; Password: mypassword **/
@@ -129,27 +148,32 @@ INSERT INTO fantasticfour_p6.User (`userId`, `username`, `pword_hash`, `email`, 
   (11, 'admin4000', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'sample@email.com', 11, 'John', 'Jacobs', 'PUBLIC'),
   (13, 'admin7000', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'sample@gmail.com', 1, 'Joe', 'Jacobs', 'PRIVATE');
 
-INSERT INTO fantasticfour_p6.Unit (id, name) VALUES (1, 'Assault Gun Platoon');
-INSERT INTO fantasticfour_p6.Unit (id, name) VALUES (2, 'Reconaissance Platoon');
+INSERT INTO fantasticfour_p6.Unit (id, name) VALUES (1, 'Headquarters Company');
+INSERT INTO fantasticfour_p6.Unit (id, name, unitParent) VALUES (11, 'Assault Gun Platoon', 1);
+INSERT INTO fantasticfour_p6.Unit (id, name, unitParent) VALUES (12, 'Reconaissance Platoon', 1);
+INSERT INTO fantasticfour_p6.Unit (id, name) VALUES (3, 'Company A');
+INSERT INTO fantasticfour_p6.Unit (id, name, unitParent) VALUES (31, 'Company A - 1st Platoon', 3);
+INSERT INTO fantasticfour_p6.Unit (id, name, unitParent) VALUES (32, 'Company A - 2nd Platoon', 3);
+INSERT INTO fantasticfour_p6.Unit (id, name, unitParent) VALUES (33, 'Company A - 3rd Platoon', 3);
+INSERT INTO fantasticfour_p6.Unit (id, name) VALUES (4, 'Medical Detachment');
 
-INSERT INTO fantasticfour_p6.Person (id, unitID, rank, firstname, lastname) VALUES (1, 1, 'Pfc', 'Lawrence', 'Clark');
-INSERT INTO fantasticfour_p6.Person (id, unitID, rank, firstname, lastname) VALUES (2, 1, 'Pvt', 'Chester', 'Harej');
-INSERT INTO fantasticfour_p6.Person (id, unitID, rank, firstname, lastname) VALUES (3, 1, 'Pfc', 'Vito', 'Mikalauski');
-INSERT INTO fantasticfour_p6.Person (id, unitID, rank, firstname, lastname) VALUES (4, 2, 'Cpl', 'Harvey', 'Keller');
-INSERT INTO fantasticfour_p6.Person (id, unitID, rank, firstname, lastname) VALUES (5, 2, 'Pvt', 'Jessie', 'Staggs');
+INSERT INTO fantasticfour_p6.Person (id, unitID, rank, firstname, lastname) VALUES (1, 11, 'Pfc', 'Lawrence', 'Clark');
+INSERT INTO fantasticfour_p6.Person (id, unitID, rank, firstname, lastname) VALUES (2, 11, 'Pvt', 'Chester', 'Harej');
+INSERT INTO fantasticfour_p6.Person (id, unitID, rank, firstname, lastname) VALUES (3, 11, 'Pfc', 'Vito', 'Mikalauski');
+INSERT INTO fantasticfour_p6.Person (id, unitID, rank, firstname, lastname) VALUES (4, 12, 'Cpl', 'Harvey', 'Keller');
+INSERT INTO fantasticfour_p6.Person (id, unitID, rank, firstname, lastname) VALUES (5, 12, 'Pvt', 'Jessie', 'Staggs');
 
 INSERT INTO Following (id, userFrom, userTo) VALUES
   (1, 1, 2), (2, 2, 1), (3, 1, 9), (4, 11, 1);
 
 INSERT INTO Comment(id, user, unit, timestamp, text) VALUES
-  (1, 1, 1, NOW(), 'Sample Administrator Comment!'),
-  (2, 2, 1, NOW(), 'Sample Commenter Comment!'),
-  (3, 3, 1, NOW(), 'Sample Editor Comment!'),
-  (4, 13, 1, NOW(), '<marquee>Comments support HTML!</marquee>'),
-  (5, 1, 2, NOW(), 'Sample Administrator Comment!'),
-  (6, 2, 2, NOW(), 'Sample Commenter Comment!'),
-  (7, 3, 2, NOW(), 'Sample Editor Comment!'),
-  (8, 13, 2, NOW(), '<marquee>Comments support HTML!</marquee>');
+  (1, 1, 11, NOW(), 'Sample Administrator Comment!'),
+  (2, 2, 11, NOW(), 'Sample Commenter Comment!'),
+  (3, 3, 12, NOW(), 'Sample Editor Comment!'),
+  (4, 13, 12, NOW(), '<marquee>Comments support HTML!</marquee>'),
+  (5, 1, 31, NOW(), 'Sample Administrator Comment!'),
+  (6, 2, 31, NOW(), 'Sample Commenter Comment!'),
+  (7, 3, 31, NOW(), 'Sample Editor Comment!');
 
 INSERT INTO Message(id, follow, timestamp, text) VALUES
   (1, 1, NOW(), 'Hello, Commenter User'),

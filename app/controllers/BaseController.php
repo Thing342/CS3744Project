@@ -102,6 +102,15 @@ abstract class BaseController extends Controller
     }
 
     /**
+     * Shortcut method for returning the object representing the currently logged-in user.
+     * @return User|null
+     */
+    public function getLoggedInUserType() : int {
+        if (!$this->is_logged_in() || !array_key_exists('user', $_SESSION)) return 0;
+        else return $this->getLoggedInUser()->getType();
+    }
+
+    /**
      * Overrides Controller's on_request method.
      * @inheritdoc
      */

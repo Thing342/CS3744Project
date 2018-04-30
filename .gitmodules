@@ -1,0 +1,3 @@
+[submodule "CS3744Visualization"]
+	path = CS3744Visualization
+	url = git@github.com:Thing342/CS3744Visualization.git
