@@ -196,7 +196,7 @@ INSERT INTO fantasticfour_p6.Person (`id`, `unitID`, `rank`, `firstname`, `lastn
   (14, 31, 'S/Sgt.', 'William', 'Begley'),
   (15, 31, 'Sgt.', 'Knute', 'Brumberg'),
   (16, 31, 'Pfc.', 'Leonard', 'Berry'),
-  (17, 31, 'Tec. 5', 'Joseph Giglia', ''),
+  (17, 31, 'Tec. 5', 'Joseph', 'Giglia'),
   (18, 31, 'Tec. 4', 'Sebastian', 'Bevacqua');
 
 INSERT INTO Following (id, userFrom, userTo) VALUES
