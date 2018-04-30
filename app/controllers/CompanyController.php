@@ -467,7 +467,7 @@ class CompanyController extends BaseController
     public function companyPage($params)
     {
       //validates form by preventing extra characters from being read
-        $params = htmlspecialchars($params);
+        //$params = htmlspecialchars($params);
 
         // Validate url params
         $id = $params['companyID'];
@@ -527,7 +527,7 @@ class CompanyController extends BaseController
      */
     public function companies($params)
     {
-    
+
         $db = $this->getDBConn();
 
         // Fetch the company list

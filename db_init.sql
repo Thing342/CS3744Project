@@ -148,20 +148,56 @@ INSERT INTO fantasticfour_p6.User (`userId`, `username`, `pword_hash`, `email`, 
   (11, 'admin4000', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'sample@email.com', 11, 'John', 'Jacobs', 'PUBLIC'),
   (13, 'admin7000', '$2y$10$Hj1xEDJR.vr3KOPxi/iXC.et92qXsgyyb3hmM/NaAv2acz/SVxBwK', 'sample@gmail.com', 1, 'Joe', 'Jacobs', 'PRIVATE');
 
-INSERT INTO fantasticfour_p6.Unit (id, name) VALUES (1, 'Headquarters Company');
-INSERT INTO fantasticfour_p6.Unit (id, name, unitParent) VALUES (11, 'Assault Gun Platoon', 1);
-INSERT INTO fantasticfour_p6.Unit (id, name, unitParent) VALUES (12, 'Reconaissance Platoon', 1);
-INSERT INTO fantasticfour_p6.Unit (id, name) VALUES (3, 'Company A');
-INSERT INTO fantasticfour_p6.Unit (id, name, unitParent) VALUES (31, 'Company A - 1st Platoon', 3);
-INSERT INTO fantasticfour_p6.Unit (id, name, unitParent) VALUES (32, 'Company A - 2nd Platoon', 3);
-INSERT INTO fantasticfour_p6.Unit (id, name, unitParent) VALUES (33, 'Company A - 3rd Platoon', 3);
-INSERT INTO fantasticfour_p6.Unit (id, name) VALUES (4, 'Medical Detachment');
+INSERT INTO fantasticfour_p6.Unit (`id`, `name`, `unitParent`) VALUES
+  (1, 'Headquarters Company', NULL),
+  (3, 'Company A', NULL),
+  (4, 'Medical Detachment', NULL),
+  (11, 'Assault Gun Platoon', 1),
+  (12, 'Reconaissance Platoon', 1),
+  (31, 'Company A - 1st Platoon', 3),
+  (32, 'Company A - 2nd Platoon', 3),
+  (33, 'Company A - 3rd Platoon', 3),
+  (34, 'Company B', NULL),
+  (35, 'Company C', NULL),
+  (36, 'Company D', NULL),
+  (37, 'Tank Section', 1),
+  (38, 'Mortar Platoon', 1),
+  (39, 'Communications Section', 1),
+  (40, 'Operations and Intelligence Section', 1),
+  (41, 'Company B - 1st Platoon', 34),
+  (42, 'Company B - 2nd Platoon', 34),
+  (43, 'Company B - 3rd Platoon', 34),
+  (44, 'Company C - 1st Platoon', 35),
+  (45, 'Company C - 2nd Platoon', 35),
+  (46, 'Company C - 3rd Platoon', 35),
+  (47, 'Company D - 1st Platoon', 36),
+  (48, 'Company D - 2nd Platoon', 36),
+  (49, 'Company D - 3rd Platoon', 36),
+  (50, 'Service Company', NULL),
+  (51, 'Service Company - Headquarters Platoon', 50),
+  (52, 'Service Company - Maintenance Platoon', 50),
+  (53, 'Service Company - Transportation Platoon', 50),
+  (54, 'Service Company - Medical Detachment', 50);
 
-INSERT INTO fantasticfour_p6.Person (id, unitID, rank, firstname, lastname) VALUES (1, 11, 'Pfc', 'Lawrence', 'Clark');
-INSERT INTO fantasticfour_p6.Person (id, unitID, rank, firstname, lastname) VALUES (2, 11, 'Pvt', 'Chester', 'Harej');
-INSERT INTO fantasticfour_p6.Person (id, unitID, rank, firstname, lastname) VALUES (3, 11, 'Pfc', 'Vito', 'Mikalauski');
-INSERT INTO fantasticfour_p6.Person (id, unitID, rank, firstname, lastname) VALUES (4, 12, 'Cpl', 'Harvey', 'Keller');
-INSERT INTO fantasticfour_p6.Person (id, unitID, rank, firstname, lastname) VALUES (5, 12, 'Pvt', 'Jessie', 'Staggs');
+INSERT INTO fantasticfour_p6.Person (`id`, `unitID`, `rank`, `firstname`, `lastname`) VALUES
+  (1, 11, 'Pfc', 'Lawrence', 'Clark'),
+  (2, 11, 'Pvt', 'Chester', 'Harej'),
+  (3, 11, 'Pfc', 'Vito', 'Mikalauski'),
+  (4, 12, 'Cpl', 'Harvey', 'Keller'),
+  (5, 12, 'Pvt', 'Jessie', 'Staggs'),
+  (6, 31, 'Tec. 5', 'John', 'Ferrell'),
+  (7, 41, 'Tec. 5', 'John', 'Vavrik'),
+  (8, 31, 'Pfc.', 'Vernon', 'Stolt'),
+  (9, 31, 'Cpl.', 'James', 'Fairchild'),
+  (10, 32, 'Pfc.', 'Leonard', 'Elliott'),
+  (11, 43, 'Pfc.', 'Leonard', 'Nephew'),
+  (12, 31, 'Tec. 5', 'Earl', 'Hagan'),
+  (13, 31, '1st Lt.', 'Henry', 'Rauch'),
+  (14, 31, 'S/Sgt.', 'William', 'Begley'),
+  (15, 31, 'Sgt.', 'Knute', 'Brumberg'),
+  (16, 31, 'Pfc.', 'Leonard', 'Berry'),
+  (17, 31, 'Tec. 5', 'Joseph Giglia', ''),
+  (18, 31, 'Tec. 4', 'Sebastian', 'Bevacqua');
 
 INSERT INTO Following (id, userFrom, userTo) VALUES
   (1, 1, 2), (2, 2, 1), (3, 1, 9), (4, 11, 1);
@@ -180,3 +216,9 @@ INSERT INTO Message(id, follow, timestamp, text) VALUES
   (2, 2, NOW(), 'Hello, Admin User'),
   (3, 4, NOW(), 'Hello, Admin User'),
   (4, 4, NOW(), '<h1>Messages Support HTML</h1>');
+
+INSERT INTO fantasticfour_p6.UnitNote (`id`, `unitID`, `title`, `content`, `imageURL`) VALUES
+  (1, 1, 'Quote', 'I brought my accordion with me—why? —I don’t know. But it was getting heavy and bulky and many a time I was tempted to let it gently slip from my hand into the Atlantic Ocean. But I kept it and practiced with it so often that even the platoon warned me that they would sabotage the instrument… This was the beginning of our platoon orchestra and with the leadership of Sergeant Donofrio, it proved very helpful and a success when we played ‘Happy Birthday’ or held concerts in the squad room near the blazing fire-place every evening.', NULL),
+  (2, 1, 'Quote', 'German airplanes, screaming SS’s and wonderful stew sure makes a guy wish he were someplace else besides in the army…', NULL),
+  (3, 31, 'Quote', 'One night as we were spearheading through the heavy woods of Germany all had gone smoothly until suddenly firing was coming from all directions. No one knew just where it was coming from. Our position was obscured from the Jerries by the dark shadows, but the tiniest flicker of light would have given our position away…', NULL),
+  (4, 31, 'Quote', 'A little sad news that came to us around 15 March when we heard that Sgt. Buchler had been killed in action. We had crossed the Rhine and had passed on through the town of Linz taking a position on a hill. All morning long our planes had been bombing and strafing enemy positions. Our tanks had their panels displayed but the planes mistook some of them for Jerry tanks, a few of which were in the area, and started dropping bombs around us…', NULL);
