@@ -58,7 +58,7 @@ class SearchController extends BaseController
 
     private function showSearchPage() {
         $isResults = false;
-        require "app/views/search.phtml";
+        require "app/views/search/search.phtml";
     }
 
     private function showSearchResults(string $firstname, string $lastname) {
@@ -72,6 +72,6 @@ class SearchController extends BaseController
         }
 
         $isResults = true;
-        require "app/views/search.phtml";
+        require "app/views/search/search.phtml";
     }
 }

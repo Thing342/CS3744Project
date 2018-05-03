@@ -62,7 +62,7 @@ class AdminController extends BaseController
 
         $users = User::fetchAll($this->getDBConn());
 
-        require "app/views/admin.phtml";
+        require "app/views/admin/admin.phtml";
     }
 
     /**
@@ -125,7 +125,7 @@ class AdminController extends BaseController
             $this->error404($params[0]);
         }
 
-        require 'app/views/admin_edit.phtml';
+        require 'app/views/admin/admin_edit.phtml';
     }
 
     /**

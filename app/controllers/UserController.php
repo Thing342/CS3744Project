@@ -191,7 +191,7 @@ class UserController extends BaseController
         // Activity feed array
         $events = array_merge($messages, $comments);
         usort($events, "\app\models\UserEvent_sorting_key");
-        include_once "app/views/user.phtml";
+        include_once "app/views/user/user.phtml";
     }
 
 // shows list of all users in order of username
@@ -214,7 +214,7 @@ class UserController extends BaseController
       }
 
 
-      include_once "app/views/users.phtml";
+      include_once "app/views/user/users.phtml";
     }
 
 
@@ -224,7 +224,7 @@ class UserController extends BaseController
      * Full path: 'GET /users/new'
      */
     public function newForm($params) {
-        include_once "app/views/user_new.phtml";
+        include_once "app/views/user/user_new.phtml";
     }
 
     /**
@@ -272,7 +272,7 @@ class UserController extends BaseController
     public function edit() {
       $token = $this->require_authentication();
       $user = $token->getUser();
-      require "app/views/userEdit.php";
+      require "app/views/user/user_edit.phtml";
     }
 
     /**
@@ -400,7 +400,7 @@ class UserController extends BaseController
             $this->logout([]);
         }
 
-        include_once "app/views/user_login.phtml";
+        include_once "app/views/user/user_login.phtml";
     }
 
     /**

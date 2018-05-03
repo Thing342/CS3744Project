@@ -487,7 +487,7 @@ class CompanyController extends BaseController
         $comments = Comment::fetchByUnit($db, $id);
 
         // Display page, passing in company object.
-        require "app/views/companyDetails.php";
+        require "app/views/company/company_details.phtml";
     }
 
     /**
@@ -517,7 +517,7 @@ class CompanyController extends BaseController
         }
 
         // Display page, passing in company object.
-        require "app/views/companyEdit.php";
+        require "app/views/admin/company_edit.phtml";
     }
 
     /**
@@ -539,7 +539,7 @@ class CompanyController extends BaseController
         }
 
         // Display the page, passing in $companies as a variable
-        require "app/views/companies.phtml";
+        require "app/views/company/companies.phtml";
     }
 
     /**

@@ -188,6 +188,6 @@ class MessagingController extends BaseController
         $sent = Message::fetchAllSender($db, $u->getUserId());
         $messageableUsers = Message::getMessageableUsers($db, $u->getUserId());
 
-        require 'app/views/inbox.phtml';
+        require 'app/views/messaging/inbox.phtml';
     }
 }
