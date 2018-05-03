@@ -309,4 +309,9 @@ function init_ajax(subdir, company_id, edit) {
             }
         })
     });
+
+    $('.platoon-item').on('click', function (e) {
+        var id = $(this).data('unitid');
+        window.document.location.href = url('/companies/' + id);
+    })
 }

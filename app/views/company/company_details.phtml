@@ -4,6 +4,8 @@
  *
  * @var $company \app\models\Unit
  * @var $comments \app\models\Comment[]
+ * @var $platoons \app\models\Unit[] | null
+ * @var $parent \app\models\Unit | null
  * @var $this \app\controllers\CompanyController
  */
 $title = $company->getName();
@@ -50,31 +52,48 @@ include "app/views/_header.phtml"
                     <a href="<?= $this->url('/companies/' . $company->getId() . '/edit') ?>"
                        class="btn btn-primary">Edit</a>
                 <?php else: ?>
-                <p><i>You must be an Editor to edit this page.</i></p>
+                    <p><i>You must be an Editor to edit this page.</i></p>
                 <?php endif; ?>
                 <a class="btn btn-secondary" href="<?= $_ENV['SUBDIRECTORY'] ?>/companies">Back to List</a>
             </p>
         </div>
 
+        <div>
+            <?php if($parent): ?>
+                <h4>Part of <a href="<?= $this->url('/companies/' . $parent->getId()) ?>"><?= $parent->getName() ?></a>.</h4>
+            <?php endif; ?>
+        </div>
+
         <div class="row">
+
             <section class="col col-12 col-lg-4">
-                <h3>Members</h3>
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col"><b>Rank</b></th>
-                        <th scope="col"><b>Name</b></th>
-                    </tr>
-                    </thead>
-                    <tbody id="members-tbody">
-                    <!--
-                        AJAX
-                    -->
-                    </tbody>
-                </table>
+                <?php if ($platoons): ?>
+                    <h3>Platoons</h3>
+                    <ul class="list-unstyled">
+                        <?php foreach ($platoons as $platoon): ?>
+                            <li class="platoon-item list-group-item list-group-item-action" data-unitid="<?= $platoon->getId() ?>"><?= $platoon->getName() ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php else: ?>
+                    <h3>Members</h3>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col"><b>Rank</b></th>
+                            <th scope="col"><b>Name</b></th>
+                        </tr>
+                        </thead>
+                        <tbody id="members-tbody">
+                        <!--
+                            AJAX
+                        -->
+                        </tbody>
+                    </table>
+                <?php endif; ?>
             </section>
 
             <section class="col col-12 col-md-8">
+                <h3>Notes</h3>
                 <ul class="list-unstyled list-group" id="notes-tbody">
                     <!--
                         AJAX

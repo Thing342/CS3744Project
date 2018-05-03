@@ -47,8 +47,6 @@ class CompanyController extends BaseController
     public function routes(): array
     {
         return [
-            self::route("POST", "/add", 'companyAdd'),
-
             self::route("GET", "/json", 'readJSON'),
             self::route("POST", "/json", 'createJSON'),
             self::route("OPTIONS", "/json", 'corsJSON'),
@@ -67,6 +65,7 @@ class CompanyController extends BaseController
             self::route("POST", "/:companyID/changeName", 'companyChangeName'),
             self::route("POST", "/:companyID/changePhoto", 'companyChangePhoto'),
             self::route("POST", "/:companyID/delete", 'companyDelete'),
+            self::route("POST", "/:companyID/add", 'companyAdd'),
 
             self::route("GET", "/:companyID/edit", 'companyEditPage'),
             self::route("GET", "/:companyID", 'companyPage'),
@@ -146,21 +145,23 @@ class CompanyController extends BaseController
     }
 
     /**
-     * Full path: '/companies/add'
+     * Full path: '/companies/:companyID/add'
      *
-     * Creates a new, blank company object.
+     * Creates a new, blank company object, as a subunit to the provided company ID.
      * Returns 200 and redirects to the new company's edit page if successful.
      */
     public function companyAdd($params)
     {
         // Throw 401 if not logged in
         $token = $this->require_authentication(User::TYPE_EDITOR);
+        $parentID = $params['companyID'];
 
         $db = $this->getDBConn();
 
         // Create new company and save
         $company = new Unit();
-        $company->setName("New Company");
+        $company->setName($_POST['platoon-name']);
+        $company->setUnitParentID($parentID);
 
         $res = $company->commit($db); // true if successful
 
@@ -466,6 +467,24 @@ class CompanyController extends BaseController
         // Fetch comments
         $comments = Comment::fetchByUnit($db, $id);
 
+        // Fetch platoons, if any:
+        if(!empty($company->getSubunits())) {
+            $platoons = [];
+            foreach ($company->getSubunits() as $platoonID) {
+                $platoon = Unit::fetch($db, $platoonID);
+                if($platoon) array_push($platoons, $platoon);
+            }
+        } else {
+            $platoons = null;
+        }
+
+        //Fetch parent unit, if not-top-level
+        if($company->getUnitParentID() != -1) {
+            $parent = Unit::fetch($db, $company->getUnitParentID());
+        } else {
+            $parent = null;
+        }
+
         // Display page, passing in company object.
         require "app/views/company/company_details.phtml";
     }
@@ -494,8 +513,19 @@ class CompanyController extends BaseController
             $this->error404($params[0]);
         }
 
+        // Fetch platoons, if any:
+        if(!empty($company->getSubunits())) {
+            $platoons = [];
+            foreach ($company->getSubunits() as $platoonID) {
+                $platoon = Unit::fetch($db, $platoonID);
+                if($platoon) array_push($platoons, $platoon);
+            }
+        } else {
+            $platoons = null;
+        }
+
         // Display page, passing in company object.
-        require "app/views/admin/company_edit.phtml";
+        require "app/views/company/company_edit.phtml";
     }
 
     /**
