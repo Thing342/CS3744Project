@@ -1,0 +1,68 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: wes
+ * Date: 5/3/18
+ * Time: 11:35 AM
+ *
+ * @var app\models\User $user - The current user.
+ * @var \app\models\Token $token - The user's token.
+ * @var \app\models\User[] $following - Users that the user has followed
+ * @var \app\models\User[] $followers - Users that follow the user.
+ * @var \app\models\UserEvent[] $events - Activity feed objects
+ * @var \app\controllers\BaseController $this
+ */
+?>
+<h3 class="my-4">Activity Feed</h3>
+<ul class="list-unstyled">
+    <?php if (empty($events)): ?>
+        <li>No activity in the past 24 hours.</li>
+    <?php else: ?>
+        <?php foreach ($events as $event): ?>
+            <?php
+            $username = $event->getUser()->getFullName();
+            error_log(json_encode($event->getUser()->serialize()));
+            error_log(json_encode($user->serialize()));
+            if ($event->getUser()->getUserId() == $user->getUserId()) {
+                $username = "You";
+            }
+            ?>
+            <?php if ($event->getEventType() == 'comment'): ?>
+                <li class="alert alert-secondary">
+                    <h5 class="alert-heading">
+                        <?= $username ?> commented on a company page:
+                    </h5>
+                    <p><?= $event->getText() ?></p>
+                    <hr>
+                    <span><?= \lib\timeAgo($event->getTimestamp()) ?></span>
+                    <a href="<?= $this->url('/companies/' . $event->getUnitID()) ?>" class="d-block-inline alert-link ml-4">Read</a>
+                </li>
+            <?php elseif ($event->getEventType() == 'message' && $event->getUser()->getUserId() != $user->getUserId()): ?>
+                <li class="alert alert-primary">
+                    <h5 class="alert-heading">
+                        <a href="<?= $this->url("/users/" . $event->getUserFrom()->getUserId()) ?>"><?= $event->getUserFrom()->getFullname() ?></a>
+                        sent you a message:</h5>
+                    <p><?= \lib\ellipsize($event->getText(), 100) ?></p>
+                    <hr>
+                    <div>
+                        <span><?= \lib\timeAgo($event->getTimestamp()) ?></span>
+                        <a href="<?= $this->url('/messages/' . $event->getId()) ?>" class="d-block-inline alert-link ml-4">Read</a>
+                    </div>
+                </li>
+            <?php elseif ($event->getEventType() == 'message' && $event->getUser()->getUserId() == $user->getUserId()): ?>
+                <li class="alert alert-info">
+                    <h5 class="alert-heading">You sent
+                        <a href="<?= $this->url("/users/" . $event->getUserTo()->getUserId()) ?>"><?= $event->getUserTo()->getFullname() ?></a>
+                        a message:</h5>
+                    <p><?= \lib\ellipsize($event->getText(), 100) ?></p>
+                    <hr>
+                    <div>
+                        <span><?= \lib\timeAgo($event->getTimestamp()) ?></span>
+                        <a href="<?= $this->url('/messages/' . $event->getId()) ?>" class="d-block-inline alert-link ml-4">Read</a>
+                    </div>
+                </li>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</ul>
+<a href="#" class="btn btn-secondary">Back to top</a>

@@ -31,7 +31,8 @@ class SiteController extends BaseController
     /**
      * Factory function, instantiates the controller (called by the server upon dispatch)
      */
-    public static function init(): Controller {
+    public static function init(): Controller
+    {
         return new SiteController();
     }
 
@@ -52,7 +53,8 @@ class SiteController extends BaseController
      *
      * Displays the credits page
      */
-    public function credits($params) {
+    public function credits($params)
+    {
         require "app/views/credits.phtml";
     }
 
@@ -61,7 +63,8 @@ class SiteController extends BaseController
      *
      * Displays the about page
      */
-    public function about($params) {
+    public function about($params)
+    {
         require "app/views/about.phtml";
     }
 
@@ -70,51 +73,58 @@ class SiteController extends BaseController
      *
      * Displays the site homepage.
      */
-    public function index($params) {
-      if ($this->is_logged_in(true)) {
-        $token = $this->require_authentication();
+    public function index($params)
+    {
+        if ($this->is_logged_in()) {
+            $token = $this->require_authentication();
 
-        if ($token == null) {
-            $this->error404($params[0]);
-            return;
-        }
-
-        $db = $this->getDBConn();
-
-        // Fetch user info from token
-        $user = $token->getUser();
-
-        // Fetch followers and followees
-        $following = User::fetchFollowedUsers($db, $user->getUserId());
-        if($following == null) {
-            $following=[];
-        }
-
-        $followers = User::fetchFollowingUsers($db, $user->getUserId());
-        if($followers == null) {
-            $followers=[];
-        }
-
-        // Fetch new comments for activity feed
-        $comments = Comment::fetchByFollow($db, $user->getUserId(), 24);
-        if($comments == null) {
-            $comments=[];
-        } else {
-            foreach(Comment::fetchByUser($db, $user->getUserId()) as $comment) {
-              array_push($comments, $comment);
+            if ($token == null) {
+                $this->error404($params[0]);
+                return;
             }
-        }
 
-        $messages = Message::fetchAllRecipient($db, $user->getUserId(), 24);
-        if($messages == null) {
-            $messages=[];
-        }
+            $db = $this->getDBConn();
 
-        // Activity feed array
-        $events = array_merge($messages, $comments);
-        usort($events, "\app\models\UserEvent_sorting_key");
+            // Fetch user info from token
+            $user = $token->getUser();
+
+          // Fetch followers and followees
+          $following = User::fetchFollowedUsers($db, $user->getUserId());
+          if ($following == null) {
+              $following = [];
+          }
+
+          $followers = User::fetchFollowingUsers($db, $user->getUserId());
+          if ($followers == null) {
+              $followers = [];
+          }
+
+          // Fetch new comments for activity feed
+          $comments = Comment::fetchByFollow($db, $user->getUserId(), 24);
+          if ($comments == null) {
+              $comments = [];
+          }
+
+          foreach (Comment::fetchByUser($db, $user->getUserId()) as $comment) {
+              array_push($comments, $comment);
+          }
+
+          //print_r($comments);
+          $messages = Message::fetchAllRecipient($db, $user->getUserId(), 24);
+          if ($messages == null) {
+              $messages = [];
+          }
+
+          $sent = Message::fetchAllSender($db, $user->getUserId(), 24);
+          if ($sent == null) {
+              $sent = [];
+          }
+
+          // Activity feed array
+          $events = array_merge($messages, $comments, $sent);
+          usort($events, "\app\models\UserEvent_sorting_key");
       }
-      require "app/views/index.phtml";
+        require "app/views/index.phtml";
     }
 
 }

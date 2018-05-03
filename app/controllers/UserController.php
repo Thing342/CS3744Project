@@ -177,19 +177,25 @@ class UserController extends BaseController
         $comments = Comment::fetchByFollow($db, $user->getUserId(), 24);
         if($comments == null) {
             $comments=[];
-        } else {
-            foreach(Comment::fetchByUser($db, $user->getUserId()) as $comment) {
-              array_push($comments, $comment);
-            }
         }
+
+        foreach(Comment::fetchByUser($db, $user->getUserId()) as $comment) {
+            array_push($comments, $comment);
+        }
+
         //print_r($comments);
         $messages = Message::fetchAllRecipient($db, $user->getUserId(), 24);
         if($messages == null) {
             $messages=[];
         }
 
+        $sent = Message::fetchAllSender($db, $user->getUserId(), 24);
+        if($sent == null) {
+            $sent=[];
+        }
+
         // Activity feed array
-        $events = array_merge($messages, $comments);
+        $events = array_merge($messages, $comments, $sent);
         usort($events, "\app\models\UserEvent_sorting_key");
         include_once "app/views/user/user.phtml";
     }

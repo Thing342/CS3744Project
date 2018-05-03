@@ -133,9 +133,10 @@ SQL;
      * Fetches all of the Messages sent by a given sender within a given duration.
      * @param PDO $db
      * @param int $recipientID - The ID of the sender
+     * @param int $hoursAgo - How far back to search (in hours), by default, unlimited
      * @return array|null - null if the results set is empty or if they query could not be completed.
      */
-    public static function fetchAllSender(PDO $db, int $recipientID) : ?array {
+    public static function fetchAllSender(PDO $db, int $recipientID, int $hoursAgo = -1) : ?array {
         $sql = <<<SQL
 SELECT * 
 FROM Message 
@@ -145,8 +146,22 @@ JOIN User UT ON F.userTo = UT.userId
 WHERE F.userFrom = ?
 ORDER BY timestamp
 SQL;
+        $params = [$recipientID];
+        if ($hoursAgo != -1) { // need to filter by timespan
+            $sql = <<<SQL
+SELECT * 
+FROM Message 
+JOIN Following F ON Message.follow = F.id
+JOIN User UF ON F.userFrom = UF.userId
+JOIN User UT ON F.userTo = UT.userId
+WHERE F.userFrom = ? AND TIMESTAMPDIFF(HOUR, timestamp, NOW()) < ?
+ORDER BY timestamp
+SQL;
+            array_push($params, $hoursAgo);
+        }
+
         $stmt = $db->prepare($sql);
-        $res = $stmt->execute([$recipientID]);
+        $res = $stmt->execute($params);
 
         if($res == false) {
             error_log("Could not query Message (" . $stmt->queryString ."):" . $stmt->errorCode());
@@ -158,7 +173,6 @@ SQL;
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
             array_push($results, self::build($row));
         }
-
 
         return $results;
     }
