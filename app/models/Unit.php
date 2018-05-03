@@ -67,7 +67,7 @@ class Unit
 SELECT U.*, S.children
 FROM Unit U
 LEFT JOIN (
-    SELECT unitParent, GROUP_CONCAT(id) as children
+    SELECT unitParent, GROUP_CONCAT(id ORDER BY name) as children
     FROM Unit
     GROUP BY unitParent
     ) AS S ON S.unitParent = U.id
@@ -102,10 +102,11 @@ SQL;
 SELECT U.*, S.children
 FROM Unit U
 LEFT JOIN (
-    SELECT unitParent, GROUP_CONCAT(id) as children
+    SELECT unitParent, GROUP_CONCAT(id ORDER BY name) as children
     FROM Unit
     GROUP BY unitParent
     ) AS S ON S.unitParent = U.id
+ORDER BY U.name
 SQL;
         $stmt = $db->prepare($fetch_sql);
         $res = $stmt->execute();
@@ -177,7 +178,7 @@ SQL;
      * @return [int]|null - null if the query failed.
      */
     public static function getTopLevelUnitIDs(PDO $db) : ?array {
-        $stmt = $db->prepare("SELECT GROUP_CONCAT(id) FROM Unit WHERE unitParent IS NULL");
+        $stmt = $db->prepare("SELECT GROUP_CONCAT(id ORDER BY name) FROM Unit WHERE unitParent IS NULL");
         $res = $stmt->execute();
 
         if(!$res) {
